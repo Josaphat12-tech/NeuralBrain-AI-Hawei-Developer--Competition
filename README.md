@@ -199,6 +199,15 @@ Please ensure:
 - Changes align with the project’s objectives
 - Proper attribution is provided when using third-party resources
 
+
+  ## ☕ Support the Project
+
+If you find this project useful and would like to support its development, you can buy us a coffee ☕  
+Your support helps us maintain, improve, and scale this open-source project.
+
+[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-orange.png)](https://www.buymeacoffee.com/bitingojb)
+
+
 By contributing, you agree that your work may be used as part of the  
 **NeuralBrain AI – Huawei Developer Competition** project.
 
