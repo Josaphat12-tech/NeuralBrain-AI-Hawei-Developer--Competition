@@ -179,7 +179,8 @@ Contributions are welcome and appreciated!
 - **Cloud ,DevOps & AI Engineer** – [@Josaphat12-tech](https://github.com/josaphat12-tech)
 - **Data Scientist / ML Engineer** – [@Josaphat12-tech](https://github.com/josaphat12-tech)
 - **Backend Engineer** – [@jacobkitams](https://github.com/jacobkitams)
-- **Frontend / Visualization Engineer** – [@princempunga](https://github.com/princempunga)
+- **Frontend Integrator & API Endepoint Creaor** – [@princempunga](https://github.com/princempunga)
+- **Frontend / Visualization Engineer** – [@mozart1123](https://github.com/mozart1123)
 
 > Team members are responsible for design, development, deployment, and documentation of the project.
 
