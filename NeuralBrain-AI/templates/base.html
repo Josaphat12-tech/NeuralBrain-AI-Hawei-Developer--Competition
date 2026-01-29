@@ -92,24 +92,47 @@
             background-clip: text;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-family: 'Playfair Display', serif;
             letter-spacing: -1px;
             white-space: nowrap;
+            text-decoration: none;
         }
 
         .navbar-brand i {
             font-size: 1.8rem;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background: linear-gradient(135deg, #ec4899, #f59e0b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.4));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .navbar-brand i {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #ec4899, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.4));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
         }
 
         .navbar-nav {
             display: flex;
             align-items: center;
-            gap: 0;
+            gap: 0.5rem;
             list-style: none;
             margin: 0;
             padding: 0;
@@ -133,6 +156,24 @@
             align-items: center;
             gap: 6px;
             border-radius: 8px;
+        }
+
+        .nav-link i {
+            font-size: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+            border-radius: 8px;
+        }
+
+        .nav-link i {
+            font-size: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .nav-link::before {
@@ -162,9 +203,6 @@
         .nav-link.active {
             color: #f1f5f9 !important;
         }
-
-        .navbar-toggler {
-            border: none;
             padding: 0.25rem 0.5rem;
             display: none;
             transition: all 0.3s ease;

@@ -59,6 +59,11 @@
         animation: fadeInUp 0.6s ease-out;
         overflow: hidden;
         position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
     }
 
     .stat-card::before {
@@ -264,6 +269,47 @@
         transform: translateY(-4px);
     }
 
+    .btn-tertiary-custom {
+        background: rgba(236, 72, 153, 0.2);
+        color: var(--accent);
+        border: 1px solid var(--accent);
+    }
+
+    .btn-tertiary-custom:hover {
+        background: var(--accent);
+        color: white;
+        transform: translateY(-4px);
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .btn-custom {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.8rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        white-space: nowrap;
+    }
+
+    .btn-custom i {
+        font-size: 1.1rem;
+    }
+
+    .btn-custom span {
+        font-size: 0.95rem;
+    }
+
     /* ==================== ANIMATIONS ==================== */
     @keyframes fadeInUp {
         from {
@@ -312,6 +358,82 @@
         .hero-section {
             padding: 2rem 1rem;
         }
+
+        .cta-buttons {
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .btn-custom {
+            width: 100%;
+            justify-content: center;
+            padding: 0.75rem 1.2rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .hero-title {
+            font-size: 1.5rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .metrics-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .cta-title {
+            font-size: 1.3rem;
+        }
+
+        .cta-buttons {
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .btn-custom {
+            padding: 0.65rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-custom i {
+            font-size: 1rem;
+        }
+
+        .btn-custom span {
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .hero-title {
+            font-size: 1.3rem;
+        }
+
+        .cta-title {
+            font-size: 1.1rem;
+        }
+
+        .cta-subtitle {
+            font-size: 0.9rem;
+        }
+
+        .btn-custom {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-custom i {
+            font-size: 0.9rem;
+        }
+
+        .btn-custom span {
+            font-size: 0.75rem;
+        }
+    }
 
         .cta-section {
             padding: 2rem 1rem;
@@ -485,14 +607,17 @@
 
 <!-- CTA SECTION -->
 <div class="cta-section">
-    <h2 class="cta-title">Ready to Take Action?</h2>
+    <h2 class="cta-title"><i class="fas fa-rocket"></i> Ready to Take Action?</h2>
     <p class="cta-subtitle">Explore advanced analytics and AI-powered health insights</p>
-    <div>
+    <div class="cta-buttons">
         <a href="{{ url_for('views.health_risk') }}" class="btn-custom btn-primary-custom">
-            <i class="fas fa-shield-alt"></i> Health Risk Assessment
+            <i class="fas fa-shield-alt"></i> <span>Health Risk Assessment</span>
         </a>
         <a href="{{ url_for('views.data_explorer') }}" class="btn-custom btn-secondary-custom">
-            <i class="fas fa-database"></i> Explore Data
+            <i class="fas fa-database"></i> <span>Explore Data</span>
+        </a>
+        <a href="{{ url_for('views.contact') }}" class="btn-custom btn-tertiary-custom">
+            <i class="fas fa-envelope"></i> <span>Contact Us</span>
         </a>
     </div>
 </div>
@@ -500,10 +625,15 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- Axios for Advanced Data Handling -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"></script>
+
 <script>
-    // Chart.js Configuration
+    // Chart.js Configuration with Advanced Options
     Chart.defaults.font.family = "'Inter', sans-serif";
     Chart.defaults.color = '#cbd5e1';
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+    Chart.defaults.plugins.legend.labels.padding = 15;
     
     const chartColors = {
         primary: '#6366f1',
