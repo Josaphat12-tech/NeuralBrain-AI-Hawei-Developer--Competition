@@ -1,0 +1,130 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+ENV/
+env/
+.venv
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Database
+data/neuralbrain.db
+data/neuralbrain.db-*
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Flask
+instance/
+.webassets-cache
+
+# SQLAlchemy
+*.db
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Node/Frontend (if added)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Misc
+.env.bak
+.env.backup
+*.pid
+
+# Temporary Documentation (Keep only README.md, CHANGELOG.md, LICENSE)
+AI_INTEGRATION_GUIDE.md
+AI_RISK_SCORING.md
+CLOUD_DEPLOYMENT_GUIDE.md
+COMPLETE_REIMPLEMENTATION.md
+DASHBOARD_CHECKLIST.md
+DASHBOARD_IMPLEMENTATION.md
+DASHBOARD_REDESIGN.md
+DELIVERY.md
+DEPLOYMENT.md
+FEATURES_COMPLETE.md
+FEATURE_2_COMPLETE.md
+IMPLEMENTATION.md
+IMPLEMENTATION_INDEX.md
+INDEX.md
+INSTALLATION_SUMMARY.md
+NAVBAR_UPDATE.md
+NEW_DESIGN_GUIDE.md
+QUICKREF.md
+QUICKSTART.md
+SESSION_SUMMARY.md
+SUBMISSION_READY.md
+
+# Verification/Report Files
+VERIFICATION_REPORT.py
+BEAUTIFUL_REDESIGN_GUIDE.md
+CHARTS_REFERENCE.md
+COMPLETE_SUMMARY.md
+FEATURES_CHECKLIST.md
+IMPLEMENTATION_COMPLETE.md
+IMPLEMENTATION_GUIDE.md
+PROJECT_COMPLETION_REPORT.txt
+QUICKSTART_VISUALIZATION.md
+REDESIGN_COMPLETE.md
+VISUALIZATION_IMPLEMENTATION.md
+VISUALIZATION_SUMMARY.txt
+VISUAL_DESIGN_PREVIEW.md

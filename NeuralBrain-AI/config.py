@@ -1,0 +1,76 @@
+"""
+NeuralBrain-AI Configuration Module
+Centralized configuration for Flask application
+"""
+
+import os
+from datetime import timedelta
+
+# Base directory
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+# Ensure data directory exists
+DATA_DIR = os.path.join(BASE_DIR, 'data')
+os.makedirs(DATA_DIR, exist_ok=True)
+
+# Flask Configuration
+DEBUG = os.getenv('FLASK_DEBUG', False)
+TESTING = os.getenv('FLASK_TESTING', False)
+SECRET_KEY = os.getenv('SECRET_KEY', 'neuralbrain-dev-key-change-in-production')
+
+# Database Configuration
+_db_path = os.path.join(DATA_DIR, "neuralbrain.db")
+SQLALCHEMY_DATABASE_URI = os.getenv(
+    'DATABASE_URL',
+    f'sqlite:///{_db_path}'
+)
+# Alternative: Use relative path
+# SQLALCHEMY_DATABASE_URI = 'sqlite:///data/neuralbrain.db'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+# Application Metadata
+APP_NAME = "NeuralBrain-AI"
+APP_VERSION = "1.0.0"
+AUTHOR = "Bitingo Josaphat JB"
+COPYRIGHT_YEAR = 2026
+
+# API Configuration
+API_TIMEOUT = 15  # seconds
+API_RETRY_ATTEMPTS = 3
+API_RETRY_DELAY = 2  # seconds
+
+# Data Management (already created DATA_DIR above)
+RAW_DATA_FILE = os.path.join(DATA_DIR, 'raw_data.json')
+PROCESSED_DATA_FILE = os.path.join(DATA_DIR, 'processed_data.json')
+
+# Health Data APIs (Free & Public)
+HEALTH_APIS = {
+    'open_disease': {
+        'name': 'Open Disease',
+        'url': 'https://disease.sh/v3/covid-19',
+        'description': 'COVID-19 epidemiological data',
+        'free': True
+    },
+    'heart_rate': {
+        'name': 'Fake API',
+        'url': 'https://fakerapi.it/api/v1/users',
+        'description': 'Sample health metrics',
+        'free': True
+    }
+}
+
+# Validation Rules
+VALIDATION_RULES = {
+    'temperature': {'min': 35.0, 'max': 42.0, 'unit': 'Celsius'},
+    'heart_rate': {'min': 30, 'max': 200, 'unit': 'bpm'},
+    'blood_pressure_sys': {'min': 60, 'max': 200, 'unit': 'mmHg'},
+    'blood_pressure_dia': {'min': 40, 'max': 120, 'unit': 'mmHg'},
+    'oxygen_saturation': {'min': 70, 'max': 100, 'unit': '%'},
+}
+
+# Session Configuration
+PERMANENT_SESSION_LIFETIME = timedelta(days=7)
+SESSION_REFRESH_EACH_REQUEST = True
+SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'

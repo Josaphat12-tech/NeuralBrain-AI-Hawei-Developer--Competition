@@ -1,0 +1,427 @@
+{% extends "base.html" %}
+
+{% block title %}About - NeuralBrain-AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero {
+        padding: 3rem 2rem;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+        border-radius: 20px;
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        margin-bottom: 3rem;
+        margin-top: 2rem;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .about-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #6366f1, #ec4899, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .about-subtitle {
+        font-size: 1rem;
+        color: #cbd5e1;
+    }
+
+    .section-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        backdrop-filter: blur(10px);
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        color: #f1f5f9;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .section-title i {
+        color: var(--primary);
+        font-size: 1.8rem;
+    }
+
+    .contributors-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+
+    .contributor-card {
+        background: rgba(99, 102, 241, 0.05);
+        border: 1px solid var(--border-color);
+        padding: 2rem 1.5rem;
+        border-radius: 16px;
+        text-align: center;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contributor-card:hover {
+        border-color: var(--primary);
+        background: rgba(99, 102, 241, 0.1);
+        transform: translateY(-8px);
+    }
+
+    .contributor-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    .contributor-name {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #f1f5f9;
+        margin-bottom: 0.5rem;
+    }
+
+    .contributor-role {
+        font-size: 0.85rem;
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .contributor-desc {
+        font-size: 0.85rem;
+        color: #cbd5e1;
+        line-height: 1.5;
+    }
+
+    .feature-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .feature-list li {
+        padding: 0.75rem 0;
+        color: #cbd5e1;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .feature-list li:last-child {
+        border-bottom: none;
+    }
+
+    .feature-list i {
+        color: var(--primary);
+        font-size: 1.1rem;
+        min-width: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .about-title {
+            font-size: 1.8rem;
+        }
+
+        .contributors-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .section-card {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="about-hero">
+    <h1 class="about-title"><i class="fas fa-circle-info"></i> About NeuralBrain-AI</h1>
+    <p class="about-subtitle">Zero-Cost AI Health Monitoring Platform - Competition Edition</p>
+</div>
+
+<!-- Project Overview -->
+<div class="section-card">
+    <h2 class="section-title"><i class="fas fa-lightbulb"></i> Project Overview</h2>
+    <p style="color: #cbd5e1; margin-bottom: 1.5rem; line-height: 1.8;">
+        <strong>NeuralBrain-AI</strong> is a competition-grade health monitoring platform designed to demonstrate how advanced AI and cloud architecture can be leveraged to create production-ready systems with zero infrastructure costs. Our platform integrates multiple health data sources, applies intelligent validation and normalization, and provides both REST APIs and a professional web dashboard for comprehensive health analytics.
+    </p>
+    
+    <p style="color: #cbd5e1; margin-bottom: 1.5rem; font-weight: 600; font-size: 0.95rem;">The platform emphasizes:</p>
+    <ul class="feature-list">
+        <li><i class="fas fa-check-circle"></i> <strong>Zero-Cost Architecture:</strong> Uses only free, public APIs with no paid subscriptions</li>
+        <li><i class="fas fa-check-circle"></i> <strong>Production-Ready:</strong> Follows enterprise software engineering practices and design patterns</li>
+        <li><i class="fas fa-check-circle"></i> <strong>Extensibility:</strong> Designed to seamlessly integrate future AI modules and data sources</li>
+        <li><i class="fas fa-check-circle"></i> <strong>Local & Cloud Deployment:</strong> Runs on local infrastructure or Huawei Cloud</li>
+        <li><i class="fas fa-check-circle"></i> <strong>Scalability:</strong> Architecture supports multiple data sources, AI models, and concurrent users</li>
+        <li><i class="fas fa-check-circle"></i> <strong>Professional UI/UX:</strong> Modern glassmorphic design with responsive analytics dashboard</li>
+    </ul>
+</div>
+
+<!-- Contributors Section -->
+<div class="section-card">
+    <h2 class="section-title"><i class="fas fa-users"></i> Team & Contributors</h2>
+    <p style="color: #cbd5e1; margin-bottom: 2rem;">
+        Meet the talented developers who built this platform. Each contributor brought unique expertise to different aspects of the system.
+    </p>
+    
+    <div class="contributors-grid">
+        <!-- Contributor 1 -->
+        <div class="contributor-card">
+            <div class="contributor-avatar">👨‍💼</div>
+            <div class="contributor-name">Kamangi Amusini Tresor</div>
+            <div class="contributor-role">Project Lead & Manager</div>
+            <div class="contributor-desc">
+                Overall project direction, team management, architecture oversight, and strategic planning. Ensures project goals are met and team collaboration is optimal.
+            </div>
+        </div>
+
+        <!-- Contributor 2 -->
+        <div class="contributor-card">
+            <div class="contributor-avatar">🧠</div>
+            <div class="contributor-name">Bitingo Josaphat JB</div>
+            <div class="contributor-role">ML/AI & DevOps Engineer</div>
+            <div class="contributor-desc">
+                Developed machine learning models for health risk prediction, implemented AI algorithms, set up DevOps infrastructure, and managed cloud deployment strategies.
+            </div>
+        </div>
+
+        <!-- Contributor 3 -->
+        <div class="contributor-card">
+            <div class="contributor-avatar">🔐</div>
+            <div class="contributor-name">Jacob Kitams</div>
+            <div class="contributor-role">Backend & Security Developer</div>
+            <div class="contributor-desc">
+                Implemented secure backend architecture, REST API framework, data validation, encryption protocols, and security best practices for the entire platform.
+            </div>
+        </div>
+
+        <!-- Contributor 4 -->
+        <div class="contributor-card">
+            <div class="contributor-avatar">👩‍💻</div>
+            <div class="contributor-name">Prince Mpunga</div>
+            <div class="contributor-role">Frontend & API Integrator</div>
+            <div class="contributor-desc">
+                Built the professional web dashboard with responsive design, Chart.js visualizations, glassmorphic UI components, and seamlessly integrated external APIs.
+            </div>
+        </div>
+
+        <!-- Contributor 5 -->
+        <div class="contributor-card">
+            <div class="contributor-avatar">🎵</div>
+            <div class="contributor-name">Mozart</div>
+            <div class="contributor-role">QA & Documentation Engineer</div>
+            <div class="contributor-desc">
+                Created comprehensive test suites, wrote API documentation, developed user guides, ensured code quality, and managed quality assurance processes.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Technology Stack -->
+<div class="section-card">
+    <h2 class="section-title"><i class="fas fa-cogs"></i> Technology Stack</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin: 2rem 0;">
+        <div>
+            <h6 style="color: var(--primary); font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; font-size: 0.85rem;">Backend</h6>
+            <ul class="feature-list" style="border: none;">
+                <li style="border: none; display: block; margin-bottom: 0.5rem;"><i class="fas fa-python" style="color: #3776ab;"></i> <span style="color: #cbd5e1;">Python 3.10+</span></li>
+                <li style="border: none; display: block; margin-bottom: 0.5rem;"><i class="fas fa-cube" style="color: var(--primary);"></i> <span style="color: #cbd5e1;">Flask Web Framework</span></li>
+                <li style="border: none; display: block; margin-bottom: 0.5rem;"><i class="fas fa-database" style="color: var(--primary);"></i> <span style="color: #cbd5e1;">SQLAlchemy ORM</span></li>
+                <li style="border: none; display: block; margin-bottom: 0.5rem;"><i class="fas fa-network-wired" style="color: var(--primary);"></i> <span style="color: #cbd5e1;">RESTful API Design</span></li>
+            </ul>
+        </div>
+        
+        <div>
+            <h6 style="color: var(--primary); font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; font-size: 0.85rem;">Frontend</h6>
+            <ul class="feature-list" style="border: none;">
+                <li style="border: none; display: block; margin-bottom: 0.5rem;"><i class="fab fa-html5" style="color: #e34c26;"></i> <span style="color: #cbd5e1;">HTML5</span></li>
+                <li style="border: none; display: block; margin-bottom: 0.5rem;"><i class="fab fa-bootstrap" style="color: #7952b3;"></i> <span style="color: #cbd5e1;">Bootstrap 5</span></li>
+                <li style="border: none; display: block; margin-bottom: 0.5rem;"><i class="fas fa-chart-line" style="color: var(--primary);"></i> <span style="color: #cbd5e1;">Chart.js Visualizations</span></li>
+                <li style="border: none; display: block; margin-bottom: 0.5rem;"><i class="fas fa-magic" style="color: var(--primary);"></i> <span style="color: #cbd5e1;">Glassmorphic Design</span></li>
+            </ul>
+        </div>
+
+        <div>
+            <h6 style="color: var(--primary); font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; font-size: 0.85rem;">Database</h6>
+            <ul class="feature-list" style="border: none;">
+                <li style="border: none; display: block; margin-bottom: 0.5rem;"><i class="fas fa-database" style="color: #336791;"></i> <span style="color: #cbd5e1;">SQLite Local</span></li>
+                <li style="border: none; display: block; margin-bottom: 0.5rem;"><i class="fas fa-file" style="color: var(--primary);"></i> <span style="color: #cbd5e1;">JSON Backups</span></li>
+                <li style="border: none; display: block; margin-bottom: 0.5rem;"><i class="fas fa-sync" style="color: var(--primary);"></i> <span style="color: #cbd5e1;">Transaction Support</span></li>
+                <li style="border: none; display: block; margin-bottom: 0.5rem;"><i class="fas fa-code" style="color: var(--primary);"></i> <span style="color: #cbd5e1;">Data Normalization</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<div class="section-card">
+    <h2 class="section-title"><i class="fas fa-star"></i> Key Features</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+        <div style="background: rgba(16, 185, 129, 0.05); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #10b981;">
+            <h6 style="color: #a7f3d0; font-weight: 700; margin-bottom: 0.75rem;"><i class="fas fa-download"></i> Data Ingestion</h6>
+            <p style="color: #cbd5e1; font-size: 0.9rem; margin: 0;">Fetch health data from multiple free public APIs with automatic retry and error handling</p>
+        </div>
+
+        <div style="background: rgba(99, 102, 241, 0.05); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--primary);">
+            <h6 style="color: var(--primary); font-weight: 700; margin-bottom: 0.75rem;"><i class="fas fa-exchange-alt"></i> Normalization</h6>
+            <p style="color: #cbd5e1; font-size: 0.9rem; margin: 0;">Standardize data from different sources into consistent formats with validation</p>
+        </div>
+
+        <div style="background: rgba(236, 72, 153, 0.05); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #ec4899;">
+            <h6 style="color: #f472b6; font-weight: 700; margin-bottom: 0.75rem;"><i class="fas fa-check-circle"></i> Validation</h6>
+            <p style="color: #cbd5e1; font-size: 0.9rem; margin: 0;">Validate health metrics against medical ranges and business constraints automatically</p>
+        </div>
+
+        <div style="background: rgba(139, 92, 246, 0.05); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #8b5cf6;">
+            <h6 style="color: #d8b4fe; font-weight: 700; margin-bottom: 0.75rem;"><i class="fas fa-brain"></i> Risk Scoring</h6>
+            <p style="color: #cbd5e1; font-size: 0.9rem; margin: 0;">AI-powered health risk assessment with machine learning models and recommendations</p>
+        </div>
+
+        <div style="background: rgba(245, 158, 11, 0.05); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #f59e0b;">
+            <h6 style="color: #fde047; font-weight: 700; margin-bottom: 0.75rem;"><i class="fas fa-api"></i> REST API</h6>
+            <p style="color: #cbd5e1; font-size: 0.9rem; margin: 0;">Complete REST API for data access, ingestion, analytics, and integration</p>
+        </div>
+
+        <div style="background: rgba(59, 130, 246, 0.05); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #3b82f6;">
+            <h6 style="color: #93c5fd; font-weight: 700; margin-bottom: 0.75rem;"><i class="fas fa-chart-bar"></i> Dashboard</h6>
+            <p style="color: #cbd5e1; font-size: 0.9rem; margin: 0;">Professional responsive dashboard with interactive charts and real-time analytics</p>
+        </div>
+    </div>
+</div>
+
+<!-- Data Sources & APIs Section -->
+<div class="section-card">
+    <h2 class="section-title"><i class="fas fa-database"></i> Data Sources & Integration</h2>
+    
+    <p style="color: #cbd5e1; margin-bottom: 2rem; line-height: 1.8;">
+        NeuralBrain-AI integrates with multiple free health data APIs and supports fake data generation for testing and development. All data sources are completely free with no subscription costs or hidden fees.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <!-- Real APIs -->
+        <div style="background: rgba(99, 102, 241, 0.05); padding: 1.5rem; border-radius: 12px; border-top: 4px solid var(--primary);">
+            <h6 style="color: var(--primary); font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; font-size: 0.9rem;">
+                <i class="fas fa-globe"></i> Public Health APIs
+            </h6>
+            <ul style="list-style: none; padding: 0;">
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); color: #cbd5e1; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #10b981; min-width: 16px;"></i>
+                    <span><strong>Disease.sh API</strong> - Global disease tracking</span>
+                </li>
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); color: #cbd5e1; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #10b981; min-width: 16px;"></i>
+                    <span><strong>OpenWeather API</strong> - Environmental health factors</span>
+                </li>
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); color: #cbd5e1; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #10b981; min-width: 16px;"></i>
+                    <span><strong>CDC & WHO Data</strong> - Public health statistics</span>
+                </li>
+                <li style="padding: 0.5rem 0; color: #cbd5e1; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle" style="color: #10b981; min-width: 16px;"></i>
+                    <span><strong>Custom Public APIs</strong> - Healthcare data sources</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Fake Data Generation -->
+        <div style="background: rgba(236, 72, 153, 0.05); padding: 1.5rem; border-radius: 12px; border-top: 4px solid #ec4899;">
+            <h6 style="color: #f472b6; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; font-size: 0.9rem;">
+                <i class="fas fa-dice"></i> Fake Data Generation
+            </h6>
+            <p style="color: #cbd5e1; margin-bottom: 1rem; font-size: 0.9rem;">
+                For development and testing, the platform can generate realistic fake health data:
+            </p>
+            <ul style="list-style: none; padding: 0;">
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); color: #cbd5e1; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-random" style="color: #ec4899; min-width: 16px;"></i>
+                    <span>Random vital signs (HR, BP, Temperature)</span>
+                </li>
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); color: #cbd5e1; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-random" style="color: #ec4899; min-width: 16px;"></i>
+                    <span>Realistic health metrics distribution</span>
+                </li>
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); color: #cbd5e1; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-random" style="color: #ec4899; min-width: 16px;"></i>
+                    <span>Time-series data with variations</span>
+                </li>
+                <li style="padding: 0.5rem 0; color: #cbd5e1; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-random" style="color: #ec4899; min-width: 16px;"></i>
+                    <span>Anomalies & edge cases for testing</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Integration Features -->
+        <div style="background: rgba(139, 92, 246, 0.05); padding: 1.5rem; border-radius: 12px; border-top: 4px solid #8b5cf6;">
+            <h6 style="color: #d8b4fe; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; font-size: 0.9rem;">
+                <i class="fas fa-plug"></i> Integration Features
+            </h6>
+            <ul style="list-style: none; padding: 0;">
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); color: #cbd5e1; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-cog" style="color: #8b5cf6; min-width: 16px;"></i>
+                    <span><strong>Automatic normalization</strong> across all sources</span>
+                </li>
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); color: #cbd5e1; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-cog" style="color: #8b5cf6; min-width: 16px;"></i>
+                    <span><strong>Smart caching</strong> to reduce API calls</span>
+                </li>
+                <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); color: #cbd5e1; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-cog" style="color: #8b5cf6; min-width: 16px;"></i>
+                    <span><strong>Error handling</strong> with fallback mechanisms</span>
+                </li>
+                <li style="padding: 0.5rem 0; color: #cbd5e1; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-cog" style="color: #8b5cf6; min-width: 16px;"></i>
+                    <span><strong>Extensible framework</strong> for custom APIs</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="background: rgba(16, 185, 129, 0.05); padding: 1.5rem; border-radius: 12px; margin-top: 2rem; border-left: 4px solid #10b981;">
+        <p style="color: #cbd5e1; margin: 0;">
+            <i class="fas fa-info-circle" style="color: #10b981; margin-right: 10px;"></i>
+            <strong>Zero-Cost Promise:</strong> All data sources are completely free. No API keys required for public data. Development data can be generated locally without any external dependencies.
+        </p>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); border: 1px solid var(--border-color); border-radius: 16px; padding: 3rem 2rem; text-align: center; margin-top: 3rem; margin-bottom: 2rem;">
+    <h3 style="color: #f1f5f9; font-weight: 700; margin-bottom: 1rem; font-size: 1.5rem;">Ready to Get Started?</h3>
+    <p style="color: #cbd5e1; margin-bottom: 2rem;">Explore the platform, check out the API documentation, or contribute to the project.</p>
+    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+        <a href="{{ url_for('views.index') }}" style="display: inline-block; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 40px rgba(99, 102, 241, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+            <i class="fas fa-dashboard"></i> View Dashboard
+        </a>
+        <a href="https://github.com/Josaphat12-tech/NeuralBrain-AI-Hawei-Developer--Competition" target="_blank" style="display: inline-block; padding: 0.75rem 1.5rem; background: rgba(99, 102, 241, 0.2); color: var(--primary); border: 1px solid var(--primary); border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(99, 102, 241, 0.3)';" onmouseout="this.style.background='rgba(99, 102, 241, 0.2)';">
+            <i class="fas fa-github"></i> View on GitHub
+        </a>
+    </div>
+</div>
+
+{% endblock %}

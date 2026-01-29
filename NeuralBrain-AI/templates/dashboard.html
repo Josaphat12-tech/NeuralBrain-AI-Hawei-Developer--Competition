@@ -1,0 +1,1275 @@
+{% extends "base.html" %}
+
+{% block title %}NeuralBrain-AI - Professional Health Analytics Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<style>
+/* ============================================================================
+   PROFESSIONAL NEURALBRAIN-AI DASHBOARD - REDESIGNED
+   ============================================================================ */
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    --info-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --success-color: #4facfe;
+    --warning-color: #fa709a;
+    --danger-color: #ff6b6b;
+    --info-color: #00f2fe;
+    
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --text-light: #ecf0f1;
+    --bg-light: #f8f9fa;
+    --bg-white: #ffffff;
+    
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.25);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+    scroll-behavior: smooth;
+}
+
+/* ============================================================================
+   HERO SECTION
+   ============================================================================ */
+
+.hero-section {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -5%;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(30px); }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hero-content p {
+    font-size: 1.3rem;
+    opacity: 0.95;
+    margin-bottom: 30px;
+}
+
+.hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.hero-stat {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.hero-stat:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-5px);
+}
+
+.hero-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    display: block;
+}
+
+.hero-stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: 5px;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================================
+   KEY METRICS SECTION
+   ============================================================================ */
+
+.metrics-section {
+    padding: 60px 20px;
+    max-width: 1400px;
+    margin: -60px auto 0;
+    position: relative;
+    z-index: 10;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-title h2 {
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    font-weight: 800;
+}
+
+.section-title .subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 60px;
+}
+
+.metric-card {
+    background: var(--bg-white);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+}
+
+.metric-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.metric-card.success::before {
+    background: var(--success-gradient);
+}
+
+.metric-card.warning::before {
+    background: var(--warning-gradient);
+}
+
+.metric-card.danger::before {
+    background: var(--danger-gradient);
+}
+
+.metric-card.info::before {
+    background: var(--info-gradient);
+}
+
+.metric-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.metric-card.success .metric-icon {
+    background: var(--success-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.metric-card.warning .metric-icon {
+    background: var(--warning-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.metric-card.danger .metric-icon {
+    background: var(--danger-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 15px;
+}
+
+.metric-card.success .metric-value {
+    background: var(--success-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.metric-card.warning .metric-value {
+    background: var(--warning-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.metric-card.danger .metric-value {
+    background: var(--danger-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.metric-description {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ============================================================================
+   CHARTS SECTION
+   ============================================================================ */
+
+.charts-section {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.charts-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.chart-card {
+    background: var(--bg-white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chart-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-5px);
+}
+
+.chart-header {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chart-header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.chart-header-icon {
+    font-size: 1.5rem;
+}
+
+.chart-body {
+    padding: 30px;
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-body canvas {
+    max-height: 300px;
+    width: 100%;
+}
+
+.chart-card.chart-secondary .chart-header {
+    background: var(--secondary-gradient);
+}
+
+.chart-card.chart-success .chart-header {
+    background: var(--success-gradient);
+}
+
+.chart-card.chart-warning .chart-header {
+    background: var(--warning-gradient);
+}
+
+.chart-card.chart-danger .chart-header {
+    background: var(--danger-gradient);
+}
+
+.chart-card.chart-info .chart-header {
+    background: var(--info-gradient);
+}
+
+/* ============================================================================
+   HEALTH METRICS DISPLAY
+   ============================================================================ */
+
+.health-metrics-section {
+    padding: 60px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.health-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.health-metric-item {
+    background: var(--bg-white);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.health-metric-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+}
+
+.health-metric-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+.health-metric-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+/* ============================================================================
+   ACTION SECTION
+   ============================================================================ */
+
+.action-section {
+    padding: 60px 20px;
+    background: var(--primary-gradient);
+    color: white;
+    text-align: center;
+}
+
+.action-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    font-weight: 800;
+}
+
+.action-section p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-action {
+    padding: 15px 40px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary {
+    background: white;
+    color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-secondary:hover {
+    background: white;
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* ============================================================================
+   DATA SOURCES SECTION
+   ============================================================================ */
+
+.sources-section {
+    padding: 60px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.sources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.source-card {
+    background: var(--bg-white);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.source-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-8px);
+}
+
+.source-icon {
+    font-size: 3rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 15px;
+}
+
+.source-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.source-action {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.source-action a {
+    flex: 1;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    background: var(--primary-gradient);
+    color: white;
+}
+
+.source-action a:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .section-title h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 40px 15px;
+    }
+    
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-content p {
+        font-size: 1rem;
+    }
+    
+    .hero-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .hero-stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .metrics-section {
+        padding: 40px 15px -40px;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .section-title h2 {
+        font-size: 1.8rem;
+    }
+    
+    .chart-card {
+        border-radius: 15px;
+    }
+    
+    .chart-body {
+        padding: 20px;
+        min-height: 280px;
+    }
+    
+    .health-metrics-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-action {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section {
+        padding: 30px 10px;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.6rem;
+    }
+    
+    .hero-section::before,
+    .hero-section::after {
+        display: none;
+    }
+    
+    .hero-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .metrics-section {
+        padding: 30px 10px -30px;
+    }
+    
+    .metric-card {
+        padding: 20px;
+    }
+    
+    .metric-value {
+        font-size: 2rem;
+    }
+    
+    .section-title h2 {
+        font-size: 1.5rem;
+    }
+    
+    .section-title .subtitle {
+        font-size: 1rem;
+    }
+    
+    .chart-header {
+        padding: 20px;
+    }
+    
+    .chart-header-title {
+        font-size: 1rem;
+    }
+    
+    .chart-body {
+        padding: 15px;
+        min-height: 250px;
+    }
+    
+    .health-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .health-metric-item {
+        padding: 15px;
+    }
+    
+    .health-metric-value {
+        font-size: 1.4rem;
+    }
+    
+    .health-metric-label {
+        font-size: 0.75rem;
+    }
+    
+    .action-section h2 {
+        font-size: 1.6rem;
+    }
+    
+    .action-section p {
+        font-size: 1rem;
+    }
+    
+    .sources-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .source-card {
+        padding: 20px;
+    }
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ============================================================================
+     HERO SECTION
+     ============================================================================ -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1>🏥 NeuralBrain-AI</h1>
+        <p>Professional AI-Powered Health Analytics & Monitoring Platform</p>
+        
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-value">{{ stats.total_records or 0 }}</span>
+                <span class="hero-stat-label">Total Records</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-value">{{ stats.valid_records or 0 }}</span>
+                <span class="hero-stat-label">Valid Records</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-value">{{ stats.sources|length or 0 }}</span>
+                <span class="hero-stat-label">Data Sources</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-value">{{ stats.invalid_records or 0 }}</span>
+                <span class="hero-stat-label">Invalid Records</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================================
+     KEY METRICS SECTION
+     ============================================================================ -->
+<section class="metrics-section">
+    <div class="section-title">
+        <h2>📊 System Overview</h2>
+        <p class="subtitle">Real-time health monitoring metrics and statistics</p>
+    </div>
+    
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-icon"><i class="fas fa-database"></i></div>
+            <div class="metric-label">Total Records</div>
+            <div class="metric-value">{{ stats.total_records or 0 }}</div>
+            <div class="metric-description">Complete data records collected from all sources</div>
+        </div>
+        
+        <div class="metric-card success">
+            <div class="metric-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="metric-label">Valid Records</div>
+            <div class="metric-value">{{ stats.valid_records or 0 }}</div>
+            <div class="metric-description">Records passing all validation checks</div>
+        </div>
+        
+        <div class="metric-card danger">
+            <div class="metric-icon"><i class="fas fa-exclamation-circle"></i></div>
+            <div class="metric-label">Invalid Records</div>
+            <div class="metric-value">{{ stats.invalid_records or 0 }}</div>
+            <div class="metric-description">Records requiring review or correction</div>
+        </div>
+        
+        <div class="metric-card info">
+            <div class="metric-icon"><i class="fas fa-layer-group"></i></div>
+            <div class="metric-label">Active Sources</div>
+            <div class="metric-value">{{ stats.sources|length or 0 }}</div>
+            <div class="metric-description">Connected health data providers</div>
+        </div>
+    </div>
+    
+    <!-- ============================================================================
+         HEALTH METRICS DISPLAY
+         ============================================================================ -->
+    <div style="margin-top: 60px;">
+        <div class="section-title">
+            <h2>💓 Real-Time Health Metrics</h2>
+            <p class="subtitle">Current average measurements from all records</p>
+        </div>
+        
+        <div class="health-metrics-grid">
+            <div class="health-metric-item">
+                <div class="health-metric-value">--</div>
+                <div class="health-metric-label">Heart Rate (bpm)</div>
+            </div>
+            <div class="health-metric-item">
+                <div class="health-metric-value">--</div>
+                <div class="health-metric-label">Temperature (°C)</div>
+            </div>
+            <div class="health-metric-item">
+                <div class="health-metric-value">--</div>
+                <div class="health-metric-label">Oxygen Sat. (%)</div>
+            </div>
+            <div class="health-metric-item">
+                <div class="health-metric-value">--</div>
+                <div class="health-metric-label">Glucose (mg/dL)</div>
+            </div>
+            <div class="health-metric-item">
+                <div class="health-metric-value">--</div>
+                <div class="health-metric-label">BP Systolic</div>
+            </div>
+            <div class="health-metric-item">
+                <div class="health-metric-value">--</div>
+                <div class="health-metric-label">BP Diastolic</div>
+            </div>
+            <div class="health-metric-item">
+                <div class="health-metric-value">--</div>
+                <div class="health-metric-label">Resp. Rate</div>
+            </div>
+            <div class="health-metric-item">
+                <div class="health-metric-value">--</div>
+                <div class="health-metric-label">BMI</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================================
+     CHARTS SECTION
+     ============================================================================ -->
+<section class="charts-section">
+    <div class="charts-container">
+        <div class="section-title">
+            <h2>📈 Analytics & Visualizations</h2>
+            <p class="subtitle">Comprehensive health data analysis and trends</p>
+        </div>
+        
+        <div class="charts-grid">
+            <!-- Chart 1 -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-header-title">
+                        <span class="chart-header-icon"><i class="fas fa-heartbeat"></i></span>
+                        <span>Heart Rate Analysis</span>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="heartRateChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Chart 2 -->
+            <div class="chart-card chart-secondary">
+                <div class="chart-header">
+                    <div class="chart-header-title">
+                        <span class="chart-header-icon"><i class="fas fa-thermometer-half"></i></span>
+                        <span>Temperature Distribution</span>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Chart 3 -->
+            <div class="chart-card chart-success">
+                <div class="chart-header">
+                    <div class="chart-header-title">
+                        <span class="chart-header-icon"><i class="fas fa-caret-up"></i></span>
+                        <span>Blood Pressure Readings</span>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="bloodPressureChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Chart 4 -->
+            <div class="chart-card chart-warning">
+                <div class="chart-header">
+                    <div class="chart-header-title">
+                        <span class="chart-header-icon"><i class="fas fa-wind"></i></span>
+                        <span>Oxygen Saturation</span>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="oxygenChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Chart 5 -->
+            <div class="chart-card chart-danger">
+                <div class="chart-header">
+                    <div class="chart-header-title">
+                        <span class="chart-header-icon"><i class="fas fa-droplet"></i></span>
+                        <span>Glucose Levels</span>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="glucoseChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Chart 6 -->
+            <div class="chart-card chart-info">
+                <div class="chart-header">
+                    <div class="chart-header-title">
+                        <span class="chart-header-icon"><i class="fas fa-lungs"></i></span>
+                        <span>Respiratory Rate</span>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="respiratoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="charts-grid" style="margin-top: 30px;">
+            <!-- Chart 7 -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-header-title">
+                        <span class="chart-header-icon"><i class="fas fa-layer-group"></i></span>
+                        <span>Data Sources Distribution</span>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="dataSourceChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Chart 8 -->
+            <div class="chart-card chart-secondary">
+                <div class="chart-header">
+                    <div class="chart-header-title">
+                        <span class="chart-header-icon"><i class="fas fa-pie-chart"></i></span>
+                        <span>Record Status Distribution</span>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================================
+     DATA SOURCES SECTION
+     ============================================================================ -->
+{% if stats.sources %}
+<section class="sources-section">
+    <div class="section-title">
+        <h2>🔌 Active Data Sources</h2>
+        <p class="subtitle">Connected health data providers and quick actions</p>
+    </div>
+    
+    <div class="sources-grid">
+        {% for source in stats.sources %}
+        <div class="source-card">
+            <div class="source-icon"><i class="fas fa-server"></i></div>
+            <div class="source-name">{{ source }}</div>
+            <div class="source-action">
+                <a href="{{ url_for('views.data_explorer', source=source) }}" title="Explore data from {{ source }}">
+                    <i class="fas fa-eye"></i> View
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- ============================================================================
+     ACTION SECTION
+     ============================================================================ -->
+<section class="action-section">
+    <h2>🚀 Get Started with Data Ingestion</h2>
+    <p>Fetch the latest health data from all connected sources with a single click</p>
+    
+    <div class="action-buttons">
+        <form method="POST" action="{{ url_for('views.trigger_ingest') }}" style="display: inline;">
+            <button type="submit" class="btn-action btn-primary">
+                <i class="fas fa-sync-alt"></i> Ingest Data Now
+            </button>
+        </form>
+        <a href="{{ url_for('views.health_risk') }}" class="btn-action btn-secondary">
+            <i class="fas fa-shield-alt"></i> AI Risk Assessment
+        </a>
+        <a href="{{ url_for('views.data_explorer') }}" class="btn-action btn-secondary">
+            <i class="fas fa-table"></i> View All Data
+        </a>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script>
+const metrics = {{ metrics_json|safe }};
+
+const colors = {
+    primary: '#667eea',
+    secondary: '#764ba2',
+    success: '#4facfe',
+    warning: '#fa709a',
+    danger: '#ff6b6b',
+    info: '#00f2fe',
+    light: '#ecf0f1'
+};
+
+Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+Chart.defaults.plugins.legend.labels.padding = 15;
+Chart.defaults.plugins.legend.labels.font.size = 12;
+Chart.defaults.plugins.legend.labels.font.weight = '600';
+
+// Heart Rate Chart
+if (metrics['heart_rate']) {
+    const hr = metrics['heart_rate'];
+    new Chart(document.getElementById('heartRateChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Min', 'Average', 'Max'],
+            datasets: [{
+                label: 'Heart Rate (bpm)',
+                data: [hr.min, hr.average, hr.max],
+                backgroundColor: [colors.info, colors.primary, colors.danger],
+                borderRadius: 8,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { beginAtZero: true, max: 120 } }
+        }
+    });
+}
+
+// Temperature Chart
+if (metrics['temperature']) {
+    const temp = metrics['temperature'];
+    new Chart(document.getElementById('temperatureChart'), {
+        type: 'line',
+        data: {
+            labels: ['Min', 'Average', 'Max'],
+            datasets: [{
+                label: 'Temperature (°C)',
+                data: [temp.min, temp.average, temp.max],
+                borderColor: colors.warning,
+                backgroundColor: 'rgba(250, 112, 154, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointBackgroundColor: colors.warning,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { min: 36, max: 39 } }
+        }
+    });
+}
+
+// Blood Pressure Chart
+if (metrics['blood_pressure_sys'] && metrics['blood_pressure_dia']) {
+    const sys = metrics['blood_pressure_sys'];
+    const dia = metrics['blood_pressure_dia'];
+    new Chart(document.getElementById('bloodPressureChart'), {
+        type: 'radar',
+        data: {
+            labels: ['Min', 'Average', 'Max'],
+            datasets: [
+                {
+                    label: 'Systolic (mmHg)',
+                    data: [sys.min, sys.average, sys.max],
+                    borderColor: colors.danger,
+                    backgroundColor: 'rgba(255, 107, 107, 0.1)'
+                },
+                {
+                    label: 'Diastolic (mmHg)',
+                    data: [dia.min, dia.average, dia.max],
+                    borderColor: colors.info,
+                    backgroundColor: 'rgba(0, 242, 254, 0.1)'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } },
+            scales: { r: { max: 160 } }
+        }
+    });
+}
+
+// Oxygen Chart
+if (metrics['oxygen_saturation']) {
+    const o2 = metrics['oxygen_saturation'];
+    new Chart(document.getElementById('oxygenChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Oxygen Level', 'Remaining'],
+            datasets: [{
+                data: [o2.average, 100 - o2.average],
+                backgroundColor: [colors.success, 'rgba(0,0,0,0.1)'],
+                borderColor: '#fff',
+                borderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+}
+
+// Glucose Chart
+if (metrics['glucose_level']) {
+    const glucose = metrics['glucose_level'];
+    new Chart(document.getElementById('glucoseChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Min', 'Average', 'Max'],
+            datasets: [{
+                label: 'Glucose (mg/dL)',
+                data: [glucose.min, glucose.average, glucose.max],
+                backgroundColor: [colors.success, colors.warning, colors.danger],
+                borderRadius: 8,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { beginAtZero: true, max: 150 } }
+        }
+    });
+}
+
+// Respiratory Chart
+if (metrics['respiratory_rate']) {
+    const resp = metrics['respiratory_rate'];
+    new Chart(document.getElementById('respiratoryChart'), {
+        type: 'line',
+        data: {
+            labels: ['Min', 'Average', 'Max'],
+            datasets: [{
+                label: 'Respiratory Rate (breaths/min)',
+                data: [resp.min, resp.average, resp.max],
+                borderColor: colors.info,
+                backgroundColor: 'rgba(0, 242, 254, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointBackgroundColor: colors.info,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { max: 30 } }
+        }
+    });
+}
+
+// Load data sources and status charts
+fetch('/api/analytics')
+    .then(r => r.json())
+    .then(data => {
+        if (data.statistics && data.statistics.sources) {
+            const sources = data.statistics.sources;
+            const labels = Object.keys(sources);
+            const dataValues = Object.values(sources);
+            const chartColors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
+            
+            new Chart(document.getElementById('dataSourceChart'), {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataValues,
+                        backgroundColor: chartColors.slice(0, labels.length),
+                        borderColor: '#fff',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+        
+        if (data.statistics) {
+            new Chart(document.getElementById('statusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Valid Records', 'Invalid Records'],
+                    datasets: [{
+                        data: [data.statistics.valid_records, data.statistics.invalid_records],
+                        backgroundColor: [colors.success, colors.danger],
+                        borderColor: '#fff',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

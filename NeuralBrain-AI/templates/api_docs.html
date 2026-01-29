@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+
+{% block title %}API Documentation - NeuralBrain-AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .api-hero {
+        padding: 3rem 2rem;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+        border-radius: 20px;
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        margin-bottom: 3rem;
+        margin-top: 2rem;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .api-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #6366f1, #ec4899, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .api-subtitle {
+        font-size: 1rem;
+        color: #cbd5e1;
+    }
+
+    .api-section {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        backdrop-filter: blur(10px);
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .api-section-title {
+        font-size: 1.5rem;
+        color: #f1f5f9;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    .api-section-title i {
+        color: var(--primary);
+        font-size: 1.8rem;
+    }
+
+    .endpoint {
+        background: rgba(99, 102, 241, 0.05);
+        border-left: 4px solid var(--primary);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .endpoint:hover {
+        background: rgba(99, 102, 241, 0.1);
+        transform: translateX(5px);
+    }
+
+    .endpoint-method {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .method-get {
+        background: rgba(16, 185, 129, 0.2);
+        color: #a7f3d0;
+    }
+
+    .method-post {
+        background: rgba(59, 130, 246, 0.2);
+        color: #bfdbfe;
+    }
+
+    .method-put {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fde047;
+    }
+
+    .endpoint-path {
+        font-family: 'Courier New', monospace;
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .endpoint-desc {
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+    }
+
+    .param-list {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 0.75rem;
+    }
+
+    .param-item {
+        color: #cbd5e1;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        font-family: 'Courier New', monospace;
+    }
+
+    .param-item strong {
+        color: var(--primary);
+    }
+
+    .response-example {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        color: #a7f3d0;
+        overflow-x: auto;
+        line-height: 1.5;
+    }
+
+    .code-block {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--border-color);
+        padding: 1.5rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 1rem 0;
+    }
+
+    .code-block code {
+        font-family: 'Courier New', monospace;
+        color: #a7f3d0;
+        font-size: 0.85rem;
+        line-height: 1.6;
+    }
+
+    .btn-api {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+        font-weight: 600;
+    }
+
+    .btn-api:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(99, 102, 241, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .api-title {
+            font-size: 1.8rem;
+        }
+
+        .endpoint {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="api-hero">
+    <h1 class="api-title"><i class="fas fa-code"></i> API Documentation</h1>
+    <p class="api-subtitle">Comprehensive REST API reference for NeuralBrain-AI health analytics platform</p>
+</div>
+
+<!-- Base URL Section -->
+<div class="api-section">
+    <h2 class="api-section-title"><i class="fas fa-globe"></i> Base URL</h2>
+    <p style="color: #cbd5e1;">All API endpoints are relative to:</p>
+    <div class="code-block">
+        <code>https://neuralbrain-ai.herokuapp.com/api</code>
+    </div>
+    <p style="color: #cbd5e1; margin-top: 1rem; font-size: 0.9rem;">
+        For local development: <code style="background: rgba(0,0,0,0.3); padding: 0.2rem 0.5rem; border-radius: 4px;">http://localhost:5000/api</code>
+    </p>
+</div>
+
+<!-- Endpoints Section -->
+<div class="api-section">
+    <h2 class="api-section-title"><i class="fas fa-plug"></i> Core Endpoints</h2>
+
+    <!-- Status Endpoint -->
+    <div class="endpoint">
+        <span class="endpoint-method method-get">GET</span>
+        <div class="endpoint-path">/api/status</div>
+        <div class="endpoint-desc">Get system status and available endpoints</div>
+        <div class="param-list">
+            <div style="color: #f1f5f9; font-weight: 600; margin-bottom: 0.5rem;">Returns:</div>
+            <div class="param-item">✓ API status (operational/maintenance)</div>
+            <div class="param-item">✓ System uptime and version</div>
+            <div class="param-item">✓ Available endpoints summary</div>
+        </div>
+        <div class="response-example">
+{<br>
+&nbsp;&nbsp;"status": "operational",<br>
+&nbsp;&nbsp;"app_name": "NeuralBrain-AI",<br>
+&nbsp;&nbsp;"version": "1.0.0",<br>
+&nbsp;&nbsp;"timestamp": "2026-01-29T12:00:00Z"<br>
+}
+        </div>
+    </div>
+
+    <!-- Health Check Endpoint -->
+    <div class="endpoint">
+        <span class="endpoint-method method-get">GET</span>
+        <div class="endpoint-path">/api/health</div>
+        <div class="endpoint-desc">Simple health check endpoint for monitoring</div>
+        <div class="response-example">
+{<br>
+&nbsp;&nbsp;"status": "healthy",<br>
+&nbsp;&nbsp;"timestamp": "2026-01-29T12:00:00Z"<br>
+}
+        </div>
+    </div>
+
+    <!-- Data Ingestion Endpoint -->
+    <div class="endpoint">
+        <span class="endpoint-method method-post">POST</span>
+        <div class="endpoint-path">/api/ingest</div>
+        <div class="endpoint-desc">Trigger data ingestion from all configured health APIs</div>
+        <div class="response-example">
+{<br>
+&nbsp;&nbsp;"status": "success",<br>
+&nbsp;&nbsp;"message": "Ingestion complete: 2 source(s) succeeded",<br>
+&nbsp;&nbsp;"total_apis": 2,<br>
+&nbsp;&nbsp;"successful": 2,<br>
+&nbsp;&nbsp;"failed": 0,<br>
+&nbsp;&nbsp;"execution_time_seconds": 2.34<br>
+}
+        </div>
+    </div>
+
+    <!-- Get Health Data Endpoint -->
+    <div class="endpoint">
+        <span class="endpoint-method method-get">GET</span>
+        <div class="endpoint-path">/api/data</div>
+        <div class="endpoint-desc">Retrieve normalized health data with optional filtering and pagination</div>
+        <div class="param-list">
+            <div style="color: #f1f5f9; font-weight: 600; margin-bottom: 0.5rem;">Query Parameters:</div>
+            <div class="param-item"><strong>source</strong> (string): Filter by data source</div>
+            <div class="param-item"><strong>status</strong> (string): Filter by status (valid/invalid/pending)</div>
+            <div class="param-item"><strong>limit</strong> (int): Max records to return (default: 100)</div>
+            <div class="param-item"><strong>offset</strong> (int): Starting position (default: 0)</div>
+        </div>
+        <div class="response-example">
+{<br>
+&nbsp;&nbsp;"status": "success",<br>
+&nbsp;&nbsp;"total": 155,<br>
+&nbsp;&nbsp;"returned": 50,<br>
+&nbsp;&nbsp;"data": [...]<br>
+}
+        </div>
+    </div>
+
+    <!-- Get Single Record Endpoint -->
+    <div class="endpoint">
+        <span class="endpoint-method method-get">GET</span>
+        <div class="endpoint-path">/api/data/&lt;id&gt;</div>
+        <div class="endpoint-desc">Retrieve a specific health data record by ID</div>
+    </div>
+
+    <!-- Ingestion Logs Endpoint -->
+    <div class="endpoint">
+        <span class="endpoint-method method-get">GET</span>
+        <div class="endpoint-path">/api/logs</div>
+        <div class="endpoint-desc">Get ingestion operation logs and audit trail</div>
+        <div class="param-list">
+            <div style="color: #f1f5f9; font-weight: 600; margin-bottom: 0.5rem;">Query Parameters:</div>
+            <div class="param-item"><strong>source</strong> (string): Filter by API source</div>
+            <div class="param-item"><strong>status</strong> (string): Filter by log status</div>
+            <div class="param-item"><strong>limit</strong> (int): Max logs (default: 50)</div>
+        </div>
+    </div>
+
+    <!-- Data Validation Endpoint -->
+    <div class="endpoint">
+        <span class="endpoint-method method-post">POST</span>
+        <div class="endpoint-path">/api/validate</div>
+        <div class="endpoint-desc">Validate health data against defined rules and constraints</div>
+        <div class="response-example">
+{<br>
+&nbsp;&nbsp;"valid": true,<br>
+&nbsp;&nbsp;"errors": [],<br>
+&nbsp;&nbsp;"warnings": []<br>
+}
+        </div>
+    </div>
+</div>
+
+<!-- Status Codes Section -->
+<div class="api-section">
+    <h2 class="api-section-title"><i class="fas fa-check-circle"></i> HTTP Status Codes</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+        <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #10b981;">
+            <div style="color: #a7f3d0; font-weight: 700; margin-bottom: 0.25rem;">200 OK</div>
+            <div style="color: #cbd5e1; font-size: 0.9rem;">Request successful</div>
+        </div>
+        <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #10b981;">
+            <div style="color: #a7f3d0; font-weight: 700; margin-bottom: 0.25rem;">201 Created</div>
+            <div style="color: #cbd5e1; font-size: 0.9rem;">Resource created successfully</div>
+        </div>
+        <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ef4444;">
+            <div style="color: #fecaca; font-weight: 700; margin-bottom: 0.25rem;">400 Bad Request</div>
+            <div style="color: #cbd5e1; font-size: 0.9rem;">Invalid parameters or request body</div>
+        </div>
+        <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ef4444;">
+            <div style="color: #fecaca; font-weight: 700; margin-bottom: 0.25rem;">401 Unauthorized</div>
+            <div style="color: #cbd5e1; font-size: 0.9rem;">Missing authentication or invalid token</div>
+        </div>
+        <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ef4444;">
+            <div style="color: #fecaca; font-weight: 700; margin-bottom: 0.25rem;">404 Not Found</div>
+            <div style="color: #cbd5e1; font-size: 0.9rem;">Resource does not exist</div>
+        </div>
+        <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ef4444;">
+            <div style="color: #fecaca; font-weight: 700; margin-bottom: 0.25rem;">500 Error</div>
+            <div style="color: #cbd5e1; font-size: 0.9rem;">Internal server error</div>
+        </div>
+    </div>
+</div>
+
+<!-- Getting Started Section -->
+<div class="api-section">
+    <h2 class="api-section-title"><i class="fas fa-rocket"></i> Getting Started</h2>
+    <p style="color: #cbd5e1; margin-bottom: 1.5rem;">Here's a quick example to get started with the API:</p>
+    
+    <div class="code-block">
+        <code>
+# Python Example<br>
+import requests<br>
+<br>
+response = requests.get('http://localhost:5000/api/health')<br>
+data = response.json()<br>
+print(data)
+        </code>
+    </div>
+
+    <a href="https://github.com/Josaphat12-tech/NeuralBrain-AI-Hawei-Developer--Competition" target="_blank" class="btn-api">
+        <i class="fas fa-github"></i> View on GitHub
+    </a>
+</div>
+
+<!-- Support Section -->
+<div class="api-section" style="text-align: center;">
+    <h2 class="api-section-title" style="justify-content: center;"><i class="fas fa-headset"></i> Support & Contact</h2>
+    <p style="color: #cbd5e1; margin-bottom: 1.5rem;">Questions about our API? Get help from the team!</p>
+    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+        <a href="mailto:bitingojosaphat@gmail.com" style="display: inline-block; padding: 0.75rem 1.5rem; background: rgba(99, 102, 241, 0.2); color: var(--primary); border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(99, 102, 241, 0.3)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='rgba(99, 102, 241, 0.2)'; this.style.transform='translateY(0)';">
+            <i class="fas fa-envelope"></i> Email Support
+        </a>
+        <a href="https://github.com/Josaphat12-tech/NeuralBrain-AI-Hawei-Developer--Competition/issues" target="_blank" style="display: inline-block; padding: 0.75rem 1.5rem; background: rgba(99, 102, 241, 0.2); color: var(--primary); border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(99, 102, 241, 0.3)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='rgba(99, 102, 241, 0.2)'; this.style.transform='translateY(0)';">
+            <i class="fas fa-github"></i> GitHub Issues
+        </a>
+    </div>
+</div>
+
+{% endblock %}

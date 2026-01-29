@@ -1,0 +1,147 @@
+{
+  "timestamp": "2026-01-29T13:35:57.699790",
+  "sources": {
+    "heart_rate": {
+      "data": {
+        "status": "OK",
+        "code": 200,
+        "locale": "en_US",
+        "seed": null,
+        "total": 10,
+        "data": [
+          {
+            "id": 1,
+            "uuid": "9ab91d9c-0db2-3daa-ac58-5c862400d707",
+            "firstname": "Gideon",
+            "lastname": "Abbott",
+            "username": "lemke.daniella",
+            "password": "VJL$Keud~",
+            "email": "nframi@hotmail.com",
+            "ip": "232.63.158.215",
+            "macAddress": "F6:53:21:AF:A5:43",
+            "website": "http://cassin.biz",
+            "image": "http://placeimg.com/640/480/people"
+          },
+          {
+            "id": 2,
+            "uuid": "cab8ceaf-0056-3ce3-a08c-b4b7975eb383",
+            "firstname": "Keagan",
+            "lastname": "Dietrich",
+            "username": "ruecker.glenna",
+            "password": "}Hax;bVPe7vTi",
+            "email": "jakayla.bode@hotmail.com",
+            "ip": "115.113.15.160",
+            "macAddress": "3C:D1:64:48:E3:06",
+            "website": "http://hessel.biz",
+            "image": "http://placeimg.com/640/480/people"
+          },
+          {
+            "id": 3,
+            "uuid": "19df90ad-4fa0-3325-905a-905edcd008aa",
+            "firstname": "Kolby",
+            "lastname": "Kilback",
+            "username": "drodriguez",
+            "password": "qe-xD2.[*",
+            "email": "wilburn68@fadel.net",
+            "ip": "58.238.102.166",
+            "macAddress": "32:88:1E:32:22:F9",
+            "website": "http://hayes.com",
+            "image": "http://placeimg.com/640/480/people"
+          },
+          {
+            "id": 4,
+            "uuid": "741232ed-e67c-35e4-a3b4-e393421ec17c",
+            "firstname": "Mabel",
+            "lastname": "Hauck",
+            "username": "amanda.considine",
+            "password": "k1xtbKxCzbD",
+            "email": "arthur.stanton@yahoo.com",
+            "ip": "15.66.125.75",
+            "macAddress": "0D:EC:78:1B:1D:EA",
+            "website": "http://mohr.com",
+            "image": "http://placeimg.com/640/480/people"
+          },
+          {
+            "id": 5,
+            "uuid": "c4b7cb5a-e946-3605-8a86-9e92df03ac8b",
+            "firstname": "Oda",
+            "lastname": "Nader",
+            "username": "langosh.jon",
+            "password": "`4RX**<y8P,XLi\\I}ue",
+            "email": "rodriguez.sylvia@shanahan.com",
+            "ip": "68.144.8.104",
+            "macAddress": "F5:F9:C7:80:DD:FA",
+            "website": "http://jast.com",
+            "image": "http://placeimg.com/640/480/people"
+          },
+          {
+            "id": 6,
+            "uuid": "c2538f38-f1b7-30a1-881e-41883db05612",
+            "firstname": "Kaitlin",
+            "lastname": "Funk",
+            "username": "brad.runolfsson",
+            "password": ">6!hf7eXp6a07",
+            "email": "yhoppe@armstrong.com",
+            "ip": "252.109.48.178",
+            "macAddress": "23:1C:43:90:E4:80",
+            "website": "http://connelly.org",
+            "image": "http://placeimg.com/640/480/people"
+          },
+          {
+            "id": 7,
+            "uuid": "41376d19-353e-3949-b001-d29ed855b58f",
+            "firstname": "Kennedy",
+            "lastname": "Douglas",
+            "username": "thermann",
+            "password": "YwMKIf&brVq5!<5k-C",
+            "email": "harvey.nathaniel@mcglynn.com",
+            "ip": "208.235.231.125",
+            "macAddress": "3D:2A:DA:3F:EA:E7",
+            "website": "http://jast.net",
+            "image": "http://placeimg.com/640/480/people"
+          },
+          {
+            "id": 8,
+            "uuid": "43a1b8cd-6e63-3c94-b726-c31566f05ebf",
+            "firstname": "Nick",
+            "lastname": "Kulas",
+            "username": "mark23",
+            "password": "Jx};`QS-d#!x5_[77",
+            "email": "gunner.kohler@gmail.com",
+            "ip": "38.5.32.105",
+            "macAddress": "21:47:03:FE:86:25",
+            "website": "http://paucek.net",
+            "image": "http://placeimg.com/640/480/people"
+          },
+          {
+            "id": 9,
+            "uuid": "9ebefcd4-efe0-3487-9d41-82903e6c46ce",
+            "firstname": "Brendon",
+            "lastname": "Hamill",
+            "username": "gene50",
+            "password": "[)U^7>\"N|#a$eiG",
+            "email": "rosalee16@vandervort.com",
+            "ip": "223.143.148.27",
+            "macAddress": "E9:DF:9E:77:1C:E9",
+            "website": "http://harris.info",
+            "image": "http://placeimg.com/640/480/people"
+          },
+          {
+            "id": 10,
+            "uuid": "50233029-31ac-33ad-a7de-0a7d4f9cf6dd",
+            "firstname": "Luisa",
+            "lastname": "Krajcik",
+            "username": "odach",
+            "password": "?iBs_Lpy/t?\"V1;3{l4",
+            "email": "anne94@weissnat.com",
+            "ip": "192.191.6.155",
+            "macAddress": "F8:62:D5:3D:5B:78",
+            "website": "http://predovic.com",
+            "image": "http://placeimg.com/640/480/people"
+          }
+        ]
+      },
+      "fetched_at": "2026-01-29T13:36:19.597623"
+    }
+  }
+}

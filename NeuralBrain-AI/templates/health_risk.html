@@ -1,0 +1,591 @@
+{% extends "base.html" %}
+
+{% block title %}Health Risk Assessment - NeuralBrain-AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css">
+<style>
+    :root {
+        --primary: #667eea;
+        --secondary: #764ba2;
+        --success: #198754;
+        --danger: #dc3545;
+        --warning: #ffc107;
+        --info: #0dcaf0;
+    }
+    
+    .risk-wrapper {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        min-height: 100vh;
+        padding: 40px 0;
+    }
+    
+    .risk-header {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        margin-bottom: 40px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    
+    .risk-header h1 {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin: 0 0 10px 0;
+    }
+    
+    .risk-level {
+        display: inline-block;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin: 15px 0;
+    }
+    
+    .risk-level.low {
+        background: #d4edda;
+        color: #155724;
+        border: 2px solid #155724;
+    }
+    
+    .risk-level.medium {
+        background: #fff3cd;
+        color: #856404;
+        border: 2px solid #856404;
+    }
+    
+    .risk-level.high {
+        background: #f8d7da;
+        color: #721c24;
+        border: 2px solid #721c24;
+    }
+    
+    .risk-gauge {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .gauge-container {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
+        position: relative;
+    }
+    
+    .gauge-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 10;
+    }
+    
+    .gauge-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+    
+    .gauge-label {
+        font-size: 0.9rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .risk-factor-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-left: 5px solid;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+    
+    .risk-factor-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    }
+    
+    .risk-factor-card.danger {
+        border-left-color: var(--danger);
+        background: linear-gradient(90deg, rgba(220,53,69,0.05) 0%, white 100%);
+    }
+    
+    .risk-factor-card.warning {
+        border-left-color: var(--warning);
+        background: linear-gradient(90deg, rgba(255,193,7,0.05) 0%, white 100%);
+    }
+    
+    .risk-factor-card.info {
+        border-left-color: var(--info);
+        background: linear-gradient(90deg, rgba(13,202,240,0.05) 0%, white 100%);
+    }
+    
+    .factor-metric {
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 5px;
+    }
+    
+    .factor-value {
+        font-size: 1.3rem;
+        color: #333;
+        font-weight: 600;
+    }
+    
+    .recommendation-box {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border-left: 5px solid var(--info);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    
+    .recommendation-list {
+        list-style: none;
+        padding: 0;
+        margin: 15px 0 0 0;
+    }
+    
+    .recommendation-list li {
+        padding: 12px 0;
+        border-bottom: 1px solid #e9ecef;
+        color: #555;
+        font-size: 1rem;
+    }
+    
+    .recommendation-list li:last-child {
+        border-bottom: none;
+    }
+    
+    .section-title {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin: 40px 0 25px 0;
+        padding-left: 20px;
+        border-left: 4px solid white;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .trend-chart-container {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .model-info {
+        background: rgba(255,255,255,0.95);
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .model-info h5 {
+        color: var(--primary);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--primary);
+    }
+    
+    .badge-algorithm {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin: 5px 5px 5px 0;
+    }
+    
+    .confidence-bar {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+    }
+    
+    .confidence-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #666;
+        width: 150px;
+    }
+    
+    .progress-bar {
+        flex: 1;
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        margin: 0 15px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+    
+    .confidence-value {
+        font-weight: 700;
+        color: var(--primary);
+        width: 60px;
+        text-align: right;
+    }
+    
+    .alert-banner {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border-left: 5px solid;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    
+    .alert-banner.info {
+        border-left-color: var(--info);
+    }
+    
+    .alert-banner.success {
+        border-left-color: var(--success);
+    }
+    
+    .alert-banner.danger {
+        border-left-color: var(--danger);
+    }
+    
+    @media (max-width: 768px) {
+        .risk-header h1 {
+            font-size: 1.8rem;
+        }
+        
+        .gauge-container {
+            width: 150px;
+            height: 150px;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="risk-wrapper">
+    <div class="container-fluid px-4">
+        <!-- Header -->
+        <div class="risk-header">
+            <h1><i class="fas fa-shield-alt"></i> Health Risk Assessment</h1>
+            <p class="text-muted">AI-Powered Health Risk Scoring with Explainable Insights</p>
+        </div>
+
+        <!-- Current Risk Assessment -->
+        <div class="section-title">
+            <i class="fas fa-heartbeat"></i> Current Risk Status
+        </div>
+
+        <div class="row mb-4">
+            <!-- Risk Gauge -->
+            <div class="col-lg-4">
+                <div class="risk-gauge">
+                    <div class="gauge-container">
+                        <canvas id="riskGauge"></canvas>
+                        <div class="gauge-text">
+                            <div class="gauge-value" id="riskPercentage">
+                                {{ stats.latest_risk.risk_percentage|int }}%
+                            </div>
+                            <div class="gauge-label">Risk Score</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Level Badge -->
+            <div class="col-lg-8">
+                <div class="risk-gauge">
+                    <h5 class="mb-3">Risk Classification</h5>
+                    <div class="mb-3">
+                        <span class="risk-level {{ stats.latest_risk.overall_risk|lower }}">
+                            <i class="fas fa-{{ 'check-circle' if stats.latest_risk.overall_risk == 'Low' else 'exclamation-triangle' if stats.latest_risk.overall_risk == 'Medium' else 'times-circle' }}"></i>
+                            {{ stats.latest_risk.overall_risk }} Risk
+                        </span>
+                    </div>
+
+                    <div class="confidence-bar">
+                        <div class="confidence-label">Model Confidence:</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ stats.latest_risk.confidence * 100 }}%"></div>
+                        </div>
+                        <div class="confidence-value">{{ (stats.latest_risk.confidence * 100)|int }}%</div>
+                    </div>
+
+                    {% if stats.latest_risk.overall_risk == 'Low' %}
+                        <div class="alert alert-success mt-3" role="alert">
+                            <i class="fas fa-check-circle"></i> Your health metrics are within normal ranges. Continue monitoring regularly.
+                        </div>
+                    {% elif stats.latest_risk.overall_risk == 'Medium' %}
+                        <div class="alert alert-warning mt-3" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i> Some metrics show elevated levels. Consider lifestyle adjustments and monitoring.
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger mt-3" role="alert">
+                            <i class="fas fa-exclamation-circle"></i> Several metrics are concerning. Please consult with a healthcare professional.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Factors -->
+        {% if stats.latest_risk.risk_factors %}
+        <div class="section-title">
+            <i class="fas fa-flag"></i> Contributing Risk Factors
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                {% for factor in stats.latest_risk.risk_factors %}
+                <div class="risk-factor-card {{ factor.risk_level|lower }}">
+                    <div class="factor-metric">
+                        <i class="fas fa-circle-exclamation"></i>
+                        {{ factor.metric|replace('_', ' ')|title }}
+                    </div>
+                    <div class="factor-value">
+                        {{ factor.value|round(1) }}
+                        {% if factor.metric == 'heart_rate' %}bpm{% endif %}
+                        {% if factor.metric == 'temperature' %}°C{% endif %}
+                        {% if factor.metric == 'oxygen_saturation' or factor.metric == 'glucose_level' %}{% if factor.metric == 'oxygen_saturation' %}%{% else %}mg/dL{% endif %}{% endif %}
+                    </div>
+                    <small class="text-muted">
+                        <i class="fas fa-warning"></i> Risk Level: <strong>{{ factor.risk_level|upper }}</strong>
+                    </small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle"></i> No significant risk factors detected in current metrics.
+        </div>
+        {% endif %}
+
+        <!-- Recommendations -->
+        {% if stats.latest_risk.recommendations %}
+        <div class="section-title">
+            <i class="fas fa-lightbulb"></i> Personalized Recommendations
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="recommendation-box">
+                    <h5><i class="fas fa-star"></i> Health Suggestions</h5>
+                    <ul class="recommendation-list">
+                        {% for rec in stats.latest_risk.recommendations %}
+                        <li>{{ rec }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Risk Trend Over Time -->
+        {% if stats.risk_history %}
+        <div class="section-title">
+            <i class="fas fa-chart-line"></i> Risk Trend Analysis
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="trend-chart-container">
+                    <canvas id="riskTrendChart" style="max-height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- AI Model Information -->
+        <div class="section-title">
+            <i class="fas fa-robot"></i> AI Model Information
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-lg-6">
+                <div class="model-info">
+                    <h5><i class="fas fa-cogs"></i> Algorithms Used</h5>
+                    <div class="mb-3">
+                        <span class="badge-algorithm">Rule-Based Assessment</span>
+                        <span class="badge-algorithm">Trend Detection</span>
+                        <span class="badge-algorithm">Isolation Forest</span>
+                        <span class="badge-algorithm">Volatility Analysis</span>
+                    </div>
+                    <small class="text-muted d-block mt-3">
+                        <strong>Approach:</strong> Hybrid Rule-Based + Machine Learning
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="model-info">
+                    <h5><i class="fas fa-info-circle"></i> Model Status</h5>
+                    <div class="mb-3">
+                        {% if stats.ml_trained %}
+                        <span class="badge bg-success"><i class="fas fa-check"></i> ML Model Trained</span>
+                        {% else %}
+                        <span class="badge bg-warning"><i class="fas fa-hourglass-half"></i> Training ({{ stats.total_records }} records)</span>
+                        {% endif %}
+                    </div>
+                    <small class="text-muted d-block">
+                        <strong>Privacy:</strong> 100% Local Processing - No Data Sent to External Services
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="model-info">
+                    <h5><i class="fas fa-book"></i> How Risk Scoring Works</h5>
+                    <p class="text-muted mb-3">
+                        Our AI risk scoring system combines multiple analytical approaches to provide explainable health risk assessments:
+                    </p>
+                    <ul class="text-muted">
+                        <li><strong>Rule-Based Assessment (40%):</strong> Compares metrics against clinical reference ranges</li>
+                        <li><strong>Trend Detection (30%):</strong> Analyzes upward/downward trends in health metrics</li>
+                        <li><strong>Anomaly Detection (20%):</strong> Uses Isolation Forest to detect unusual patterns</li>
+                        <li><strong>Volatility Analysis (10%):</strong> Measures variability in measurements</li>
+                    </ul>
+                    <p class="text-muted mt-3 mb-0">
+                        <i class="fas fa-shield-alt"></i> <strong>Explainability:</strong> Every risk factor is explained with specific metrics and thresholds. No black-box predictions.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Dashboard -->
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <a href="{{ url_for('views.index') }}" class="btn btn-lg" style="background: white; color: var(--primary); font-weight: 600; padding: 12px 40px;">
+                    <i class="fas fa-home"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script>
+// Risk Data
+const riskData = {{ stats.latest_risk|tojson }};
+const riskHistory = {{ stats.risk_history|tojson }};
+
+// Colors
+const colors = {
+    primary: '#667eea',
+    secondary: '#764ba2',
+    success: '#198754',
+    danger: '#dc3545',
+    warning: '#ffc107',
+    info: '#0dcaf0'
+};
+
+// Risk Gauge Chart
+const ctx = document.getElementById('riskGauge');
+if (ctx) {
+    const riskPercentage = riskData.risk_percentage;
+    const riskColor = riskPercentage < 30 ? colors.success : riskPercentage < 60 ? colors.warning : colors.danger;
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [riskPercentage, 100 - riskPercentage],
+                backgroundColor: [riskColor, 'rgba(0,0,0,0.1)'],
+                borderColor: ['#fff', '#fff'],
+                borderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            }
+        }
+    });
+}
+
+// Risk Trend Chart
+if (riskHistory && riskHistory.length > 0) {
+    const trendCtx = document.getElementById('riskTrendChart');
+    if (trendCtx) {
+        const labels = riskHistory.map(r => new Date(r.timestamp).toLocaleDateString());
+        const scores = riskHistory.map(r => r.risk_score);
+        
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Risk Score Over Time',
+                    data: scores,
+                    borderColor: colors.primary,
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: colors.primary,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+</script>
+{% endblock %}

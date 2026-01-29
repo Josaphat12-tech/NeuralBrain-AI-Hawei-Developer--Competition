@@ -1,0 +1,81 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+ENV/
+env/
+.venv
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary Documentation (Root Level)
+# Keep only: README.md, LICENSE
+BEAUTIFUL_REDESIGN_GUIDE.md
+CHARTS_REFERENCE.md
+COMPLETE_SUMMARY.md
+FEATURES_CHECKLIST.md
+IMPLEMENTATION_COMPLETE.md
+IMPLEMENTATION_GUIDE.md
+IMPLEMENTATION_INDEX.md
+PROJECT_COMPLETION_REPORT.txt
+QUICKSTART_VISUALIZATION.md
+REDESIGN_COMPLETE.md
+VERIFICATION_REPORT.py
+VISUALIZATION_IMPLEMENTATION.md
+VISUALIZATION_SUMMARY.txt
+VISUAL_DESIGN_PREVIEW.md
+
+# GitHub Push Setup Guides (Consolidated - not needed in repo)
+GITHUB_PUSH_CHECKLIST.md
+GITHUB_PUSH_SUMMARY.md
+QUICKSTART_GITHUB_PUSH.md
+GITHUB_PUSH_GUIDE.md
+push.sh

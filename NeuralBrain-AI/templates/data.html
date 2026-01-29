@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}Data Explorer - NeuralBrain-AI{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-5 fw-bold mb-2">
+            <i class="fas fa-database"></i> Data Explorer
+        </h1>
+        <p class="text-muted">Browse and filter ingested health data records</p>
+    </div>
+</div>
+
+<!-- Filter Controls -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-light py-3 border-0">
+                <h6 class="mb-0"><i class="fas fa-filter"></i> Filters</h6>
+            </div>
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="source" class="form-label">Data Source</label>
+                        <select name="source" id="source" class="form-select">
+                            <option value="">All Sources</option>
+                            {% for src in sources %}
+                            <option value="{{ src }}" {% if current_source == src %}selected{% endif %}>{{ src }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <label for="status" class="form-label">Status</label>
+                        <select name="status" id="status" class="form-select">
+                            <option value="">All Statuses</option>
+                            <option value="valid" {% if current_status == 'valid' %}selected{% endif %}>Valid</option>
+                            <option value="invalid" {% if current_status == 'invalid' %}selected{% endif %}>Invalid</option>
+                            <option value="pending" {% if current_status == 'pending' %}selected{% endif %}>Pending</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search"></i> Apply Filters
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Table -->
+<div class="row">
+    <div class="col-12">
+        {% if records and paginated %}
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-light py-3 border-0 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">
+                    <i class="fas fa-list"></i> 
+                    Records ({{ paginated.total }} total)
+                </h6>
+                <span class="badge bg-secondary">Page {{ paginated.page }} of {{ paginated.pages }}</span>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Source</th>
+                            <th>Status</th>
+                            <th>Timestamp</th>
+                            <th>Records</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr>
+                            <td>
+                                <code class="text-primary">#{{ record.id }}</code>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ record.data_source }}</span>
+                            </td>
+                            <td>
+                                <span class="badge {% if record.status == 'valid' %}bg-success{% elif record.status == 'invalid' %}bg-danger{% else %}bg-warning{% endif %}">
+                                    {{ record.status|upper }}
+                                </span>
+                            </td>
+                            <td>
+                                <small>{{ record.timestamp|replace('T', ' ')|truncate(19, True, '') }}</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">1</span>
+                            </td>
+                            <td>
+                                <a href="#record{{ record.id }}" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" 
+                                   data-bs-target="#recordModal{{ record.id }}">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="card-footer bg-light py-3 border-0">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mb-0">
+                        {% if paginated.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('views.data_explorer', page=1, source=current_source, status=current_status) }}">
+                                <i class="fas fa-chevron-left"></i> First
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('views.data_explorer', page=paginated.prev_num, source=current_source, status=current_status) }}">
+                                Previous
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% for page_num in paginated.iter_pages(left_edge=1, right_edge=1) %}
+                            {% if page_num %}
+                                {% if page_num == paginated.page %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ page_num }}</span>
+                                </li>
+                                {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('views.data_explorer', page=page_num, source=current_source, status=current_status) }}">
+                                        {{ page_num }}
+                                    </a>
+                                </li>
+                                {% endif %}
+                            {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if paginated.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('views.data_explorer', page=paginated.next_num, source=current_source, status=current_status) }}">
+                                Next
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('views.data_explorer', page=paginated.pages, source=current_source, status=current_status) }}">
+                                Last <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Record Detail Modals -->
+        {% for record in records %}
+        <div class="modal fade" id="recordModal{{ record.id }}" tabindex="-1" aria-labelledby="recordLabel{{ record.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold" id="recordLabel{{ record.id }}">
+                            Record #{{ record.id }} - {{ record.data_source }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <dl class="row">
+                            <dt class="col-sm-4"><strong>ID</strong></dt>
+                            <dd class="col-sm-8"><code>{{ record.id }}</code></dd>
+
+                            <dt class="col-sm-4"><strong>Source</strong></dt>
+                            <dd class="col-sm-8"><span class="badge bg-info">{{ record.data_source }}</span></dd>
+
+                            <dt class="col-sm-4"><strong>Status</strong></dt>
+                            <dd class="col-sm-8">
+                                <span class="badge {% if record.status == 'valid' %}bg-success{% elif record.status == 'invalid' %}bg-danger{% else %}bg-warning{% endif %}">
+                                    {{ record.status|upper }}
+                                </span>
+                            </dd>
+
+                            <dt class="col-sm-4"><strong>Timestamp</strong></dt>
+                            <dd class="col-sm-8"><small>{{ record.timestamp }}</small></dd>
+
+                            <dt class="col-sm-4"><strong>Last Updated</strong></dt>
+                            <dd class="col-sm-8"><small>{{ record.last_updated }}</small></dd>
+                        </dl>
+
+                        {% if record.processed_data %}
+                        <div class="mt-4">
+                            <h6 class="fw-bold">Processed Data</h6>
+                            <pre class="bg-light p-3 rounded"><code>{{ record.processed_data|tojson(indent=2) }}</code></pre>
+                        </div>
+                        {% endif %}
+
+                        {% if record.validation_notes %}
+                        <div class="mt-3 alert alert-warning">
+                            <strong>Validation Notes:</strong> {{ record.validation_notes }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% else %}
+        <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle"></i> No records found. Try adjusting your filters or 
+            <a href="{{ url_for('views.trigger_ingest') }}" class="alert-link">ingest data</a>.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
