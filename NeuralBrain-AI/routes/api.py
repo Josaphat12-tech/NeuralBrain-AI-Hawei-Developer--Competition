@@ -300,7 +300,7 @@ def analytics():
         metrics_summary = DataSeeder.get_health_metrics_summary()
         
         # Get statistics
-        stats = DataSeeder.get_statistics()
+        api_stats = DataSeeder.get_statistics()
         
         # Get time-series data (last 7 days)
         records = HealthDataRecord.query.filter(
@@ -323,7 +323,7 @@ def analytics():
             'status': 'success',
             'timestamp': datetime.utcnow().isoformat(),
             'metrics_summary': metrics_summary,
-            'statistics': stats,
+            'statistics': api_stats,
             'time_series': time_series,
             'recent_records': [r.to_dict() for r in records[-10:]],
             # Attempt to include a lightweight external data snapshot from a free public API
