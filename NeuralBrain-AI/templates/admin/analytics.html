@@ -72,6 +72,10 @@
         </div>
     </div>
 </div>
+
+<!-- Hidden Data Container for JS -->
+<div id="analytics-data-store" data-metrics='{{ metrics_json| safe }}' style="display: none;">
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -80,7 +84,9 @@
     Chart.defaults.color = '#9ca3af';
     Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
 
-    const metricsData = {{ metrics_json| safe }};
+    // Data for charts
+    const dataStore = document.getElementById('analytics-data-store');
+    const metricsData = JSON.parse(dataStore.dataset.metrics);
     const chartColors = {
         primary: '#3b82f6',
         success: '#22c55e',

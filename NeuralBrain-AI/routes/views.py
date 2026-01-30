@@ -69,7 +69,8 @@ def dashboard():
     except Exception as e:
         logger.error(f"Error loading dashboard: {str(e)}")
         # Fallback to empty dashboard if error
-        return render_template('admin/dashboard.html', stats={}, error=str(e), metrics_json='{}')
+        user = session.get('user', {})
+        return render_template('admin/dashboard.html', stats={}, error=str(e), metrics_json='{}', user=user)
 
 
 @views_bp.route('/analytics')
@@ -85,7 +86,8 @@ def analytics():
         return render_template('admin/analytics.html', metrics_data=metrics_summary, metrics_json=json.dumps(metrics_summary), user=user)
     except Exception as e:
         logger.error(f"Error loading analytics: {str(e)}")
-        return render_template('admin/analytics.html', metrics_data={}, metrics_json='{}', error=str(e))
+        user = session.get('user', {})
+        return render_template('admin/analytics.html', metrics_data={}, metrics_json='{}', error=str(e), user=user)
 
 
 import random
@@ -207,6 +209,7 @@ def data_explorer():
     Data explorer and viewer
     """
     try:
+        user = session.get('user', {})
         page = request.args.get('page', 1, type=int)
         per_page = 20
         
@@ -233,11 +236,13 @@ def data_explorer():
             paginated=paginated,
             sources=sources,
             current_source=source,
-            current_status=status
+            current_status=status,
+            user=user
         )
     except Exception as e:
         logger.error(f"Error loading data explorer: {str(e)}")
-        return render_template('admin/data.html', error=str(e), records=[], paginated=None)
+        user = session.get('user', {})
+        return render_template('admin/data.html', error=str(e), records=[], paginated=None, user=user)
 
 
 @views_bp.route('/ingest', methods=['GET', 'POST'])
@@ -337,7 +342,8 @@ def health_risk():
             'risk_history': risk_history
         }
         
-        return render_template('admin/health_risk.html', stats=stats)
+        user = session.get('user', {})
+        return render_template('admin/health_risk.html', stats=stats, user=user)
         
     except Exception as e:
         logger.error(f"Health risk dashboard error: {str(e)}")

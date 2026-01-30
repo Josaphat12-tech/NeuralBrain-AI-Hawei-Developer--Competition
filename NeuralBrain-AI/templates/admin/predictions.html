@@ -61,8 +61,8 @@
                     <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
                         <td style="padding: 1rem 0;">{{ region.region }}</td>
                         <td style="padding: 1rem 0;">
-                            <span class="font-bold"
-                                style="color: {{ 'var(--accent-red)' if region.risk_score > 80 else ('var(--accent-orange)' if region.risk_score > 50 else 'var(--accent-green)') }};">
+                            <span
+                                class="font-bold {{ 'text-accent-red' if region.risk_score > 80 else ('text-accent-orange' if region.risk_score > 50 else 'text-accent-green') }}">
                                 {{ region.risk_score }}%
                             </span>
                         </td>
@@ -130,112 +130,115 @@
     </div>
 </div>
 
+<!-- Hidden Data Container for JS -->
+<div id="prediction-data-store" data-chart-data='{{ chart_data|default({}) | tojson }}' style="display: none;">
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Safe access to chart data
-        const chartData = {{ chart_data|default ({}) | tojson
-    }};
+        // Safe access to chart data via store
+        const dataStore = document.getElementById('prediction-data-store');
+        const chartData = JSON.parse(dataStore.dataset.chartData);
 
-    // Ensure chart data exists before trying to render
-    if (!chartData || !chartData.dates) {
-        console.warn("No prediction data available");
-        return;
-    }
+        // Ensure chart data exists before trying to render
+        if (!chartData || !chartData.dates) {
+            console.warn("No prediction data available");
+            return;
+        }
 
-    const ctx = document.getElementById('predictionChart').getContext('2d');
+        const ctx = document.getElementById('predictionChart').getContext('2d');
 
-    // Gradient for historical data
-    const historicalGradient = ctx.createLinearGradient(0, 0, 0, 400);
-    historicalGradient.addColorStop(0, 'rgba(59, 130, 246, 0.5)');
-    historicalGradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+        // Gradient for historical data
+        const historicalGradient = ctx.createLinearGradient(0, 0, 0, 400);
+        historicalGradient.addColorStop(0, 'rgba(59, 130, 246, 0.5)');
+        historicalGradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
 
-    // Gradient for forecast data
-    const forecastGradient = ctx.createLinearGradient(0, 0, 0, 400);
-    forecastGradient.addColorStop(0, 'rgba(6, 182, 212, 0.5)');
-    forecastGradient.addColorStop(1, 'rgba(6, 182, 212, 0)');
+        // Gradient for forecast data
+        const forecastGradient = ctx.createLinearGradient(0, 0, 0, 400);
+        forecastGradient.addColorStop(0, 'rgba(6, 182, 212, 0.5)');
+        forecastGradient.addColorStop(1, 'rgba(6, 182, 212, 0)');
 
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: chartData.dates,
-            datasets: [
-                {
-                    label: 'Historical Risk',
-                    data: chartData.historical,
-                    borderColor: '#3b82f6',
-                    backgroundColor: historicalGradient,
-                    borderWidth: 2,
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 0,
-                    pointHoverRadius: 6
-                },
-                {
-                    label: 'Predicted Trend',
-                    data: chartData.forecast,
-                    borderColor: '#06b6d4',
-                    backgroundColor: forecastGradient,
-                    borderWidth: 2,
-                    borderDash: [5, 5],
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 0,
-                    pointHoverRadius: 6
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false,
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartData.dates,
+                datasets: [
+                    {
+                        label: 'Historical Risk',
+                        data: chartData.historical,
+                        borderColor: '#3b82f6',
+                        backgroundColor: historicalGradient,
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Predicted Trend',
+                        data: chartData.forecast,
+                        borderColor: '#06b6d4',
+                        backgroundColor: forecastGradient,
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 0,
+                        pointHoverRadius: 6
+                    }
+                ]
             },
-            plugins: {
-                legend: {
-                    display: false
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
                 },
-                tooltip: {
-                    backgroundColor: 'rgba(17, 24, 39, 0.9)',
-                    titleColor: '#f9fafb',
-                    bodyColor: '#9ca3af',
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                    borderWidth: 1,
-                    padding: 10,
-                    displayColors: false,
-                    callbacks: {
-                        label: function (context) {
-                            return context.dataset.label + ': ' + context.parsed.y + '% Risk Score';
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                        titleColor: '#f9fafb',
+                        bodyColor: '#9ca3af',
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        borderWidth: 1,
+                        padding: 10,
+                        displayColors: false,
+                        callbacks: {
+                            label: function (context) {
+                                return context.dataset.label + ': ' + context.parsed.y + '% Risk Score';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#6b7280'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#6b7280',
+                            maxTicksLimit: 7
                         }
                     }
                 }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.05)'
-                    },
-                    ticks: {
-                        color: '#6b7280'
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: '#6b7280',
-                        maxTicksLimit: 7
-                    }
-                }
             }
-        }
-    });
+        });
     });
 </script>
 {% endblock %}
