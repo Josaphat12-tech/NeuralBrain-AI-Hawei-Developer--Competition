@@ -3,11 +3,12 @@ NeuralBrain-AI Web Views Routes
 Frontend HTML and dashboard routes
 """
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session, make_response
 from models import db, HealthDataRecord, IngestionLog
 from services.ingestion import DataIngestionService
 from services.seed_data import DataSeeder
 from services.risk_scoring import calculate_health_risk, get_risk_scorer
+from services.auth_service import login_required
 from datetime import datetime, timedelta
 import logging
 import json
@@ -23,7 +24,17 @@ ingestion_service = DataIngestionService()
 def index():
     """
     GET /
-    Dashboard homepage with system overview and visualizations
+    Landing page (Public)
+    """
+    return render_template('public/landing.html')
+
+
+@views_bp.route('/dashboard')
+@login_required
+def dashboard():
+    """
+    GET /dashboard
+    Admin Dashboard (Protected)
     """
     try:
         # Get recent statistics
@@ -51,19 +62,154 @@ def index():
             'data_quality': (valid_records / (valid_records + invalid_records) * 100) if (valid_records + invalid_records) > 0 else 0
         }
         
-        return render_template('dashboard_new.html', stats=stats, metrics_data=metrics_summary, metrics_json=json.dumps(metrics_summary))
+        # Pass user info if available in session (from login_required)
+        user = session.get('user', {})
+        
+        return render_template('admin/dashboard.html', stats=stats, metrics_data=metrics_summary, metrics_json=json.dumps(metrics_summary), user=user)
     except Exception as e:
         logger.error(f"Error loading dashboard: {str(e)}")
-        return render_template('dashboard.html', stats={}, error=str(e), metrics_json='{}')
+        # Fallback to empty dashboard if error
+        user = session.get('user', {})
+        return render_template('admin/dashboard.html', stats={}, error=str(e), metrics_json='{}', user=user)
+
+
+@views_bp.route('/analytics')
+@login_required
+def analytics():
+    """
+    GET /analytics
+    Analytics Dashboard with Health Metrics Charts (Protected)
+    """
+    try:
+        metrics_summary = DataSeeder.get_health_metrics_summary()
+        user = session.get('user', {})
+        return render_template('admin/analytics.html', metrics_data=metrics_summary, metrics_json=json.dumps(metrics_summary), user=user)
+    except Exception as e:
+        logger.error(f"Error loading analytics: {str(e)}")
+        user = session.get('user', {})
+        return render_template('admin/analytics.html', metrics_data={}, metrics_json='{}', error=str(e), user=user)
+
+
+import random
+
+@views_bp.route('/predictions')
+@login_required
+def predictions():
+    """
+    GET /predictions
+    AI Predictions Dashboard (Protected)
+    """
+    user = session.get('user', {})
+    
+    try:
+        # Mock data for demonstration purposes
+        dates = []
+        historical_risk = []
+        forecast_risk = []
+        
+        today = datetime.now()
+        
+        # specific regions data for table
+        regions_risk = [
+            {'region': 'Southeast Asia', 'risk_score': 78, 'trend': 'Increasing', 'status': 'High Risk'},
+            {'region': 'Sub-Saharan Africa', 'risk_score': 65, 'trend': 'Stable', 'status': 'Medium Risk'},
+            {'region': 'South America', 'risk_score': 92, 'trend': 'Critical', 'status': 'Outbreak Imminent'},
+            {'region': 'Central Europe', 'risk_score': 12, 'trend': 'Stable', 'status': 'Low Risk'},
+            {'region': 'North America', 'risk_score': 24, 'trend': 'Decreasing', 'status': 'Low Risk'},
+        ]
+        
+        # Generate 14 days of data (7 past, 7 future)
+        for i in range(7, 0, -1):
+            date = (today - timedelta(days=i)).strftime('%Y-%m-%d')
+            dates.append(date)
+            # Random historical fluctuation around 40-60
+            historical_risk.append(random.randint(40, 65))
+            forecast_risk.append(None) # Gap for chart
+            
+        # Today
+        dates.append(today.strftime('%Y-%m-%d'))
+        current_val = 62
+        historical_risk.append(current_val)
+        forecast_risk.append(current_val) # Connect lines
+        
+        # Future 7 days
+        for i in range(1, 8):
+            date = (today + timedelta(days=i)).strftime('%Y-%m-%d')
+            dates.append(date)
+            historical_risk.append(None)
+            # Projected increase
+            current_val += random.randint(-2, 5) 
+            forecast_risk.append(min(100, max(0, current_val)))
+
+        chart_data = {
+            'dates': dates,
+            'historical': historical_risk,
+            'forecast': forecast_risk
+        }
+        
+        return render_template('admin/predictions.html', user=user, chart_data=chart_data, regions=regions_risk)
+        
+    except Exception as e:
+        logger.error(f"Error loading predictions: {str(e)}")
+        # Pass empty chart_data to avoid template errors
+        return render_template('admin/predictions.html', user=user, error=str(e), chart_data=None, regions=[])
+
+
+@views_bp.route('/alerts')
+@login_required
+def alerts():
+    """
+    GET /alerts
+    System Alerts Dashboard (Protected)
+    """
+    user = session.get('user', {})
+    return render_template('admin/alerts.html', user=user)
+
+
+@views_bp.route('/settings')
+@login_required
+def settings():
+    """
+    GET /settings
+    User Settings Page (Protected)
+    """
+    user = session.get('user', {})
+    return render_template('admin/settings.html', user=user)
+
+
+
+@views_bp.route('/login')
+def login():
+    """Login page (Clerk)"""
+    return render_template('auth/login.html')
+
+
+@views_bp.route('/signup')
+def signup():
+    """Signup page (Clerk)"""
+    return render_template('auth/signup.html')
+
+
+@views_bp.route('/logout')
+def logout():
+    """Logout - Render logout page and clear session"""
+    response = make_response(render_template('admin/logout.html'))
+    # Clear the Clerk session cookie
+    response.set_cookie('__session', '', expires=0)
+    session.clear()
+    return response
+
 
 
 @views_bp.route('/data')
+@login_required
 def data_explorer():
     """
     GET /data
     Data explorer and viewer
     """
     try:
+        user = session.get('user', {})
         page = request.args.get('page', 1, type=int)
         per_page = 20
         
@@ -85,19 +231,22 @@ def data_explorer():
         sources = [s[0] for s in sources]
         
         return render_template(
-            'data.html',
+            'admin/data.html',
             records=paginated.items,
             paginated=paginated,
             sources=sources,
             current_source=source,
-            current_status=status
+            current_status=status,
+            user=user
         )
     except Exception as e:
         logger.error(f"Error loading data explorer: {str(e)}")
-        return render_template('data.html', error=str(e), records=[], paginated=None)
+        user = session.get('user', {})
+        return render_template('admin/data.html', error=str(e), records=[], paginated=None, user=user)
 
 
 @views_bp.route('/ingest', methods=['GET', 'POST'])
+@login_required
 def trigger_ingest():
     """
     POST /ingest
@@ -122,13 +271,7 @@ def trigger_ingest():
     return redirect(url_for('views.index'))
 
 
-@views_bp.route('/about')
-def about():
-    """
-    GET /about
-    About page with project information
-    """
-    return render_template('about.html')
+
 
 
 @views_bp.route('/contact')
@@ -137,7 +280,7 @@ def contact():
     GET /contact
     Contact page - points to about page (about/contact combined)
     """
-    return render_template('about.html')
+    return render_template('public/about.html')
 
 
 @views_bp.route('/api-docs')
@@ -156,10 +299,11 @@ def api_docs():
         'POST /api/validate': 'Validate health data against rules',
     }
     
-    return render_template('api_docs.html', endpoints=apis)
+    return render_template('public/api_docs.html', endpoints=apis)
 
 
 @views_bp.route('/health-risk')
+@login_required
 def health_risk():
     """
     GET /health-risk
@@ -198,7 +342,8 @@ def health_risk():
             'risk_history': risk_history
         }
         
-        return render_template('health_risk.html', stats=stats)
+        user = session.get('user', {})
+        return render_template('admin/health_risk.html', stats=stats, user=user)
         
     except Exception as e:
         logger.error(f"Health risk dashboard error: {str(e)}")

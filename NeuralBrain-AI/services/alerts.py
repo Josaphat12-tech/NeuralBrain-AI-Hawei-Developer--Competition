@@ -1,14 +1,15 @@
 """
 Alert System - Early Warning & Detection
 Detects anomalies, spikes, and high-risk situations
-Developed by: Bitingo Josaphat JB
+Simplified for Python 3.14 (No Numpy)
 """
 
 import logging
+import math
+import uuid
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 from enum import Enum
-import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -36,16 +37,7 @@ class Alert:
     
     def __init__(self, alert_type: AlertType, severity: AlertSeverity, 
                  title: str, message: str, data: Dict = None):
-        """
-        Initialize an alert.
-        
-        Args:
-            alert_type: Type of alert
-            severity: Severity level
-            title: Short title
-            message: Detailed message
-            data: Additional context data
-        """
+        """Initialize an alert."""
         self.id = self._generate_id()
         self.type = alert_type
         self.severity = severity
@@ -60,7 +52,6 @@ class Alert:
     @staticmethod
     def _generate_id() -> str:
         """Generate unique alert ID"""
-        import uuid
         return f"alert_{uuid.uuid4().hex[:12]}"
     
     def to_dict(self) -> Dict:
@@ -86,35 +77,23 @@ class Alert:
 
 
 class SpikeDetector:
-    """Detects sudden spikes in health metrics"""
+    """Detects sudden spikes in health metrics using pure Python"""
     
     def __init__(self, spike_threshold: float = 2.0):
-        """
-        Initialize spike detector.
-        
-        Args:
-            spike_threshold: Standard deviations for spike detection
-        """
         self.spike_threshold = spike_threshold
     
     def detect_spike(self, current_value: float, historical_values: List[float],
                      metric_name: str = "metric") -> Optional[Alert]:
-        """
-        Detect if current value is a spike compared to history.
-        
-        Args:
-            current_value: Current metric value
-            historical_values: List of historical values
-            metric_name: Name of the metric
-            
-        Returns:
-            Alert if spike detected, None otherwise
-        """
+        """Detect if current value is a spike compared to history."""
         if len(historical_values) < 3:
             return None
         
-        mean = np.mean(historical_values)
-        std = np.std(historical_values)
+        # Calculate mean
+        mean = sum(historical_values) / len(historical_values)
+        
+        # Calculate std dev
+        variance = sum((x - mean) ** 2 for x in historical_values) / len(historical_values)
+        std = math.sqrt(variance)
         
         if std == 0:
             return None
@@ -142,33 +121,39 @@ class SpikeDetector:
 
 
 class TrendDetector:
-    """Detects deteriorating health trends"""
+    """Detects deteriorating health trends using pure Python"""
     
     def detect_trend_deterioration(self, values: List[float], metric_name: str = "metric",
                                    window_size: int = 7) -> Optional[Alert]:
-        """
-        Detect if trend is deteriorating (worsening).
-        
-        Args:
-            values: List of metric values over time
-            metric_name: Name of the metric
-            window_size: Number of recent points to analyze
-            
-        Returns:
-            Alert if deterioration detected, None otherwise
-        """
+        """Detect if trend is deteriorating (worsening)."""
         if len(values) < window_size:
             return None
         
         recent_values = values[-window_size:]
+        n = len(recent_values)
         
-        # Calculate trend using linear regression
-        x = np.arange(len(recent_values))
-        z = np.polyfit(x, recent_values, 1)
-        slope = z[0]
+        # Linear regression to find slope
+        # x are indices 0, 1, 2...
+        x = list(range(n))
+        y = recent_values
+        
+        sum_x = sum(x)
+        sum_y = sum(y)
+        sum_xy = sum(x[i] * y[i] for i in range(n))
+        sum_xx = sum(x[i] ** 2 for i in range(n))
+        
+        denominator = (n * sum_xx - sum_x ** 2)
+        
+        if denominator == 0:
+             slope = 0
+        else:
+             slope = (n * sum_xy - sum_x * sum_y) / denominator
         
         # If slope is negative for health metrics, it's deteriorating
-        if slope < -0.1:  # Arbitrary threshold
+        # Note: This logic assumes 'deterioration' means decreasing value
+        # For some metrics (like temperature/BP), increasing might be bad.
+        # Keeping original logic for now (-0.1 threshold)
+        if slope < -0.1:
             severity = AlertSeverity.MEDIUM if slope > -0.5 else AlertSeverity.HIGH
             
             return Alert(
@@ -178,7 +163,7 @@ class TrendDetector:
                 message=f"{metric_name} shows consistent deterioration trend (slope: {slope:.3f})",
                 data={
                     'metric': metric_name,
-                    'recent_values': recent_values.tolist(),
+                    'recent_values': recent_values,
                     'slope': slope,
                     'window_size': window_size
                 }
@@ -193,17 +178,7 @@ class RiskAlertGenerator:
     @staticmethod
     def generate_risk_alert(risk_score: float, risk_level: str, 
                            patient_id: str = None) -> Optional[Alert]:
-        """
-        Generate alert based on risk score.
-        
-        Args:
-            risk_score: Risk percentage (0-100)
-            risk_level: 'Low', 'Medium', 'High'
-            patient_id: Optional patient identifier
-            
-        Returns:
-            Alert if high risk, None otherwise
-        """
+        """Generate alert based on risk score."""
         if risk_level == "High":
             return Alert(
                 alert_type=AlertType.HIGH_RISK_SCORE,
@@ -246,6 +221,8 @@ class AlertManager:
     
     def add_alert(self, alert: Alert) -> None:
         """Add alert to system"""
+        # Checks for duplicate recent alerts to avoid spam
+        # (Simple deduplication logic could be added here)
         self.alerts.append(alert)
         logger.warning(f"🚨 Alert: {alert.title} [{alert.severity.value}]")
     

@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NeuralBrain AI - AI-Driven Global Health Monitoring & Early Warning System">
+    <title>NeuralBrain AI - Global Health Monitoring Platform</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <style>
+        /* 
+         * NeuralBrain AI - Landing Page Styles
+         */
+
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-green: #22c55e;
+            --container-width: 80rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 4rem;
+            --transition-base: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flex-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1.5rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .grid-4 {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .text-hero {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .text-hero {
+                font-size: 3.75rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .text-hero {
+                font-size: 4.5rem;
+            }
+        }
+
+        .text-section-title {
+            font-size: 2.25rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .text-section-title {
+                font-size: 3rem;
+            }
+        }
+
+        .text-lg {
+            font-size: 1.125rem;
+        }
+
+        .text-xl {
+            font-size: 1.25rem;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .text-xs {
+            font-size: 0.75rem;
+        }
+
+        .text-gray {
+            color: var(--text-secondary);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            height: 72px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .nav-logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(to right, var(--accent-cyan), var(--accent-blue));
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #cbd5e1;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-cyan);
+        }
+
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+
+        .mobile-menu-container {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            position: absolute;
+            top: 72px;
+            left: 0;
+            width: 100%;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu-container.active {
+            display: flex;
+        }
+
+        .mobile-menu-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: var(--transition-base);
+            cursor: pointer;
+            border: none;
+            font-size: 0.875rem;
+        }
+
+        @media (min-width: 768px) {
+            .btn {
+                font-size: 1rem;
+                padding: 1rem 2rem;
+            }
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-blue) 100%);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: var(--transition-base);
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-4px);
+        }
+
+        /* Philosophy Cards */
+        .philosophy-card {
+            text-align: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .philosophy-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .philosophy-card h4 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .philosophy-card p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Technology Stack Cards */
+        .tech-card {
+            padding: 2rem;
+        }
+
+        .tech-card h4 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .tech-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .tech-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .tech-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .tech-name {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .hero-section {
+            padding-top: 8rem;
+            padding-bottom: 5rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        @media (min-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+            }
+        }
+
+        /* Feature Pills */
+        .pill-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .pill {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+
+        /* Stats Blocks */
+        .stat-card {
+            padding: 1rem;
+            text-align: center;
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100px;
+            transition: transform 0.3s;
+        }
+
+        @media (min-width: 640px) {
+            .stat-card {
+                padding: 1.5rem;
+                min-height: 120px;
+            }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-val {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        @media (min-width: 640px) {
+            .stat-val {
+                font-size: 1.5rem;
+            }
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        @media (min-width: 640px) {
+            .stat-label {
+                font-size: 0.875rem;
+            }
+        }
+
+        .text-cyan {
+            color: var(--accent-cyan);
+        }
+
+        .text-blue {
+            color: var(--accent-blue);
+        }
+
+        .text-green {
+            color: var(--accent-green);
+        }
+
+        .text-pink {
+            color: var(--accent-pink);
+        }
+
+        /* Map Container */
+        .map-container {
+            height: 400px;
+            border-radius: 1rem;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .map-container {
+                height: 500px;
+            }
+        }
+
+        /* Feature Cards */
+        .feature-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4rem 0;
+            margin-top: 4rem;
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (min-width: 640px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .footer-heading {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Animations */
+        iframe {
+            pointer-events: none;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-100 {
+            transition-delay: 0.1s;
+        }
+
+        .delay-200 {
+            transition-delay: 0.2s;
+        }
+
+        .delay-300 {
+            transition-delay: 0.3s;
+        }
+
+        .text-big-gradient {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        @media (min-width: 768px) {
+            .text-big-gradient {
+                font-size: 4rem;
+            }
+        }
+
+        /* Counter Animation */
+        .counter {
+            display: inline-block;
+        }
+
+        /* Hero Brain Icon Positioning */
+        .hero-brain-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+
+        .brain-graphic {
+            font-size: 18rem;
+            line-height: 1;
+            filter: drop-shadow(0 0 60px rgba(236, 72, 153, 0.4));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @media (max-width: 1024px) {
+            .brain-graphic {
+                font-size: 12rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .brain-graphic {
+                font-size: 8rem;
+            }
+
+            .hero-brain-container {
+                min-height: 300px;
+            }
+        }
+
+        .brain-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, rgba(6, 182, 212, 0.2) 40%, transparent 70%);
+            filter: blur(60px);
+            z-index: -1;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                opacity: 0.6;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background -->
+    <canvas id="particles-canvas"
+        style="position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.3; width: 100vw; height: 100vh;"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container flex-between">
+            <a href="{{ url_for('views.index') }}" class="nav-logo" style="text-decoration: none; color: inherit;">
+                <div class="nav-logo-icon">🧠</div>
+                <span>NeuralBrain AI</span>
+            </a>
+
+            <!-- Desktop Links -->
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#technology" class="nav-link">Technology</a></li>
+                <li><a href="{{ url_for('views.login') }}" class="nav-link">Login</a></li>
+                <li><a href="{{ url_for('views.signup') }}" class="btn btn-primary" style="padding: 0.5rem 1rem;">Get
+                        Started</a></li>
+            </ul>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars" style="font-size: 1.5rem;"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div class="mobile-menu-container">
+            <a href="#home" class="nav-link">Home</a>
+            <a href="#about" class="nav-link">About</a>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#technology" class="nav-link">Technology</a>
+            <a href="{{ url_for('views.login') }}" class="nav-link">Login</a>
+            <a href="{{ url_for('views.signup') }}" class="btn btn-primary text-center">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="container">
+            <div class="hero-grid">
+                <div style="z-index: 1;">
+                    <h1 class="text-hero fade-in-up">
+                        AI-Driven Global Health<br>
+                        <span class="gradient-text">Monitoring System</span>
+                    </h1>
+
+                    <p class="text-lg text-gray fade-in-up delay-100" style="margin-bottom: 2rem; max-width: 600px;">
+                        Leveraging advanced machine learning to predict and track disease outbreaks,
+                        providing early warnings 2-4 weeks before they occur.
+                    </p>
+
+                    <div class="pill-container fade-in-up delay-200">
+                        <div class="pill"><span>🤖</span>&nbsp;AI Ethics</div>
+                        <div class="pill"><span>📊</span>&nbsp;LLM Guidelines</div>
+                        <div class="pill"><span>⚡</span>&nbsp;Real-time Support</div>
+                        <div class="pill"><span>📈</span>&nbsp;Data Analytics</div>
+                    </div>
+
+                    <div class="fade-in-up delay-300"
+                        style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem;">
+                        <a href="#" class="btn btn-primary">Explore Dashboard</a>
+                        <a href="#" class="btn btn-secondary">View API Documentation</a>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid-4 fade-in-up delay-300">
+                        <div class="stat-card" style="border-color: rgba(6, 182, 212, 0.3);">
+                            <div class="stat-val text-cyan">2-4 Weeks</div>
+                            <div class="stat-label">Early Prediction</div>
+                        </div>
+                        <div class="stat-card" style="border-color: rgba(59, 130, 246, 0.3);">
+                            <div class="stat-val text-blue">8+ Countries</div>
+                            <div class="stat-label">Monitored</div>
+                        </div>
+                        <div class="stat-card" style="border-color: rgba(34, 197, 94, 0.3);">
+                            <div class="stat-val text-green">Real-time</div>
+                            <div class="stat-label">Data Analysis</div>
+                        </div>
+                        <div class="stat-card" style="border-color: rgba(236, 72, 153, 0.3);">
+                            <div class="stat-val text-pink">95% Accuracy</div>
+                            <div class="stat-label">AI Predictions</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brain Graphic - FIXED POSITIONING -->
+                <div class="hero-brain-container fade-in-up delay-200">
+                    <div class="brain-glow"></div>
+                    <div class="brain-graphic">🧠</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about"
+        style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);">
+        <div class="container">
+            <div class="fade-in-up text-center" style="margin-bottom: 4rem;">
+                <h2 class="text-section-title">About <span class="gradient-text">NeuralBrain AI</span></h2>
+                <p class="text-xl text-gray" style="max-width: 50rem; margin: 0 auto;">
+                    Enterprise-grade AI health monitoring platform delivering production-ready solutions with zero
+                    infrastructure costs
+                </p>
+            </div>
+
+            <div style="max-width: 68rem; margin: 0 auto;">
+                <div class="card fade-in-up" style="padding: 2.5rem; margin-bottom: 2rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div
+                            style="width: 3.5rem; height: 3.5rem; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; font-size: 1.75rem;">
+                            💡</div>
+                        <h3 style="color: var(--text-primary); font-size: 1.5rem; font-weight: 700; margin: 0;">Mission
+                            Statement</h3>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.8; margin: 0;">
+                        NeuralBrain AI leverages cutting-edge artificial intelligence and cloud architecture to create a
+                        production-ready health monitoring ecosystem. Our platform seamlessly integrates multiple data
+                        sources, applies intelligent validation protocols, and delivers actionable insights through both
+                        RESTful APIs and an intuitive web dashboard—all while maintaining zero infrastructure costs.
+                    </p>
+                </div>
+
+                <div class="grid-2 fade-in-up delay-100" style="gap: 1.5rem;">
+                    <div class="card philosophy-card">
+                        <div class="philosophy-icon">💰</div>
+                        <h4>Zero-Cost Architecture</h4>
+                        <p>Utilizes exclusively free, public APIs with no paid subscriptions or hidden fees</p>
+                    </div>
+                    <div class="card philosophy-card">
+                        <div class="philosophy-icon">🏗️</div>
+                        <h4>Production-Ready</h4>
+                        <p>Built following enterprise software engineering practices and proven design patterns</p>
+                    </div>
+                    <div class="card philosophy-card">
+                        <div class="philosophy-icon">🔌</div>
+                        <h4>Highly Extensible</h4>
+                        <p>Architected to seamlessly integrate future AI modules and diverse data sources</p>
+                    </div>
+                    <div class="card philosophy-card">
+                        <div class="philosophy-icon">☁️</div>
+                        <h4>Flexible Deployment</h4>
+                        <p>Runs efficiently on local infrastructure or scales with Huawei Cloud</p>
+                    </div>
+                    <div class="card philosophy-card">
+                        <div class="philosophy-icon">🔒</div>
+                        <h4>Privacy-First Design</h4>
+                        <p>Implements secure data handling and rigorous validation protocols</p>
+                    </div>
+                    <div class="card philosophy-card">
+                        <div class="philosophy-icon">⚡</div>
+                        <h4>Real-Time Processing</h4>
+                        <p>Delivers instant insights with sub-second response times for critical alerts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="section">
+        <div class="container">
+            <div class="text-center fade-in-up" style="margin-bottom: 4rem;">
+                <h2 class="text-section-title">Platform Features</h2>
+                <p class="text-xl text-gray">Comprehensive tools for global health monitoring</p>
+            </div>
+
+            <div class="grid-3">
+                <div class="card fade-in-up delay-100">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);">💗
+                    </div>
+                    <h3 class="text-xl" style="margin-bottom: 0.5rem;">AI-Powered Monitoring</h3>
+                    <p class="text-gray text-sm">Advanced predictive analytics using deep learning models for accurate
+                        outbreak forecasting.</p>
+                </div>
+
+                <div class="card fade-in-up delay-200">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #ffd93d 0%, #f6c23e 100%);">🔔
+                    </div>
+                    <h3 class="text-xl" style="margin-bottom: 0.5rem;">Real-time Crisis Detection</h3>
+                    <p class="text-gray text-sm">Receive instant notifications for potential health risks and anomalous
+                        patterns.</p>
+                </div>
+
+                <div class="card fade-in-up delay-300">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #00d9ff 0%, #0099cc 100%);">🌍
+                    </div>
+                    <h3 class="text-xl" style="margin-bottom: 0.5rem;">Global Data Integration</h3>
+                    <p class="text-gray text-sm">Monitor health data across multiple countries and regions with
+                        comprehensive coverage.</p>
+                </div>
+
+                <div class="card fade-in-up delay-100">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #6bcf7f 0%, #51b56d 100%);">📊
+                    </div>
+                    <h3 class="text-xl" style="margin-bottom: 0.5rem;">Predictive Analytics</h3>
+                    <p class="text-gray text-sm">Interactive dashboards for real-time insights, trend analysis, and
+                        decision making.</p>
+                </div>
+
+                <div class="card fade-in-up delay-200">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);">🎯
+                    </div>
+                    <h3 class="text-xl" style="margin-bottom: 0.5rem;">Personalized Interventions</h3>
+                    <p class="text-gray text-sm">Tailored health recommendations and intervention strategies based on
+                        regional risk profiles.</p>
+                </div>
+
+                <div class="card fade-in-up delay-300">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);">🕐
+                    </div>
+                    <h3 class="text-xl" style="margin-bottom: 0.5rem;">24/7 Support Access</h3>
+                    <p class="text-gray text-sm">Continuous monitoring and support with automated alerts and real-time
+                        updates.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section class="section" id="technology"
+        style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);">
+        <div class="container fade-in-up">
+            <h2 class="text-section-title text-center">Technology <span class="gradient-text">Stack</span></h2>
+            <p class="text-xl text-gray text-center" style="margin-bottom: 3rem;">Built with modern, production-ready
+                technologies</p>
+
+            <div class="grid-3">
+                <!-- Backend -->
+                <div class="card tech-card fade-in-up delay-100">
+                    <h4 style="color: var(--accent-cyan);">
+                        <i class="fas fa-server" style="margin-right: 0.5rem;"></i>Backend
+                    </h4>
+
+                    <div class="tech-item">
+                        <div class="tech-icon" style="background: linear-gradient(135deg, #306998, #FFD43B);">
+                            <i class="fab fa-python"></i>
+                        </div>
+                        <span class="tech-name">Python 3.10+</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <div class="tech-icon" style="background: linear-gradient(135deg, #000000, #FFFFFF);">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <span class="tech-name">Flask Framework</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <div class="tech-icon" style="background: linear-gradient(135deg, #D71F00, #F29111);">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <span class="tech-name">SQLAlchemy ORM</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <div class="tech-icon" style="background: linear-gradient(135deg, #61DAFB, #0088CC);">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <span class="tech-name">RESTful API</span>
+                    </div>
+                </div>
+
+                <!-- Frontend -->
+                <div class="card tech-card fade-in-up delay-200">
+                    <h4 style="color: var(--accent-purple);">
+                        <i class="fas fa-paint-brush" style="margin-right: 0.5rem;"></i>Frontend
+                    </h4>
+
+                    <div class="tech-item">
+                        <div class="tech-icon" style="background: linear-gradient(135deg, #E34F26, #F06529);">
+                            <i class="fab fa-html5"></i>
+                        </div>
+                        <span class="tech-name">HTML5 & CSS3</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <div class="tech-icon" style="background: linear-gradient(135deg, #667EEA, #764BA2);">
+                            <i class="fas fa-magic"></i>
+                        </div>
+                        <span class="tech-name">Glassmorphic UI</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <div class="tech-icon" style="background: linear-gradient(135deg, #FF6384, #36A2EB);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <span class="tech-name">Chart.js</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <div class="tech-icon" style="background: linear-gradient(135deg, #199900, #7BB32E);">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <span class="tech-name">Leaflet.js</span>
+                    </div>
+                </div>
+
+                <!-- Data & AI -->
+                <div class="card tech-card fade-in-up delay-300">
+                    <h4 style="color: var(--accent-pink);">
+                        <i class="fas fa-brain" style="margin-right: 0.5rem;"></i>Data & AI
+                    </h4>
+
+                    <div class="tech-item">
+                        <div class="tech-icon" style="background: linear-gradient(135deg, #003B57, #0F80AA);">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <span class="tech-name">SQLite</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <div class="tech-icon" style="background: linear-gradient(135deg, #F7931E, #F15A29);">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <span class="tech-name">Scikit-Learn</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <div class="tech-icon" style="background: linear-gradient(135deg, #4A90E2, #50E3C2);">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <span class="tech-name">Disease.sh API</span>
+                    </div>
+
+                    <div class="tech-item">
+                        <div class="tech-icon" style="background: linear-gradient(135deg, #C8102E, #FF0000);">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <span class="tech-name">Huawei Cloud</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center fade-in-up" style="margin-bottom: 3rem;">
+                <h2 class="text-section-title">Global Health Network</h2>
+                <p class="text-xl text-gray">Real-time monitoring across continents</p>
+            </div>
+
+            <div id="world-map-container" class="map-container fade-in-up delay-200">
+                <div id="map" style="width: 100%; height: 100%; border-radius: 1rem;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center fade-in-up" style="margin-bottom: 3rem;">
+                <h2 class="text-section-title">Latest Impact & Research</h2>
+                <p class="text-xl text-gray">Measurable outcomes and ongoing studies</p>
+            </div>
+
+            <div class="grid-3">
+                <div class="card text-center fade-in-up delay-100">
+                    <div class="text-big-gradient">
+                        <span class="counter" data-target="50">0</span>M+
+                    </div>
+                    <div class="text-gray">Data Points Analyzed Daily</div>
+                </div>
+                <div class="card text-center fade-in-up delay-200">
+                    <div class="text-big-gradient">
+                        <span class="counter" data-target="10">0</span>+
+                    </div>
+                    <div class="text-gray">Disease Models Trained</div>
+                </div>
+                <div class="card text-center fade-in-up delay-300">
+                    <div class="text-big-gradient">
+                        <span class="counter" data-target="5">0</span>+
+                    </div>
+                    <div class="text-gray">Partner Organizations</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section">
+        <div class="container text-center fade-in-up">
+            <h2 class="text-section-title">Ready to Transform Global Health Monitoring?</h2>
+            <p class="text-xl text-gray" style="margin-bottom: 2rem;">Start exploring our AI-powered platform today.</p>
+
+            <div class="flex-center" style="gap: 1rem;">
+                <a href="#" class="btn btn-primary">Get Started</a>
+                <a href="#" class="btn btn-secondary">Explore API</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                        <div
+                            style="width: 2rem; height: 2rem; background: var(--accent-blue); border-radius: 0.25rem; display: flex; align-items: center; justify-content: center;">
+                            🧠</div>
+                        <span style="font-weight: 700; font-size: 1.1rem;">NeuralBrain AI</span>
+                    </div>
+                    <p class="text-gray text-sm">AI-Driven Global Health Monitoring & Early Warning System.</p>
+                </div>
+
+                <div>
+                    <h4 class="footer-heading">Platform</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">API Docs</a></li>
+                        <li><a href="#features">Features</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-heading">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#technology">Technology</a></li>
+                        <li><a href="#">Team</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-heading">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">API Reference</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 NeuralBrain AI. All rights reserved.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.7;">Improved Design v2.1</p>
+                <p style="margin-top: 0.5rem;">Built for Huawei Cloud Global Developer Competition</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.querySelector('.mobile-menu-container');
+            menu.classList.toggle('active');
+        }
+
+        document.querySelectorAll('.mobile-menu-container a[href^="#"]').forEach(link => {
+            link.addEventListener('click', () => {
+                const menu = document.querySelector('.mobile-menu-container');
+                menu.classList.remove('active');
+            });
+        });
+
+        // Particle Background System
+        const canvas = document.getElementById('particles-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+
+            const particles = [];
+            const particleCount = Math.min(50, Math.floor(window.innerWidth / 20));
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2 + 1;
+                    this.speedX = (Math.random() - 0.5) * 0.5;
+                    this.speedY = (Math.random() - 0.5) * 0.5;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+
+                    if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                    if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+                }
+                draw() {
+                    ctx.fillStyle = 'rgba(6, 182, 212, 0.4)';
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles.length = 0;
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+            }
+            initParticles();
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let p of particles) {
+                    p.update();
+                    p.draw();
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                initParticles();
+            });
+        }
+
+        // Counter Animation
+        function animateCounter(element) {
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 2000; // 2 seconds
+            const steps = 60;
+            const increment = target / steps;
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, duration / steps);
+        }
+
+        // Intersection Observer for Scroll Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+
+                    // Trigger counter animation if element has counter
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                        if (!counter.classList.contains('animated')) {
+                            counter.classList.add('animated');
+                            animateCounter(counter);
+                        }
+                    });
+
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    document.querySelector('.mobile-menu-container').classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        // Initialize Map
+        document.addEventListener('DOMContentLoaded', () => {
+            const mapContainer = document.getElementById('map');
+            if (mapContainer) {
+                const map = L.map('map', {
+                    zoomControl: true,
+                    scrollWheelZoom: true,
+                    dragging: true,
+                    attributionControl: false
+                }).setView([20, 0], 2);
+
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                    subdomains: 'abcd',
+                    maxZoom: 19
+                }).addTo(map);
+
+                const outbreaks = [
+                    { lat: -14.235, lng: -51.925, color: '#ef4444', radius: 15, region: 'South America (Brazil)', risk: 'High', cases: '12,450', trend: 'Rising' },
+                    { lat: 20.593, lng: 78.962, color: '#f97316', radius: 12, region: 'South Asia (India)', risk: 'Moderate', cases: '5,230', trend: 'Stable' },
+                    { lat: -1.286, lng: 36.817, color: '#eab308', radius: 10, region: 'East Africa (Kenya)', risk: 'Low', cases: '1,120', trend: 'Decreasing' },
+                    { lat: 39.904, lng: 116.407, color: '#3b82f6', radius: 8, region: 'East Asia (China)', risk: 'Monitored', cases: '850', trend: 'Stable' },
+                    { lat: 51.507, lng: -0.127, color: '#22c55e', radius: 8, region: 'Europe (UK)', risk: 'Safe', cases: '120', trend: 'Low' }
+                ];
+
+                outbreaks.forEach(point => {
+                    const circle = L.circleMarker([point.lat, point.lng], {
+                        color: point.color,
+                        fillColor: point.color,
+                        fillOpacity: 0.6,
+                        radius: point.radius,
+                        weight: 0
+                    }).addTo(map);
+
+                    const popupContent = `
+                        <div style="font-family: 'Inter', sans-serif; color: #1e293b; padding: 5px;">
+                            <h4 style="margin: 0 0 5px 0; color: ${point.color}; font-weight: 700;">${point.region}</h4>
+                            <p style="margin: 0; font-size: 0.9rem;"><strong>Risk Level:</strong> ${point.risk}</p>
+                            <p style="margin: 0; font-size: 0.9rem;"><strong>Active Cases:</strong> ${point.cases}</p>
+                            <p style="margin: 0; font-size: 0.9rem;"><strong>Trend:</strong> ${point.trend}</p>
+                        </div>
+                    `;
+                    circle.bindPopup(popupContent);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

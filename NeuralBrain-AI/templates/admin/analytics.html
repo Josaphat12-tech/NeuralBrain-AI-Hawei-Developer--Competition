@@ -1,0 +1,211 @@
+{% extends "admin/base_dashboard.html" %}
+
+{% block title %}Analytics - NeuralBrain AI{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem;">
+    <div>
+        <h2 class="text-3xl">📈 Analytics Dashboard</h2>
+        <p class="text-gray" style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span
+                style="width: 8px; height: 8px; background-color: var(--accent-green); border-radius: 50%; display: inline-block;"
+                class="animate-pulse"></span>
+            <span>Real-time health metrics and trends</span>
+        </p>
+    </div>
+</div>
+
+<!-- Analytics Charts Grid -->
+<div class="grid-2">
+    <!-- Heart Rate Chart -->
+    <div class="glass p-6">
+        <h3 class="text-xl font-bold mb-6"><i class="fas fa-heart" style="color: var(--accent-red);"></i> Heart Rate
+            Trends</h3>
+        <div style="position: relative; height: 300px;">
+            <canvas id="heartRateChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Temperature Chart -->
+    <div class="glass p-6">
+        <h3 class="text-xl font-bold mb-6"><i class="fas fa-thermometer" style="color: var(--accent-orange);"></i>
+            Temperature Variation</h3>
+        <div style="position: relative; height: 300px;">
+            <canvas id="temperatureChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Blood Pressure Chart -->
+    <div class="glass p-6">
+        <h3 class="text-xl font-bold mb-6"><i class="fas fa-droplet" style="color: var(--accent-red);"></i> Blood
+            Pressure</h3>
+        <div style="position: relative; height: 300px;">
+            <canvas id="bloodPressureChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Oxygen Saturation Chart -->
+    <div class="glass p-6">
+        <h3 class="text-xl font-bold mb-6"><i class="fas fa-wind" style="color: var(--accent-cyan);"></i> Oxygen
+            Saturation</h3>
+        <div style="position: relative; height: 300px;">
+            <canvas id="oxygenChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Glucose Level Chart -->
+    <div class="glass p-6">
+        <h3 class="text-xl font-bold mb-6"><i class="fas fa-cubes" style="color: var(--accent-purple);"></i> Glucose
+            Levels</h3>
+        <div style="position: relative; height: 300px;">
+            <canvas id="glucoseChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Respiratory Rate Chart -->
+    <div class="glass p-6">
+        <h3 class="text-xl font-bold mb-6"><i class="fas fa-lungs" style="color: var(--accent-green);"></i> Respiratory
+            Rate</h3>
+        <div style="position: relative; height: 300px;">
+            <canvas id="respiratoryChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Data Container for JS -->
+<div id="analytics-data-store" data-metrics='{{ metrics_json| safe }}' style="display: none;">
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Chart.js Configuration
+    Chart.defaults.color = '#9ca3af';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
+
+    // Data for charts
+    const dataStore = document.getElementById('analytics-data-store');
+    const metricsData = JSON.parse(dataStore.dataset.metrics);
+    const chartColors = {
+        primary: '#3b82f6',
+        success: '#22c55e',
+        warning: '#f59e0b',
+        danger: '#ef4444',
+        purple: '#8b5cf6'
+    };
+
+    // Heart Rate Chart
+    if (metricsData['heart_rate']) {
+        new Chart(document.getElementById('heartRateChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Min', 'Avg', 'Max'],
+                datasets: [{
+                    label: 'Heart Rate (bpm)',
+                    data: [metricsData.heart_rate.min, metricsData.heart_rate.average, metricsData.heart_rate.max],
+                    backgroundColor: [chartColors.success, chartColors.primary, chartColors.danger],
+                    borderRadius: 8
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    // Temperature Chart
+    if (metricsData['temperature']) {
+        new Chart(document.getElementById('temperatureChart'), {
+            type: 'line',
+            data: {
+                labels: ['Min', 'Avg', 'Max'],
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: [metricsData.temperature.min, metricsData.temperature.average, metricsData.temperature.max],
+                    borderColor: chartColors.warning,
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    // Blood Pressure Chart
+    if (metricsData['blood_pressure_sys'] && metricsData['blood_pressure_dia']) {
+        new Chart(document.getElementById('bloodPressureChart'), {
+            type: 'radar',
+            data: {
+                labels: ['Min', 'Avg', 'Max'],
+                datasets: [
+                    {
+                        label: 'Systolic',
+                        data: [metricsData.blood_pressure_sys.min, metricsData.blood_pressure_sys.average, metricsData.blood_pressure_sys.max],
+                        borderColor: chartColors.danger,
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)'
+                    },
+                    {
+                        label: 'Diastolic',
+                        data: [metricsData.blood_pressure_dia.min, metricsData.blood_pressure_dia.average, metricsData.blood_pressure_dia.max],
+                        borderColor: chartColors.primary,
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)'
+                    }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    // Oxygen Saturation Chart
+    if (metricsData['oxygen_saturation']) {
+        new Chart(document.getElementById('oxygenChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Oxygen Level', 'Remaining'],
+                datasets: [{
+                    data: [metricsData.oxygen_saturation.average, 100 - metricsData.oxygen_saturation.average],
+                    backgroundColor: [chartColors.success, 'rgba(100, 116, 139, 0.2)'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    // Glucose Chart
+    if (metricsData['glucose_level']) {
+        new Chart(document.getElementById('glucoseChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Min', 'Avg', 'Max'],
+                datasets: [{
+                    label: 'Glucose (mg/dL)',
+                    data: [metricsData.glucose_level.min, metricsData.glucose_level.average, metricsData.glucose_level.max],
+                    backgroundColor: [chartColors.success, chartColors.warning, chartColors.danger],
+                    borderRadius: 8
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    // Respiratory Rate Chart
+    if (metricsData['respiratory_rate']) {
+        new Chart(document.getElementById('respiratoryChart'), {
+            type: 'line',
+            data: {
+                labels: ['Min', 'Avg', 'Max'],
+                datasets: [{
+                    label: 'Respiratory Rate (breaths/min)',
+                    data: [metricsData.respiratory_rate.min, metricsData.respiratory_rate.average, metricsData.respiratory_rate.max],
+                    borderColor: chartColors.success,
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+</script>
+{% endblock %}
