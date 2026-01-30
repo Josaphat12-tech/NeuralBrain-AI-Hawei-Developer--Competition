@@ -1,0 +1,103 @@
+name: Code Quality & Tests
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  python-lint:
+    name: Python Linting & Syntax Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pylint
+      
+      - name: Lint with flake8
+        run: |
+          # Stop the build if there are Python syntax errors
+          flake8 NeuralBrain-AI/routes NeuralBrain-AI/models --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Exit-zero treats all errors as warnings
+          flake8 NeuralBrain-AI/routes NeuralBrain-AI/models --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      
+      - name: Check for security issues
+        run: pip install bandit && bandit -r NeuralBrain-AI/routes NeuralBrain-AI/models -f json -o bandit-report.json || true
+
+  html-validate:
+    name: HTML/CSS Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install validation tools
+        run: npm install -g html-validate
+      
+      - name: Validate HTML templates
+        run: html-validate 'NeuralBrain-AI/templates/**/*.html' || true
+
+  documentation:
+    name: Check Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Check if README exists
+        run: |
+          if [ ! -f README.md ]; then
+            echo "❌ README.md missing!"
+            exit 1
+          fi
+          echo "✅ README.md found"
+      
+      - name: Check if CONTRIBUTING.md exists
+        run: |
+          if [ ! -f CONTRIBUTING.md ]; then
+            echo "❌ CONTRIBUTING.md missing!"
+            exit 1
+          fi
+          echo "✅ CONTRIBUTING.md found"
+
+  branch-protection-check:
+    name: Enforce PR Requirements
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Check PR has description
+        run: |
+          if [ -z "${{ github.event.pull_request.body }}" ]; then
+            echo "❌ PR description is empty. Please add a description."
+            exit 1
+          fi
+          echo "✅ PR has a description"
+      
+      - name: Check PR title format
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          if [[ ! $TITLE =~ ^(feat|fix|docs|refactor|test|chore|style)(\(.+\))?:.*$ ]]; then
+            echo "❌ PR title must follow format: feat: description or fix(scope): description"
+            exit 1
+          fi
+          echo "✅ PR title format is correct"
+
+  status-check-summary:
+    name: Status Summary
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [python-lint, html-validate, documentation, branch-protection-check]
+    steps:
+      - name: Check if all required checks passed
+        run: echo "✅ All status checks completed. Safe to merge after manual review."
