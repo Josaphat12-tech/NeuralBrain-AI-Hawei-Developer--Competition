@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - NeuralBrain AI</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Clerk JS SDK -->
+    <script crossorigin="anonymous"
+        data-clerk-publishable-key="pk_test_cmVhZHktbWFncGllLTg3LmNsZXJrLmFjY291bnRzLmRldiQ"
+        src="https://ready-magpie-87.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"
+        type="text/javascript"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --error-red: #ef4444;
+            --success-green: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Particle Background */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        /* Glass Card */
+        .login-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 20px rgba(6, 182, 212, 0.4));
+            animation: float 3s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .logo-icon:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .brand-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        /* Back Button */
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            z-index: 20;
+        }
+
+        .back-link:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Loading */
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-left-color: var(--accent-cyan);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Custom Form Styles */
+        .auth-form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px -2px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .social-login {
+            margin-bottom: 1.5rem;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-social {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-social:hover {
+            background: rgba(15, 23, 42, 0.8);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            padding: 0 1rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--error-red);
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success-green);
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .form-footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .form-footer a:hover {
+            color: var(--accent-blue);
+        }
+
+        .verification-container {
+            text-align: center;
+        }
+
+        .code-inputs {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        .code-input {
+            width: 3rem;
+            height: 3rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-radius: 0.75rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .code-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+        }
+
+        .resend-link {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .resend-link:hover {
+            color: var(--accent-blue);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Particle Canvas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="login-card">
+        <div class="brand-header">
+            <div class="logo-icon">🧠</div>
+            <h1 class="brand-title">NeuralBrain AI</h1>
+            <p class="brand-subtitle">Sign in to your dashboard</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="loader-container">
+            <div class="loader"></div>
+            <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary);">Initializing secure login...
+            </p>
+        </div>
+
+        <!-- Email/Password Login Form -->
+        <div id="login-form" class="auth-form hidden">
+            <div id="error-container"></div>
+
+            <!-- Social Login -->
+            <div class="social-login">
+                <div class="social-buttons">
+                    <button class="btn-social" id="google-btn">
+                        <i class="fab fa-google"></i>
+                        Google
+                    </button>
+                    <button class="btn-social" id="github-btn">
+                        <i class="fab fa-github"></i>
+                        GitHub
+                    </button>
+                    <button class="btn-social" id="linkedin-btn">
+                        <i class="fab fa-linkedin"></i>
+                        LinkedIn
+                    </button>
+                </div>
+            </div>
+
+            <div class="divider">
+                <span>or continue with email</span>
+            </div>
+
+            <!-- Email Input -->
+            <div class="form-group">
+                <label class="form-label" for="email">Email address</label>
+                <input type="email" id="email" class="form-input" placeholder="you@example.com" autocomplete="email">
+            </div>
+
+            <!-- Password Input (shown after email) -->
+            <div class="form-group hidden" id="password-group">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" id="password" class="form-input" placeholder="Enter your password"
+                    autocomplete="current-password">
+            </div>
+
+            <!-- Continue Button -->
+            <button class="btn-primary" id="continue-btn">
+                Continue <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+            </button>
+
+            <div class="form-footer">
+                Don't have an account? <a href="/signup">Sign up</a>
+            </div>
+        </div>
+
+        <!-- Verification Code Form -->
+        <div id="verification-form" class="verification-container hidden">
+            <div id="verification-error"></div>
+
+            <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">Check your email</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                We sent a verification code to <strong id="verification-email"></strong>
+            </p>
+
+            <div class="code-inputs">
+                <input type="text" class="code-input" maxlength="1" data-index="0">
+                <input type="text" class="code-input" maxlength="1" data-index="1">
+                <input type="text" class="code-input" maxlength="1" data-index="2">
+                <input type="text" class="code-input" maxlength="1" data-index="3">
+                <input type="text" class="code-input" maxlength="1" data-index="4">
+                <input type="text" class="code-input" maxlength="1" data-index="5">
+            </div>
+
+            <button class="btn-primary" id="verify-btn">
+                Verify Email
+            </button>
+
+            <div style="margin-top: 1rem;">
+                <a class="resend-link" id="resend-code">Resend code</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Particle Animation
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(6, 182, 212, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            resizeCanvas();
+            particles = [];
+            for (let i = 0; i < 50; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        initParticles();
+        animate();
+
+        // Logo click handler - navigate to home
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoIcon = document.querySelector('.logo-icon');
+            if (logoIcon) {
+                logoIcon.addEventListener('click', () => {
+                    window.location.href = '/';
+                });
+            }
+        });
+
+        // Clerk Authentication Logic
+        let signIn;
+        let currentEmail = '';
+
+        function showError(message) {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    ${message}
+                </div>
+            `;
+        }
+
+        function showVerificationError(message) {
+            const errorContainer = document.getElementById('verification-error');
+            errorContainer.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    ${message}
+                </div>
+            `;
+        }
+
+        function clearErrors() {
+            document.getElementById('error-container').innerHTML = '';
+            document.getElementById('verification-error').innerHTML = '';
+        }
+
+        async function handleSocialLogin(provider) {
+            try {
+                await signIn.authenticateWithRedirect({
+                    strategy: provider,
+                    redirectUrl: '/sso-callback',
+                    redirectUrlComplete: '/dashboard'
+                });
+            } catch (error) {
+                console.error('Social login error:', error);
+                showError(`Failed to connect with ${provider}. Please try again.`);
+            }
+        }
+
+        async function handleEmailSubmit() {
+            clearErrors();
+            const email = document.getElementById('email').value.trim();
+            const passwordGroup = document.getElementById('password-group');
+            const continueBtn = document.getElementById('continue-btn');
+
+            if (!email) {
+                showError('Please enter your email address');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Please enter a valid email address');
+                return;
+            }
+
+            continueBtn.disabled = true;
+            continueBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+
+            try {
+                // Create a new sign in
+                signIn = await window.Clerk.client.signIn.create({
+                    identifier: email
+                });
+
+                currentEmail = email;
+
+                // Check if password is needed or email code
+                const firstFactor = signIn.supportedFirstFactors.find(
+                    (f) => f.strategy === 'email_code'
+                );
+
+                if (firstFactor) {
+                    // Prepare email verification
+                    await signIn.prepareFirstFactor({
+                        strategy: 'email_code',
+                        emailAddressId: firstFactor.emailAddressId
+                    });
+
+                    // Show verification form
+                    document.getElementById('login-form').classList.add('hidden');
+                    document.getElementById('verification-form').classList.remove('hidden');
+                    document.getElementById('verification-email').textContent = email;
+
+                    // Focus first code input
+                    document.querySelector('.code-input').focus();
+                } else {
+                    // Show password field
+                    passwordGroup.classList.remove('hidden');
+                    continueBtn.innerHTML = 'Sign In <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>';
+                    document.getElementById('password').focus();
+                }
+
+            } catch (error) {
+                console.error('Sign in error:', error);
+                if (error.errors && error.errors[0]) {
+                    showError(error.errors[0].message);
+                } else {
+                    showError('Failed to sign in. Please try again.');
+                }
+                continueBtn.innerHTML = 'Continue <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>';
+            } finally {
+                continueBtn.disabled = false;
+            }
+        }
+
+        async function handlePasswordSubmit() {
+            clearErrors();
+            const password = document.getElementById('password').value;
+            const continueBtn = document.getElementById('continue-btn');
+
+            if (!password) {
+                showError('Please enter your password');
+                return;
+            }
+
+            continueBtn.disabled = true;
+            continueBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+
+            try {
+                await signIn.attemptFirstFactor({
+                    strategy: 'password',
+                    password: password
+                });
+
+                if (signIn.status === 'complete') {
+                    await window.Clerk.setActive({ session: signIn.createdSessionId });
+                    const token = await window.Clerk.session.getToken();
+                    document.cookie = `__session=${token}; path=/; max-age=3600; secure; samesite=strict`;
+                    window.location.href = '/dashboard';
+                }
+            } catch (error) {
+                console.error('Password error:', error);
+                if (error.errors && error.errors[0]) {
+                    showError(error.errors[0].message);
+                } else {
+                    showError('Invalid password. Please try again.');
+                }
+                continueBtn.disabled = false;
+                continueBtn.innerHTML = 'Sign In <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>';
+            }
+        }
+
+        async function handleVerification() {
+            clearErrors();
+            const codeInputs = document.querySelectorAll('.code-input');
+            const code = Array.from(codeInputs).map(input => input.value).join('');
+
+            if (code.length !== 6) {
+                showVerificationError('Please enter the complete 6-digit code');
+                return;
+            }
+
+            const verifyBtn = document.getElementById('verify-btn');
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+            try {
+                await signIn.attemptFirstFactor({
+                    strategy: 'email_code',
+                    code: code
+                });
+
+                if (signIn.status === 'complete') {
+                    await window.Clerk.setActive({ session: signIn.createdSessionId });
+                    const token = await window.Clerk.session.getToken();
+                    document.cookie = `__session=${token}; path=/; max-age=3600; secure; samesite=strict`;
+                    window.location.href = '/dashboard';
+                }
+            } catch (error) {
+                console.error('Verification error:', error);
+                if (error.errors && error.errors[0]) {
+                    showVerificationError(error.errors[0].message);
+                } else {
+                    showVerificationError('Invalid code. Please try again.');
+                }
+                verifyBtn.disabled = false;
+                verifyBtn.innerHTML = 'Verify Email';
+            }
+        }
+
+        // Code input auto-advance
+        document.addEventListener('DOMContentLoaded', () => {
+            const codeInputs = document.querySelectorAll('.code-input');
+
+            codeInputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    if (value.length === 1 && index < codeInputs.length - 1) {
+                        codeInputs[index + 1].focus();
+                    }
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        codeInputs[index - 1].focus();
+                    }
+                });
+
+                // Allow paste
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text').slice(0, 6);
+                    pastedData.split('').forEach((char, i) => {
+                        if (codeInputs[i]) {
+                            codeInputs[i].value = char;
+                        }
+                    });
+                    if (codeInputs[Math.min(pastedData.length, 5)]) {
+                        codeInputs[Math.min(pastedData.length, 5)].focus();
+                    }
+                });
+            });
+        });
+
+        // Clerk Initialization
+        async function initializeClerk() {
+            // Wait for Clerk to be available
+            let attempts = 0;
+            const maxAttempts = 50;
+            
+            while (typeof window.Clerk === 'undefined' && attempts < maxAttempts) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+
+            if (typeof window.Clerk === 'undefined') {
+                throw new Error('Clerk failed to load');
+            }
+
+            try {
+                await window.Clerk.load();
+
+                // Check if already signed in
+                if (window.Clerk.user) {
+                    const token = await window.Clerk.session.getToken();
+                    document.cookie = `__session=${token}; path=/; max-age=3600; secure; samesite=strict`;
+                    window.location.href = '/dashboard';
+                    return;
+                }
+
+                // Initialize sign in
+                signIn = window.Clerk.client.signIn;
+
+                // Hide loading and show form
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('login-form').classList.remove('hidden');
+
+                // Social login handlers
+                document.getElementById('google-btn').addEventListener('click', () => {
+                    handleSocialLogin('oauth_google');
+                });
+
+                document.getElementById('github-btn').addEventListener('click', () => {
+                    handleSocialLogin('oauth_github');
+                });
+
+                document.getElementById('linkedin-btn').addEventListener('click', () => {
+                    handleSocialLogin('oauth_linkedin');
+                });
+
+                // Continue button handler
+                document.getElementById('continue-btn').addEventListener('click', () => {
+                    const passwordGroup = document.getElementById('password-group');
+                    if (passwordGroup.classList.contains('hidden')) {
+                        handleEmailSubmit();
+                    } else {
+                        handlePasswordSubmit();
+                    }
+                });
+
+                // Enter key handlers
+                document.getElementById('email').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        handleEmailSubmit();
+                    }
+                });
+
+                document.getElementById('password').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        handlePasswordSubmit();
+                    }
+                });
+
+                // Verify button handler
+                document.getElementById('verify-btn').addEventListener('click', handleVerification);
+
+                // Resend code handler
+                document.getElementById('resend-code').addEventListener('click', async () => {
+                    try {
+                        await signIn.prepareFirstFactor({
+                            strategy: 'email_code',
+                            emailAddressId: signIn.supportedFirstFactors.find(
+                                (f) => f.strategy === 'email_code'
+                            ).emailAddressId
+                        });
+                        const successMsg = document.getElementById('verification-error');
+                        successMsg.innerHTML = `
+                            <div class="success-message">
+                                <i class="fas fa-check-circle"></i>
+                                Code resent successfully!
+                            </div>
+                        `;
+                        setTimeout(() => {
+                            successMsg.innerHTML = '';
+                        }, 3000);
+                    } catch (error) {
+                        showVerificationError('Failed to resend code. Please try again.');
+                    }
+                });
+
+            } catch (error) {
+                console.error("Clerk Error:", error);
+                document.getElementById('loading').innerHTML = `
+                    <div style="text-align: center; color: #ef4444;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <p>Connection Error. Please refresh the page.</p>
+                        <p style="font-size: 0.75rem; margin-top: 0.5rem; color: #94a3b8;">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Start initialization when window loads
+        window.addEventListener('load', initializeClerk);
+    </script>
+</body>
+
+</html>

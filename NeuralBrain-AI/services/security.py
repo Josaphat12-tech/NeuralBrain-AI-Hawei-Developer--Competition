@@ -179,7 +179,7 @@ class SecurityHeaders:
             'X-Frame-Options': 'SAMEORIGIN',
             'X-XSS-Protection': '1; mode=block',
             'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-            'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com bootstrap.bundle.min.css",
+            'Content-Security-Policy': "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: blob:; connect-src 'self' https: wss:; img-src 'self' data: https: blob:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; frame-src 'self' https: blob:; worker-src 'self' blob: https:;",
             'Referrer-Policy': 'strict-origin-when-cross-origin',
             'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
         }

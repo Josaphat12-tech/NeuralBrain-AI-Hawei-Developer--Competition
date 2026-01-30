@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logged Out - NeuralBrain AI</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Clerk JS SDK -->
+    <script async crossorigin="anonymous"
+        data-clerk-publishable-key="pk_test_cmVhZHktbWFncGllLTg3LmNsZXJrLmFjY291bnRzLmRldiQ"
+        src="https://ready-magpie-87.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"
+        type="text/javascript"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Particle Background */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        /* Glass Card */
+        .logout-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon-circle {
+            width: 5rem;
+            height: 5rem;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            color: var(--accent-cyan);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 2rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            text-decoration: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.4);
+        }
+
+        .timer-text {
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        #countdown {
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Particle Canvas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="logout-card">
+        <div class="icon-circle">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <h1 class="title">Successfully Logged Out</h1>
+        <p class="subtitle">Thank you for using NeuralBrain AI.<br>Your session has been securely terminated.</p>
+
+        <a href="{{ url_for('views.login') }}" class="btn-primary">
+            Sign In Again <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+        </a>
+
+        <p class="timer-text">Redirecting in <span id="countdown">3</span> seconds...</p>
+    </div>
+
+    <script>
+        // Particle Animation
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = `rgba(6, 182, 212, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            resizeCanvas();
+            particles = [];
+            for (let i = 0; i < 50; i++) { particles.push(new Particle()); }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        initParticles();
+        animate();
+
+        // Logout Logic
+        window.addEventListener('load', async function () {
+            try {
+                // Clear Cookies
+                document.cookie = '__session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                document.cookie = '__session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
+                sessionStorage.clear();
+
+                // Clerk SignOut
+                await Clerk.load();
+                if (Clerk.user) await Clerk.signOut();
+
+                // Countdown Redirect
+                let timeLeft = 3;
+                const countdown = document.getElementById('countdown');
+                const timer = setInterval(() => {
+                    timeLeft--;
+                    countdown.textContent = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        window.location.href = "{{ url_for('views.login') }}";
+                    }
+                }, 1000);
+
+            } catch (error) {
+                console.error('Logout error:', error);
+                // Force redirect on error
+                setTimeout(() => window.location.href = "{{ url_for('views.login') }}", 1000);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,241 @@
+{% extends "admin/base_dashboard.html" %}
+
+{% block title %}Predictions - NeuralBrain AI{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem;">
+    <div>
+        <h2 class="text-3xl">🔮 AI Predictions</h2>
+        <p class="text-gray" style="margin-top: 1rem;">
+            Disease outbreak predictions and risk modeling
+        </p>
+    </div>
+</div>
+
+<!-- Predictions Content -->
+<div class="grid-2">
+    <!-- Chart Section -->
+    <div class="glass p-6" style="grid-column: span 2;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <h3 class="text-xl font-bold">7-Day Outbreak Forecast</h3>
+                <p class="text-sm text-gray">Projected global health risk trend based on ingestion data</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <div
+                    style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-gray);">
+                    <span
+                        style="width: 10px; height: 10px; background-color: rgba(59, 130, 246, 0.5); border-radius: 50%;"></span>
+                    Historical
+                </div>
+                <div
+                    style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-gray);">
+                    <span
+                        style="width: 10px; height: 10px; background-color: var(--accent-cyan); border-radius: 50%; border: 2px dashed var(--accent-cyan);"></span>
+                    Predicted
+                </div>
+            </div>
+        </div>
+
+        <div style="height: 400px; width: 100%;">
+            <canvas id="predictionChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Risk Table -->
+    <div class="glass p-6">
+        <h3 class="text-xl font-bold mb-6">Predicted High Risk Regions</h3>
+        {% if regions %}
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left;">
+                        <th style="padding: 1rem 0; color: var(--text-gray);">Region</th>
+                        <th style="padding: 1rem 0; color: var(--text-gray);">Risk Score</th>
+                        <th style="padding: 1rem 0; color: var(--text-gray);">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for region in regions %}
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 1rem 0;">{{ region.region }}</td>
+                        <td style="padding: 1rem 0;">
+                            <span class="font-bold"
+                                style="color: {{ 'var(--accent-red)' if region.risk_score > 80 else ('var(--accent-orange)' if region.risk_score > 50 else 'var(--accent-green)') }};">
+                                {{ region.risk_score }}%
+                            </span>
+                        </td>
+                        <td style="padding: 1rem 0;">
+                            {% if region.status == 'Outbreak Imminent' %}
+                            <span class="badge badge-red animate-pulse">CRITICAL</span>
+                            {% elif region.status == 'High Risk' %}
+                            <span class="badge"
+                                style="background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); border: 1px solid rgba(249, 115, 22, 0.2);">HIGH</span>
+                            {% else %}
+                            <span class="badge"
+                                style="background: rgba(34, 197, 94, 0.1); color: var(--accent-green); border: 1px solid rgba(34, 197, 94, 0.2);">{{
+                                region.status|upper }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 2rem; color: var(--text-gray);">
+            No regional risk data available
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- AI Insights -->
+    <div class="glass p-6">
+        <h3 class="text-xl font-bold mb-6">🤖 AI Analysis</h3>
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div
+                style="padding: 1rem; background: rgba(6, 182, 212, 0.05); border-left: 3px solid var(--accent-cyan); border-radius: 0 0.5rem 0.5rem 0;">
+                <p class="text-sm" style="color: var(--text-white); margin-bottom: 0.25rem;">Confidence Score</p>
+                <p class="text-2xl font-bold" style="color: var(--accent-cyan);">94.8%</p>
+                <p class="text-xs text-gray">Based on 14-day historical consistency</p>
+            </div>
+
+            <div
+                style="padding: 1rem; background: rgba(139, 92, 246, 0.05); border-left: 3px solid var(--accent-purple); border-radius: 0 0.5rem 0.5rem 0;">
+                <p class="text-sm" style="color: var(--text-white); margin-bottom: 0.25rem;">Next Predicted Outbreak</p>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <p class="text-xl font-bold" style="color: var(--accent-purple);">48 Hours</p>
+                    <span class="text-xs"
+                        style="background: rgba(139, 92, 246, 0.2); padding: 2px 6px; border-radius: 4px;">Dengue /
+                        Brazil</span>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-sm mb-2" style="color: var(--text-gray);">Top Risk Factors</h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <span class="badge"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">Humidity >
+                        85%</span>
+                    <span class="badge"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">Urban
+                        Density</span>
+                    <span class="badge"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">Vector
+                        Activity</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Safe access to chart data
+        const chartData = {{ chart_data|default ({}) | tojson
+    }};
+
+    // Ensure chart data exists before trying to render
+    if (!chartData || !chartData.dates) {
+        console.warn("No prediction data available");
+        return;
+    }
+
+    const ctx = document.getElementById('predictionChart').getContext('2d');
+
+    // Gradient for historical data
+    const historicalGradient = ctx.createLinearGradient(0, 0, 0, 400);
+    historicalGradient.addColorStop(0, 'rgba(59, 130, 246, 0.5)');
+    historicalGradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+
+    // Gradient for forecast data
+    const forecastGradient = ctx.createLinearGradient(0, 0, 0, 400);
+    forecastGradient.addColorStop(0, 'rgba(6, 182, 212, 0.5)');
+    forecastGradient.addColorStop(1, 'rgba(6, 182, 212, 0)');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: chartData.dates,
+            datasets: [
+                {
+                    label: 'Historical Risk',
+                    data: chartData.historical,
+                    borderColor: '#3b82f6',
+                    backgroundColor: historicalGradient,
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 0,
+                    pointHoverRadius: 6
+                },
+                {
+                    label: 'Predicted Trend',
+                    data: chartData.forecast,
+                    borderColor: '#06b6d4',
+                    backgroundColor: forecastGradient,
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 0,
+                    pointHoverRadius: 6
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                    titleColor: '#f9fafb',
+                    bodyColor: '#9ca3af',
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    borderWidth: 1,
+                    padding: 10,
+                    displayColors: false,
+                    callbacks: {
+                        label: function (context) {
+                            return context.dataset.label + ': ' + context.parsed.y + '% Risk Score';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)'
+                    },
+                    ticks: {
+                        color: '#6b7280'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#6b7280',
+                        maxTicksLimit: 7
+                    }
+                }
+            }
+        }
+    });
+    });
+</script>
+{% endblock %}
