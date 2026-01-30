@@ -794,6 +794,42 @@
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, var(--accent), var(--secondary));
         }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+            color: white;
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: var(--secondary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
     </style>
     
     {% block extra_css %}{% endblock %}
@@ -823,13 +859,23 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'views.data_explorer' %}active{% endif %}" href="{{ url_for('views.data_explorer') }}">
-                            <i class="fas fa-database"></i> Data
+                            <i class="fas fa-database"></i> Data Explorer
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('views.contact') }}">
                             <i class="fas fa-envelope"></i> Contact
                         </a>
+                    </li>
+                    <li class="nav-item ms-auto">
+                        <div class="d-flex align-items-center gap-2">
+                            <a class="btn btn-primary btn-sm" href="#">
+                                <i class="fas fa-sign-in-alt"></i> Sign In
+                            </a>
+                            <a class="btn btn-outline-primary btn-sm" href="#">
+                                <i class="fas fa-user-plus"></i> Sign Up
+                            </a>
+                        </div>
                     </li>
                 </ul>
             </div>
