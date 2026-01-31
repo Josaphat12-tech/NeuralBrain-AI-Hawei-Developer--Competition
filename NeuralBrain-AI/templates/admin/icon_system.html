@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuralBrain AI - Premium Icon System ($10k Value)</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-green: #10b981;
+
+            --icon-size: 24px;
+            --stroke-width: 2px;
+            --transition-speed: 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        h1 {
+            background: linear-gradient(to right, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+            margin-top: 3rem;
+            color: var(--accent-cyan);
+            font-size: 1.25rem;
+        }
+
+        /* ICON SYSTEM STYLES */
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .icon-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .icon-card:hover {
+            border-color: rgba(6, 182, 212, 0.3);
+            background: rgba(30, 41, 59, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .icon-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* THE ICON COMPONENT ITSELF */
+        .nb-icon {
+            width: var(--icon-size);
+            height: var(--icon-size);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nb-icon svg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transition: all var(--transition-speed) ease;
+        }
+
+        /* Outline State (Default) */
+        .nb-icon .icon-outline {
+            opacity: 1;
+            transform: scale(1);
+            stroke: currentColor;
+            stroke-width: var(--stroke-width);
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        /* Filled State (Hover) */
+        .nb-icon .icon-filled {
+            opacity: 0;
+            transform: scale(0.8);
+            fill: currentColor;
+            stroke: none;
+        }
+
+        /* Interaction on Parent Hover */
+        .icon-card:hover .nb-icon .icon-outline {
+            opacity: 0;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .icon-card:hover .nb-icon .icon-filled {
+            opacity: 1;
+            transform: scale(1) rotate(0);
+            fill: var(--accent-cyan);
+            /* Active Color */
+        }
+
+        /* Color Variants for Sections */
+        .section-surveillance .icon-card:hover .nb-icon .icon-filled {
+            fill: var(--accent-pink);
+        }
+
+        .section-data .icon-card:hover .nb-icon .icon-filled {
+            fill: var(--accent-blue);
+        }
+
+        .section-ai .icon-card:hover .nb-icon .icon-filled {
+            fill: var(--accent-purple);
+        }
+
+        .section-users .icon-card:hover .nb-icon .icon-filled {
+            fill: var(--accent-green);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>NeuralBrain AI Icon System v1.0</h1>
+    <p style="color: var(--text-secondary); margin-bottom: 3rem;">
+        Highly professional, pixel-perfect SVG icons for enterprise health usage.
+        <br>Hover cards to see the "Outline to Filled" transition.
+    </p>
+
+    <!-- SECTION 1: MAIN -->
+    <h2>1. Main Navigation</h2>
+    <div class="icon-grid section-main">
+
+        <!-- Dashboard -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="9" rx="1" />
+                    <rect x="14" y="3" width="7" height="5" rx="1" />
+                    <rect x="14" y="12" width="7" height="9" rx="1" />
+                    <rect x="3" y="16" width="7" height="5" rx="1" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="9" rx="1" />
+                    <rect x="14" y="3" width="7" height="5" rx="1" />
+                    <rect x="14" y="12" width="7" height="9" rx="1" />
+                    <rect x="3" y="16" width="7" height="5" rx="1" />
+                </svg>
+            </div>
+            <span class="icon-label">Dashboard</span>
+        </div>
+
+        <!-- Health Monitor -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="2" fill="none" />
+                    <circle cx="12" cy="12" r="4" />
+                </svg>
+            </div>
+            <span class="icon-label">Health Monitor</span>
+        </div>
+
+        <!-- Global Map -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <path
+                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    <path d="M2 12h20" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                </svg>
+            </div>
+            <span class="icon-label">Global Map</span>
+        </div>
+
+        <!-- AI Predictions -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+                    <path d="M3 12h1m8-9v1m8 8h1M12 21v1" />
+                    <path d="M5.6 5.6l.7.7m12.1-.7l-.7.7m0 11.4l.7.7m-12.1-.7l-.7.7" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="6" />
+                    <path d="M12 2v4m0 12v4m10-10h-4M6 12H2" />
+                </svg>
+            </div>
+            <span class="icon-label">AI Predictions</span>
+        </div>
+
+        <!-- Analytics -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <rect x="16" y="10" width="4" height="10" rx="1" />
+                    <rect x="10" y="4" width="4" height="16" rx="1" />
+                    <rect x="4" y="14" width="4" height="6" rx="1" />
+                </svg>
+            </div>
+            <span class="icon-label">Analytics</span>
+        </div>
+
+        <!-- Reports -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                    <polyline points="10 9 9 9 8 9" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                </svg>
+            </div>
+            <span class="icon-label">Reports</span>
+        </div>
+    </div>
+
+
+    <!-- SECTION 2: SURVEILLANCE -->
+    <h2>2. Surveillance & Tracking</h2>
+    <div class="icon-grid section-surveillance">
+
+        <!-- Outbreak Tracker -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                </svg>
+            </div>
+            <span class="icon-label">Outbreak Tracker</span>
+        </div>
+
+        <!-- Risk Assessment -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <path d="M12 8v4" />
+                    <path d="M12 16h.01" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+            </div>
+            <span class="icon-label">Risk Assessment</span>
+        </div>
+
+        <!-- Early Warning -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path
+                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path
+                        d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                </svg>
+            </div>
+            <span class="icon-label">Early Warning</span>
+        </div>
+
+        <!-- Trend Analysis -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                    <polyline points="17 6 23 6 23 12" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <polygon points="23 6 13.5 15.5 8.5 10.5 1 18 1 20 23 20" opacity="0.5" />
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" fill="none" stroke="currentColor"
+                        stroke-width="3" />
+                </svg>
+            </div>
+            <span class="icon-label">Trend Analysis</span>
+        </div>
+
+        <!-- Hotspots -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="12" r="3" />
+                    <line x1="12" y1="2" x2="12" y2="5" />
+                    <line x1="12" y1="19" x2="12" y2="22" />
+                    <line x1="2" y1="12" x2="5" y2="12" />
+                    <line x1="19" y1="12" x2="22" y2="12" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="12" r="4" fill="var(--bg-card)" />
+                </svg>
+            </div>
+            <span class="icon-label">Hotspots</span>
+        </div>
+
+        <!-- Zone Monitoring -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M3 9h18" />
+                    <path d="M9 21V9" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                </svg>
+            </div>
+            <span class="icon-label">Zone Monitoring</span>
+        </div>
+    </div>
+
+
+    <!-- SECTION 3: DATA -->
+    <h2>3. Data & Integrations</h2>
+    <div class="icon-grid section-data">
+
+        <!-- Data Sources -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <ellipse cx="12" cy="5" rx="9" ry="3" />
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                    <ellipse cx="12" cy="5" rx="9" ry="3" />
+                </svg>
+            </div>
+            <span class="icon-label">Data Sources</span>
+        </div>
+
+        <!-- API Integration -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor"
+                        stroke-width="4" />
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor"
+                        stroke-width="4" />
+                </svg>
+            </div>
+            <span class="icon-label">API Integration</span>
+        </div>
+
+        <!-- Data Pipeline -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+                <!-- Using a 'Stream' concept -->
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+            </div>
+            <span class="icon-label">Data Pipeline</span>
+        </div>
+
+        <!-- ETL Process -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M16 3h5v5" />
+                    <path d="M4 20L21 3" />
+                    <path d="M21 16v5h-5" />
+                    <path d="M15 15l5.5 5.5" />
+                    <path d="M4 4l5 5" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path d="M16 3h5v5l-5-5z M4 20L21 3 M21 16v5h-5l5-5z M4 4l5 5" />
+                </svg>
+            </div>
+            <span class="icon-label">ETL Process</span>
+        </div>
+
+        <!-- Real-time Stream -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path
+                        d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path
+                        d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"
+                        stroke="currentColor" stroke-width="3" fill="none" />
+                </svg>
+            </div>
+            <span class="icon-label">Real-time Stream</span>
+        </div>
+    </div>
+
+
+    <!-- SECTION 4: AI & MODELS -->
+    <h2>4. AI & Machine Learning</h2>
+    <div class="icon-grid section-ai">
+
+        <!-- ML Models -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <circle cx="12" cy="5" r="3" />
+                    <circle cx="6" cy="12" r="3" />
+                    <circle cx="18" cy="12" r="3" />
+                    <circle cx="12" cy="19" r="3" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <line x1="8.5" y1="10.5" x2="15.5" y2="13.5" />
+                    <line x1="15.5" y1="10.5" x2="8.5" y2="13.5" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <circle cx="12" cy="5" r="3" />
+                    <circle cx="6" cy="12" r="3" />
+                    <circle cx="18" cy="12" r="3" />
+                    <circle cx="12" cy="19" r="3" />
+                </svg>
+            </div>
+            <span class="icon-label">ML Models</span>
+        </div>
+
+        <!-- Model Training -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M12 2a10 10 0 1 0 10 10 10 10 0 0 0-10-10zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
+                    <path d="M12 12l2.5 2.5" />
+                    <path d="M12 8v4" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                </svg>
+            </div>
+            <span class="icon-label">Model Training</span>
+        </div>
+
+        <!-- Deep Learning -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                    <polyline points="2 17 12 22 22 17" />
+                    <polyline points="2 12 12 17 22 12" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                    <polyline points="2 17 12 22 22 17" />
+                    <polyline points="2 12 12 17 22 12" />
+                </svg>
+            </div>
+            <span class="icon-label">Deep Learning</span>
+        </div>
+
+        <!-- Algorithm Tuning -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <line x1="4" y1="21" x2="4" y2="14" />
+                    <line x1="4" y1="10" x2="4" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12" y2="3" />
+                    <line x1="20" y1="21" x2="20" y2="16" />
+                    <line x1="20" y1="12" x2="20" y2="3" />
+                    <line x1="1" y1="14" x2="7" y2="14" />
+                    <line x1="9" y1="8" x2="15" y2="8" />
+                    <line x1="17" y1="16" x2="23" y2="16" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <rect x="1" y="9" width="6" height="10" rx="1" />
+                    <rect x="9" y="3" width="6" height="10" rx="1" />
+                    <rect x="17" y="11" width="6" height="10" rx="1" />
+                </svg>
+            </div>
+            <span class="icon-label">Algo Tuning</span>
+        </div>
+    </div>
+
+
+    <!-- SECTION 5: USERS & ADMIN -->
+    <h2>5. User Management & Admin</h2>
+    <div class="icon-grid section-users">
+
+        <!-- User Management -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+            </div>
+            <span class="icon-label">User Management</span>
+        </div>
+
+        <!-- Role Permissions -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <circle cx="12" cy="11" r="3" />
+                    <path d="M12 14v1" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+            </div>
+            <span class="icon-label">Role Permissions</span>
+        </div>
+
+        <!-- Audit Logs -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                    <polyline points="10 9 9 9 8 9" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                </svg>
+            </div>
+            <span class="icon-label">Audit Logs</span>
+        </div>
+
+        <!-- User Settings -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                <!-- Slightly different for variety -->
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+            </div>
+            <span class="icon-label">Settings</span>
+        </div>
+    </div>
+
+
+    <!-- SECTION 6: SUPPORT & SYSTEM -->
+    <h2>6. Support & System</h2>
+    <div class="icon-grid section-support">
+
+        <!-- API Keys -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path
+                        d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path
+                        d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"
+                        stroke="currentColor" stroke-width="4" />
+                </svg>
+            </div>
+            <span class="icon-label">API Keys</span>
+        </div>
+
+        <!-- Documentation -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                </svg>
+            </div>
+            <span class="icon-label">Documentation</span>
+        </div>
+
+        <!-- Support Tickets -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <rect x="3" y="11" width="18" height="10" rx="2" />
+                    <circle cx="12" cy="5" r="2" />
+                    <path d="M12 7v4" />
+                    <line x1="8" y1="16" x2="8" y2="16" />
+                    <line x1="16" y1="16" x2="16" y2="16" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <rect x="3" y="11" width="18" height="10" rx="2" />
+                    <circle cx="12" cy="5" r="2" />
+                    <path d="M12 7v4" />
+                </svg>
+            </div>
+            <span class="icon-label">Tickets</span>
+        </div>
+
+        <!-- System Status -->
+        <div class="icon-card">
+            <div class="nb-icon">
+                <svg class="icon-outline" viewBox="0 0 24 24">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+                <svg class="icon-filled" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                </svg>
+            </div>
+            <span class="icon-label">System Status</span>
+        </div>
+    </div>
+
+</body>
+
+</html>

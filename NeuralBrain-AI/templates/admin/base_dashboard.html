@@ -140,14 +140,19 @@
         }
 
         .logo-icon {
-            width: 2rem;
-            height: 2rem;
-            border-radius: 0.5rem;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            width: 3.5rem;
+            height: 3.5rem;
+            margin-right: 0.75rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 0.75rem;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
 
         .nav-menu {
@@ -174,8 +179,22 @@
         }
 
         .nav-icon {
+            width: 1.25rem;
+            height: 1.25rem;
             margin-right: 0.75rem;
-            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .sidebar-footer {
@@ -427,7 +446,8 @@
     <aside class="sidebar">
         <a href="{{ url_for('views.index') }}" class="logo-box"
             style="text-decoration: none; display: flex; align-items: center;">
-            <div class="logo-icon">🧠</div>
+            <div class="logo-icon"><img src="{{ url_for('static', filename='images/neuralbrain-logo-3d.jpg') }}"
+                    alt="NeuralBrain"></div>
             <span
                 style="font-size: 1.1rem; font-weight: 700; background: linear-gradient(to right, #60a5fa, #a78bfa); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">NeuralBrain
                 AI</span>
@@ -438,19 +458,37 @@
 
             <a href="{{ url_for('views.dashboard') }}"
                 class="nav-item {% if current_route == 'views.dashboard' %}active{% endif %}">
-                <span class="nav-icon">📊</span> Dashboard
+                <span class="nav-icon"><svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="9" rx="1" />
+                        <rect x="14" y="3" width="7" height="5" rx="1" />
+                        <rect x="14" y="12" width="7" height="9" rx="1" />
+                        <rect x="3" y="16" width="7" height="5" rx="1" />
+                    </svg></span> Dashboard
             </a>
             <a href="{{ url_for('views.analytics') }}"
                 class="nav-item {% if current_route == 'views.analytics' %}active{% endif %}">
-                <span class="nav-icon">📈</span> Analytics
+                <span class="nav-icon"><svg viewBox="0 0 24 24">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg></span> Analytics
             </a>
             <a href="{{ url_for('views.predictions') }}"
                 class="nav-item {% if current_route == 'views.predictions' %}active{% endif %}">
-                <span class="nav-icon">🔮</span> Predictions
+                <span class="nav-icon"><svg viewBox="0 0 24 24">
+                        <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
+                        <path d="M3 12h1m8-9v1m8 8h1M12 21v1" />
+                        <path d="M5.6 5.6l.7.7m12.1-.7l-.7.7m0 11.4l.7.7m-12.1-.7l-.7.7" />
+                    </svg></span> Predictions
             </a>
             <a href="{{ url_for('views.alerts') }}"
                 class="nav-item {% if current_route == 'views.alerts' %}active{% endif %}">
-                <span class="nav-icon">⚠️</span> Alerts
+                <span class="nav-icon"><svg viewBox="0 0 24 24">
+                        <path
+                            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg></span> Alerts
                 <span class="badge badge-red" style="margin-left: auto;">3</span>
             </a>
 
@@ -460,13 +498,24 @@
             </div>
             <a href="{{ url_for('views.settings') }}"
                 class="nav-item {% if current_route == 'views.settings' %}active{% endif %}">
-                <span class="nav-icon">⚙️</span> Settings
+                <span class="nav-icon"><svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg></span> Settings
             </a>
             <a href="{{ url_for('views.index') }}" class="nav-item">
-                <span class="nav-icon">🏠</span> Home
+                <span class="nav-icon"><svg viewBox="0 0 24 24">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg></span> Home
             </a>
             <a href="{{ url_for('views.logout') }}" class="nav-item">
-                <span class="nav-icon">🚪</span> Logout
+                <span class="nav-icon"><svg viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg></span> Logout
             </a>
         </nav>
         <!-- Sidebar Footer Removed -->
