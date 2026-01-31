@@ -29,6 +29,15 @@ def index():
     return render_template('public/landing.html')
 
 
+@views_bp.route('/sso-callback')
+def sso_callback():
+    """
+    GET /sso-callback
+    Transition route for social login (Clerk)
+    """
+    return render_template('auth/sso_callback.html')
+
+
 @views_bp.route('/dashboard')
 @login_required
 def dashboard():

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syncing Session - NeuralBrain AI</title>
+    <!-- Clerk JS SDK -->
+    <script crossorigin="anonymous" data-clerk-publishable-key="pk_test_cmVhZHktbWFncGllLTg3LmNsZXJrLmFjY291bnRzLmRldiQ"
+        src="https://ready-magpie-87.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"
+        type="text/javascript"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-left-color: #06b6d4;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div style="text-align: center;">
+        <div class="loader" style="margin: 0 auto 1.5rem;"></div>
+        <p>Synchronizing your secure session...</p>
+    </div>
+
+    <script>
+        async function handleSSO() {
+            try {
+                // Wait for Clerk to load
+                let attempts = 0;
+                while (typeof window.Clerk === 'undefined' && attempts < 50) {
+                    await new Promise(r => setTimeout(r, 100));
+                    attempts++;
+                }
+
+                if (window.Clerk) {
+                    await window.Clerk.load();
+
+                    // Clerk will automatically handle the sso-callback if it's on this URL
+                    // After success, we want to ensure the session cookie is set and redirect to dashboard
+                    if (window.Clerk.session) {
+                        const token = await window.Clerk.session.getToken();
+                        document.cookie = `__session=${token}; path=/; max-age=3600; secure; samesite=strict`;
+                        window.location.href = '/dashboard';
+                    } else {
+                        // If no session yet, Clerk might still be processing. 
+                        // Clerk usually handles the redirect after successful SSO callback automatically 
+                        // if redirectUrlComplete was set in the login form.
+                        console.log("Waiting for Clerk to complete SSO flow...");
+                    }
+                }
+            } catch (err) {
+                console.error("SSO Callback Error:", err);
+                window.location.href = '/login?error=sso_failed';
+            }
+        }
+        handleSSO();
+    </script>
+</body>
+
+</html>
