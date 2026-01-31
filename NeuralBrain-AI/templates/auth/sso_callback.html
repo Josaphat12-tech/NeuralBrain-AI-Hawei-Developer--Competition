@@ -57,22 +57,50 @@
                 if (window.Clerk) {
                     await window.Clerk.load();
 
+                    try {
+                        // Explicitly handle the redirect callback
+                        await window.Clerk.handleRedirectCallback();
+                        console.log("Redirect callback handled successfully");
+                    } catch (e) {
+                        console.log("Redirect callback not needed or already handled", e);
+                    }
+
                     // Clerk will automatically handle the sso-callback if it's on this URL
                     // After success, we want to ensure the session cookie is set and redirect to dashboard
                     if (window.Clerk.session) {
                         const token = await window.Clerk.session.getToken();
                         document.cookie = `__session=${token}; path=/; max-age=3600; secure; samesite=strict`;
-                        window.location.href = '/dashboard';
+
+                        // Show success message before redirecting
+                        document.querySelector('p').textContent = "Session verified! Redirecting...";
+
+                        setTimeout(() => {
+                            window.location.href = '/dashboard';
+                        }, 500);
                     } else {
                         // If no session yet, Clerk might still be processing. 
-                        // Clerk usually handles the redirect after successful SSO callback automatically 
-                        // if redirectUrlComplete was set in the login form.
                         console.log("Waiting for Clerk to complete SSO flow...");
+
+                        // Fallback check
+                        setTimeout(async () => {
+                            if (window.Clerk.session) {
+                                const token = await window.Clerk.session.getToken();
+                                document.cookie = `__session=${token}; path=/; max-age=3600; secure; samesite=strict`;
+                                window.location.href = '/dashboard';
+                            } else {
+                                // Only redirect to login if we truly failed after a delay
+                                console.warn("Session still not found after delay");
+                                // Optional: window.location.href = '/login?error=session_timeout';
+                            }
+                        }, 2000);
                     }
                 }
             } catch (err) {
                 console.error("SSO Callback Error:", err);
-                window.location.href = '/login?error=sso_failed';
+                document.querySelector('p').textContent = "Authentication failed. Redirecting...";
+                setTimeout(() => {
+                    window.location.href = '/login?error=sso_failed';
+                }, 1500);
             }
         }
         handleSSO();
