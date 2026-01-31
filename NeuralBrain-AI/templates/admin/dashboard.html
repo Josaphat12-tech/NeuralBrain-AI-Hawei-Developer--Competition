@@ -28,7 +28,19 @@
         right: 0;
         padding: 1rem;
         opacity: 0.1;
-        font-size: 4rem;
+        width: 6rem;
+        height: 6rem;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+    }
+
+    .stat-icon svg {
+        width: 100%;
+        height: 100%;
+        stroke: currentColor;
+        stroke-width: 1.5;
+        fill: none;
     }
 
     .stat-val {
@@ -71,7 +83,13 @@
 <div class="grid-4 mb-6">
     <!-- Total Records -->
     <div class="glass p-6 stat-card">
-        <div class="stat-icon">🌍</div>
+        <div class="stat-icon" style="color: var(--accent-green);">
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                <path d="M2 12h20" />
+            </svg>
+        </div>
         <h3 class="stat-label">Total Records</h3>
         <div style="display: flex; align-items: center;">
             <span class="stat-val">{{ stats.total_records }}</span>
@@ -82,7 +100,11 @@
 
     <!-- Valid Records -->
     <div class="glass p-6 stat-card">
-        <div class="stat-icon">✅</div>
+        <div class="stat-icon" style="color: var(--accent-blue);">
+            <svg viewBox="0 0 24 24">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg>
+        </div>
         <h3 class="stat-label">Valid Data</h3>
         <div style="display: flex; align-items: center;">
             <span class="stat-val">{{ stats.valid_records }}</span>
@@ -94,7 +116,13 @@
 
     <!-- Alerts -->
     <div class="glass p-6 stat-card">
-        <div class="stat-icon">⚠️</div>
+        <div class="stat-icon" style="color: var(--accent-red);">
+            <svg viewBox="0 0 24 24">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+        </div>
         <h3 class="stat-label">Active Alerts</h3>
         <div style="display: flex; align-items: center;">
             <span class="stat-val">3</span>
@@ -104,7 +132,13 @@
 
     <!-- Data Quality -->
     <div class="glass p-6 stat-card">
-        <div class="stat-icon">📊</div>
+        <div class="stat-icon" style="color: var(--accent-purple);">
+            <svg viewBox="0 0 24 24">
+                <line x1="18" y1="20" x2="18" y2="10" />
+                <line x1="12" y1="20" x2="12" y2="4" />
+                <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+        </div>
         <h3 class="stat-label">Quality Score</h3>
         <div style="display: flex; align-items: center;">
             <span class="stat-val">{{ "%.1f"|format(stats.data_quality) }}%</span>
