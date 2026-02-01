@@ -23,6 +23,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+from fastapi import FastAPI
+from fastapi.middleware.wsgi import WSGIMiddleware
+
 def create_app(config_name='config'):
     """
     Application factory function.
@@ -163,23 +166,35 @@ def register_context_processors(app):
         }
 
 
+# --------------------------------------------------------------------------------
+# Create the Flask application first
+flask_app = create_app()
+
+# Wrap it in FastAPI using WSGIMiddleware
+# This allows running with: uvicorn NeuralBrain-AI.app:app --reload
+app = FastAPI(
+    title="NeuralBrain-AI",
+    description="AI-Driven Global Health Monitoring & Early Warning System",
+    version="1.0.0"
+)
+
+app.mount("/", WSGIMiddleware(flask_app))
+
 if __name__ == '__main__':
-    # Create application
-    app = create_app()
-    
     # Determine debug mode
     debug_mode = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
     port = int(os.getenv('FLASK_PORT', 5000))
     host = os.getenv('FLASK_HOST', '0.0.0.0')
     
-    # Run development server
+    # When running directly, we still use the Flask dev server for convenience
     logger.info(f"Starting Flask development server on {host}:{port} (debug={debug_mode})")
     logger.info("Access the application at http://localhost:5000")
     
-    app.run(
+    flask_app.run(
         host=host,
         port=port,
         debug=debug_mode,
         use_reloader=False,
         threaded=True
     )
+
