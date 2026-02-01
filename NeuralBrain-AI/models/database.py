@@ -5,7 +5,7 @@ Defines the structure for health data records and ingestion logs
 
 from datetime import datetime
 from .import db
-from sqlalchemy.dialects.sqlite import JSON
+from sqlalchemy.types import JSON
 
 
 class HealthDataRecord(db.Model):
@@ -52,6 +52,35 @@ class HealthDataRecord(db.Model):
         return f'<HealthDataRecord {self.id} from {self.data_source}>'
 
 
+class User(db.Model):
+    """
+    Stores user authentication and profile details.
+    Synced from Clerk authentication.
+    """
+    __tablename__ = 'users'
+    
+    id = db.Column(db.String(100), primary_key=True) # Clerk User ID
+    email = db.Column(db.String(150), nullable=False, unique=True, index=True)
+    first_name = db.Column(db.String(100), nullable=True)
+    last_name = db.Column(db.String(100), nullable=True)
+    profile_image = db.Column(db.String(255), nullable=True)  # URL to profile image
+    role = db.Column(db.String(20), default='user')
+    last_login = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'profile_image': self.profile_image,
+            'role': self.role,
+            'last_login': self.last_login.isoformat() if self.last_login else None
+        }
+
+    def __repr__(self):
+        return f'<User {self.email}>'
 class IngestionLog(db.Model):
     """
     Tracks data ingestion operations and their outcomes.

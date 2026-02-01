@@ -5,6 +5,10 @@ Centralized configuration for Flask application
 
 import os
 from datetime import timedelta
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Base directory
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -18,12 +22,16 @@ DEBUG = os.getenv('FLASK_DEBUG', False)
 TESTING = os.getenv('FLASK_TESTING', False)
 SECRET_KEY = os.getenv('SECRET_KEY', 'neuralbrain-dev-key-change-in-production')
 
-# Database Configuration
+# Fix for SQLAlchemy 1.4+ and use Psycopg 3 driver
+uri = os.getenv('DATABASE_URL')
+if uri:
+    if uri.startswith('postgres://'):
+        uri = uri.replace('postgres://', 'postgresql+psycopg://', 1)
+    elif uri.startswith('postgresql://'):
+        uri = uri.replace('postgresql://', 'postgresql+psycopg://', 1)
+
 _db_path = os.path.join(DATA_DIR, "neuralbrain.db")
-SQLALCHEMY_DATABASE_URI = os.getenv(
-    'DATABASE_URL',
-    f'sqlite:///{_db_path}'
-)
+SQLALCHEMY_DATABASE_URI = uri or f'sqlite:///{_db_path}'
 # Alternative: Use relative path
 # SQLALCHEMY_DATABASE_URI = 'sqlite:///data/neuralbrain.db'
 SQLALCHEMY_TRACK_MODIFICATIONS = False

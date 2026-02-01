@@ -1,9 +1,5 @@
 # NeuralBrain-AI: Zero-Cost AI Health Monitoring Platform
 
-**Developed by: Bitingo Josaphat JB**  
-**Version: 1.0.0**  
-**Year: 2026**
-
 ---
 
 ## Overview
@@ -37,7 +33,7 @@
 - **Font Awesome** - Icon library
 
 ### Database
-- **SQLite** - Lightweight, serverless database
+- **SUPABASE** - Lightweight, serverless database
 - **JSON** - Backup format for raw data
 
 ### APIs

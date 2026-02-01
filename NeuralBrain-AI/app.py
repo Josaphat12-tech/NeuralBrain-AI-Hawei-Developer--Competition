@@ -23,8 +23,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-from fastapi import FastAPI
-from fastapi.middleware.wsgi import WSGIMiddleware
+# from fastapi import FastAPI
+# from fastapi.middleware.wsgi import WSGIMiddleware
 
 def create_app(config_name='config'):
     """
@@ -172,13 +172,13 @@ flask_app = create_app()
 
 # Wrap it in FastAPI using WSGIMiddleware
 # This allows running with: uvicorn NeuralBrain-AI.app:app --reload
-app = FastAPI(
-    title="NeuralBrain-AI",
-    description="AI-Driven Global Health Monitoring & Early Warning System",
-    version="1.0.0"
-)
+# app = FastAPI(
+#     title="NeuralBrain-AI",
+#     description="AI-Driven Global Health Monitoring & Early Warning System",
+#     version="1.0.0"
+# )
 
-app.mount("/", WSGIMiddleware(flask_app))
+# app.mount("/", WSGIMiddleware(flask_app))
 
 if __name__ == '__main__':
     # Determine debug mode

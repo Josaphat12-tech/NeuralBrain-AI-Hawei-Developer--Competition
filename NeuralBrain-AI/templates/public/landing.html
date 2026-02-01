@@ -8,7 +8,7 @@
     <title>NeuralBrain AI - Global Health Monitoring Platform</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -768,8 +768,8 @@
         <div class="container flex-between">
             <a href="{{ url_for('views.index') }}" class="nav-logo" style="text-decoration: none; color: inherit;">
                 <div class="nav-logo-icon">
-                    <img src="{{ url_for('static', filename='images/neuralbrain-logo-3d.jpg') }}"
-                        alt="NeuralBrain AI Logo">
+                    <img src="{{ url_for('static', filename='images/NeuralBrainLogo.png') }}" alt="NeuralBrain AI Logo"
+                        style="width: 48px; height: 48px; object-fit: contain; border-radius: 50%;">
                 </div>
                 <span>NeuralBrain AI</span>
             </a>
@@ -880,7 +880,10 @@
                 <!-- Brain Graphic - FIXED POSITIONING -->
                 <div class="hero-brain-container fade-in-up delay-200">
                     <div class="brain-glow"></div>
-                    <div class="brain-graphic">🧠</div>
+                    <div class="brain-graphic">
+                        <img src="{{ url_for('static', filename='images/BigLogo.png') }}" alt="NeuralBrain AI"
+                            style="width: 100%; height: auto; max-width: 450px;">
+                    </div>
                 </div>
             </div>
         </div>
@@ -1282,7 +1285,7 @@
                     <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
                         <div
                             style="width: 4rem; height: 4rem; display: flex; align-items: center; justify-content: center;">
-                            <img src="{{ url_for('static', filename='images/neuralbrain-logo-3d.jpg') }}"
+                            <img src="{{ url_for('static', filename='images/NeuralBrainLogo.png') }}"
                                 alt="NeuralBrain AI Logo"
                                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                         </div>

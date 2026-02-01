@@ -4,7 +4,7 @@ Frontend HTML and dashboard routes
 """
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session, make_response
-from models import db, HealthDataRecord, IngestionLog
+from models import db, HealthDataRecord, IngestionLog, User
 from services.ingestion import DataIngestionService
 from services.seed_data import DataSeeder
 from services.risk_scoring import calculate_health_risk, get_risk_scorer
@@ -77,9 +77,20 @@ def dashboard():
         return render_template('admin/dashboard.html', stats=stats, metrics_data=metrics_summary, metrics_json=json.dumps(metrics_summary), user=user)
     except Exception as e:
         logger.error(f"Error loading dashboard: {str(e)}")
-        # Fallback to empty dashboard if error
+        db.session.rollback()
+        
+        # Fallback to safe defaults
+        stats = {
+            'total_records': 0,
+            'valid_records': 0,
+            'invalid_records': 0,
+            'sources': [],
+            'latest_ingestion': None,
+            'metrics_summary': {},
+            'data_quality': 0
+        }
         user = session.get('user', {})
-        return render_template('admin/dashboard.html', stats={}, error=str(e), metrics_json='{}', user=user)
+        return render_template('admin/dashboard.html', stats=stats, error=str(e), metrics_json='{}', user=user)
 
 
 @views_bp.route('/analytics')
@@ -175,15 +186,79 @@ def alerts():
     return render_template('admin/alerts.html', user=user)
 
 
-@views_bp.route('/settings')
+@views_bp.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
     """
     GET /settings
     User Settings Page (Protected)
+    POST /settings
+    Update user profile (including photo upload)
     """
-    user = session.get('user', {})
-    return render_template('admin/settings.html', user=user)
+    import os
+    from werkzeug.utils import secure_filename
+    
+    user_data = session.get('user', {})
+    
+    if request.method == 'POST':
+        try:
+            # Get form data
+            first_name = request.form.get('first_name')
+            last_name = request.form.get('last_name')
+            
+            # Update database
+            user_id = user_data.get('sub') or user_data.get('id')
+            
+            if user_id:
+                user = User.query.get(user_id)
+                if user:
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    
+                    # Handle profile image upload
+                    if 'profile_image' in request.files:
+                        file = request.files['profile_image']
+                        if file and file.filename:
+                            # Secure the filename
+                            filename = secure_filename(file.filename)
+                            # Add user ID prefix for uniqueness
+                            ext = filename.rsplit('.', 1)[-1].lower() if '.' in filename else 'jpg'
+                            new_filename = f"{user_id}_avatar.{ext}"
+                            
+                            # Ensure upload directory exists
+                            upload_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'uploads', 'avatars')
+                            os.makedirs(upload_dir, exist_ok=True)
+                            
+                            # Save file
+                            filepath = os.path.join(upload_dir, new_filename)
+                            file.save(filepath)
+                            
+                            # Store relative URL in database
+                            user.profile_image = f"/static/uploads/avatars/{new_filename}"
+                            logger.info(f"Profile image uploaded for {user_id}: {user.profile_image}")
+                    
+                    db.session.commit()
+                    
+                    # Update session data
+                    user_data['first_name'] = first_name
+                    user_data['last_name'] = last_name
+                    if user.profile_image:
+                        user_data['profile_image'] = user.profile_image
+                    session['user'] = user_data
+                    
+                    flash('Profile updated successfully!', 'success')
+                else:
+                    flash('User not found in database.', 'error')
+            else:
+                flash('Session error: User ID missing.', 'error')
+                
+        except Exception as e:
+            logger.error(f"Profile update error: {str(e)}")
+            flash(f"Error updating profile: {str(e)}", 'error')
+            
+        return redirect(url_for('views.settings'))
+
+    return render_template('admin/settings.html', user=user_data)
 
 
 
@@ -198,6 +273,56 @@ def signup():
     """Signup page (Clerk)"""
     return render_template('auth/signup.html')
 
+
+@views_bp.route('/auth/sync', methods=['POST'])
+@login_required
+def auth_sync():
+    """
+    POST /auth/sync
+    Sync user details from frontend (Clerk) to database
+    """
+    try:
+        data = request.get_json()
+        logger.info(f"Auth sync request received: {data}")
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+            
+        user_data = session.get('user', {})
+        user_id = user_data.get('sub') or user_data.get('id')
+        
+        if not user_id:
+            return jsonify({'error': 'Unauthorized'}), 401
+            
+        user = User.query.get(user_id)
+        if user:
+            # Update fields if provided and not already set
+            email = data.get('email')
+            first_name = data.get('first_name')
+            last_name = data.get('last_name')
+            
+            if email:
+                user.email = email
+            if first_name:
+                user.first_name = first_name
+            if last_name:
+                user.last_name = last_name
+                
+            db.session.commit()
+            
+            # Update session as well
+            user_data['email'] = email or user_data.get('email')
+            user_data['first_name'] = first_name or user_data.get('first_name')
+            user_data['last_name'] = last_name or user_data.get('last_name')
+            session['user'] = user_data
+            
+            logger.info(f"User details synchronized for {user_id}")
+            return jsonify({'status': 'success'}), 200
+        else:
+            return jsonify({'error': 'User not found'}), 404
+            
+    except Exception as e:
+        logger.error(f"Auth sync error: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 @views_bp.route('/logout')
 def logout():

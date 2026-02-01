@@ -398,7 +398,7 @@
 
     <div class="login-card">
         <div class="brand-header">
-            <img src="{{ url_for('static', filename='images/neuralbrain-logo-3d.jpg') }}" class="logo-icon"
+            <img src="{{ url_for('static', filename='images/NeuralBrainLogo.png') }}" class="logo-icon"
                 alt="NeuralBrain Logo">
             <h1 class="brand-title">NeuralBrain AI</h1>
             <p class="brand-subtitle">Sign in to your dashboard</p>
@@ -694,6 +694,26 @@
                     await window.Clerk.setActive({ session: signIn.createdSessionId });
                     const token = await window.Clerk.session.getToken();
                     document.cookie = `__session=${token}; path=/; max-age=3600; secure; samesite=strict`;
+
+                    // Sync user details
+                    try {
+                        const user = window.Clerk.user;
+                        if (user) {
+                            const syncData = {
+                                email: user.primaryEmailAddress ? user.primaryEmailAddress.emailAddress : '',
+                                first_name: user.firstName,
+                                last_name: user.lastName
+                            };
+                            await fetch('/auth/sync', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(syncData)
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Sync failed", e);
+                    }
+
                     window.location.href = '/dashboard';
                 }
             } catch (error) {
@@ -732,6 +752,26 @@
                     await window.Clerk.setActive({ session: signIn.createdSessionId });
                     const token = await window.Clerk.session.getToken();
                     document.cookie = `__session=${token}; path=/; max-age=3600; secure; samesite=strict`;
+
+                    // Sync user details
+                    try {
+                        const user = window.Clerk.user;
+                        if (user) {
+                            const syncData = {
+                                email: user.primaryEmailAddress ? user.primaryEmailAddress.emailAddress : '',
+                                first_name: user.firstName,
+                                last_name: user.lastName
+                            };
+                            await fetch('/auth/sync', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(syncData)
+                            });
+                        }
+                    } catch (e) {
+                        console.error("Sync failed", e);
+                    }
+
                     window.location.href = '/dashboard';
                 }
             } catch (error) {

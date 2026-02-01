@@ -8,7 +8,7 @@
     <title>{% block title %}NeuralBrain AI - Dashboard{% endblock %}</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -446,8 +446,8 @@
     <aside class="sidebar">
         <a href="{{ url_for('views.index') }}" class="logo-box"
             style="text-decoration: none; display: flex; align-items: center;">
-            <div class="logo-icon"><img src="{{ url_for('static', filename='images/neuralbrain-logo-3d.jpg') }}"
-                    alt="NeuralBrain"></div>
+            <div class="logo-icon"><img src="{{ url_for('static', filename='images/NeuralBrainLogo.png') }}"
+                    alt="NeuralBrain" style="width: 100%; height: 100%; object-fit: contain;"></div>
             <span
                 style="font-size: 1.1rem; font-weight: 700; background: linear-gradient(to right, #60a5fa, #a78bfa); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">NeuralBrain
                 AI</span>
@@ -531,7 +531,14 @@
         <!-- Top Bar with Profile -->
         <header class="top-bar">
             <div class="user-card" onclick="window.location.href='{{ url_for('views.settings') }}';">
-                <div class="user-avatar" style="width: 2rem; height: 2rem; border-width: 1px;"></div>
+                {% if user.get('profile_image') %}
+                <img src="{{ user.get('profile_image') }}" alt="Profile"
+                    style="width: 2rem; height: 2rem; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg-hover);">
+                {% else %}
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ user.get('first_name', 'Admin') }}"
+                    alt="Profile"
+                    style="width: 2rem; height: 2rem; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg-hover);">
+                {% endif %}
                 <div style="margin-left: 0.5rem; margin-right: 0.5rem;">
                     <p style="font-size: 0.875rem; font-weight: 600;">{{ user.get('first_name') or 'Administrator' }}
                     </p>

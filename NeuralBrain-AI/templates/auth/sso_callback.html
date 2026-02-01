@@ -71,6 +71,42 @@
                         const token = await window.Clerk.session.getToken();
                         document.cookie = `__session=${token}; path=/; max-age=3600; secure; samesite=strict`;
 
+                        // NEW: Capture and sync user details from frontend to database
+                        try {
+                            // Poll for user details (sometimes it takes a moment after session is ready)
+                            let user = window.Clerk.user;
+                            let retries = 0;
+                            while ((!user || !user.primaryEmailAddress) && retries < 10) {
+                                console.log("Waiting for user details...");
+                                await new Promise(r => setTimeout(r, 300));
+                                user = window.Clerk.user;
+                                retries++;
+                            }
+
+                            if (user) {
+                                console.log("Capturing user details for sync...");
+                                const syncData = {
+                                    email: user.primaryEmailAddress ? user.primaryEmailAddress.emailAddress : '',
+                                    first_name: user.firstName,
+                                    last_name: user.lastName
+                                };
+
+                                await fetch('/auth/sync', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        // The backend uses the __session cookie, so we don't need a Bearer header here
+                                        // unless we want to be extra safe.
+                                    },
+                                    body: JSON.stringify(syncData)
+                                });
+                                console.log("Profile sync request sent");
+                            }
+                        } catch (syncErr) {
+                            console.error("Profile sync failed:", syncErr);
+                            // Don't block redirect if sync fails
+                        }
+
                         // Show success message before redirecting
                         document.querySelector('p').textContent = "Session verified! Redirecting...";
 

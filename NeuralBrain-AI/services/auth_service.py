@@ -7,7 +7,10 @@ import json
 from functools import wraps
 from flask import request, redirect, url_for, session, current_app
 
+
 import logging
+from datetime import datetime
+from models import db, User
 
 logger = logging.getLogger(__name__)
 
@@ -128,6 +131,60 @@ def login_required(f):
             
         user_payload = clerk_auth.verify_token(token)
         if user_payload:
+            # Sync user to local database
+            try:
+                user_id = user_payload.get('sub')
+                # Try multiple common Clerk email claim keys
+                email = (
+                    user_payload.get('email') or 
+                    user_payload.get('email_address') or 
+                    user_payload.get('primary_email_address') or
+                    ""
+                )
+                
+                # Also try to get names if they exist in the token
+                first_name = user_payload.get('given_name') or user_payload.get('first_name')
+                last_name = user_payload.get('family_name') or user_payload.get('last_name')
+                
+                logger.info(f"Syncing user {user_id}. Email: {email}, Name: {first_name} {last_name}")
+                logger.info(f"Payload keys: {list(user_payload.keys())}")
+                # logger.info(f"Full payload (redacted): { {k: (v if k not in ['email', 'email_address'] else '***') for k, v in user_payload.items()} }")
+                
+                # Check database
+                user = User.query.get(user_id)
+                
+                if not user:
+                    # Create new user
+                    user = User(
+                        id=user_id,
+                        email=email,
+                        first_name=first_name,
+                        last_name=last_name,
+                        role='user'
+                    )
+                    db.session.add(user)
+                    logger.info(f"Created new user record: {user_id}")
+                else:
+                    # Update existing user if fields are missing but present in token
+                    if email and not user.email:
+                        user.email = email
+                    if first_name and not user.first_name:
+                        user.first_name = first_name
+                    if last_name and not user.last_name:
+                        user.last_name = last_name
+                    logger.info(f"Updated existing user record: {user_id}")
+                
+                # Update last login
+                user.last_login = datetime.utcnow()
+                db.session.commit()
+                
+                # Add role to payload for session
+                user_payload['role'] = user.role
+                
+            except Exception as e:
+                logger.error(f"User sync error: {str(e)}")
+                # Continue even if sync fails, don't block login
+            
             # Save minimal info to Flask session to avoid re-verifying every single request
             # (In high security, verify every time, but for performance, caching is okay)
             session['user'] = user_payload
