@@ -7,4 +7,4 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-from .database import HealthDataRecord, IngestionLog
+from .database import HealthDataRecord, IngestionLog, User

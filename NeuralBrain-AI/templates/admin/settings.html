@@ -461,7 +461,7 @@
                     <h2 class="card-title">Profile</h2>
                 </div>
 
-                <form>
+                <form method="POST" action="{{ url_for('views.settings') }}" enctype="multipart/form-data">
                     <!-- Image Upload -->
                     <div class="profile-upload-container">
                         <div class="profile-avatar-wrapper">
@@ -470,39 +470,40 @@
                             <label for="avatarUpload" class="upload-overlay">
                                 <i class="fas fa-camera" style="color: #fff; font-size: 0.9rem;"></i>
                             </label>
-                            <input type="file" id="avatarUpload" accept="image/*" style="display: none;"
-                                onchange="previewImage(this)">
+                            <input type="file" id="avatarUpload" name="profile_image" accept="image/*"
+                                style="display: none;" onchange="previewImage(this)">
                         </div>
                         <p style="font-size: 0.8rem; color: #94a3b8; font-family: 'Space Mono';">Update Photo</p>
                     </div>
-
-                    <!-- Input Fields -->
-                    <div class="form-group">
-                        <label class="form-label">First Name</label>
-                        <input type="text" class="form-input" value="{{ user.get('first_name', 'Administrator') }}"
-                            placeholder="Enter first name">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Last Name</label>
-                        <input type="text" class="form-input" value="{{ user.get('last_name', '') }}"
-                            placeholder="Enter last name">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Email Address</label>
-                        <input type="email" class="form-input" value="{{ user.get('email', 'admin@neuralbrain.ai') }}"
-                            disabled style="opacity: 0.6; cursor: not-allowed;">
-                    </div>
-
-                    <button type="submit" class="btn-primary" style="margin-top: 1rem;">
-                        Save Changes
-                    </button>
-                </form>
             </div>
-        </div>
 
+            <!-- Input Fields -->
+            <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input type="text" name="first_name" class="form-input" value="{{ user.get('first_name', '') }}"
+                    placeholder="Enter first name">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" name="last_name" class="form-input" value="{{ user.get('last_name', '') }}"
+                    placeholder="Enter last name">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" value="{{ user.get('email', '') }}" disabled
+                    style="opacity: 0.6; cursor: not-allowed;">
+            </div>
+
+            <button type="submit" class="btn-primary" style="margin-top: 1rem;">
+                Save Changes
+            </button>
+            </form>
+        </div>
     </div>
+
+</div>
 </div>
 
 <script>
