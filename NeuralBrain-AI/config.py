@@ -31,9 +31,8 @@ if uri:
         uri = uri.replace('postgresql://', 'postgresql+psycopg://', 1)
 
 _db_path = os.path.join(DATA_DIR, "neuralbrain.db")
-SQLALCHEMY_DATABASE_URI = uri or f'sqlite:///{_db_path}'
-# Alternative: Use relative path
-# SQLALCHEMY_DATABASE_URI = 'sqlite:///data/neuralbrain.db'
+# SQLite URI - use 4 slashes for absolute path on Unix
+SQLALCHEMY_DATABASE_URI = uri or f'sqlite:////{os.path.abspath(_db_path)}'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # Application Metadata
