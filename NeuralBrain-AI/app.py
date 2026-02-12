@@ -12,8 +12,12 @@ The system is designed for zero-cost operation using only free public APIs.
 
 import os
 import logging
+from dotenv import load_dotenv
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(
@@ -73,11 +77,34 @@ def create_app(config_name='config'):
     # Register blueprints
     from routes.api import api_bp
     from routes.views import views_bp
+    from routes.real_data_api import real_data_api
+    from routes.health_api import register_health_blueprint
     
     app.register_blueprint(api_bp)
     app.register_blueprint(views_bp)
+    app.register_blueprint(real_data_api)  # ✅ NEW: Real data endpoints
+    register_health_blueprint(app)  # ✅ NEW: Health monitoring API endpoints
     
-    logger.info("Blueprints registered: api, views")
+    logger.info("✅ Blueprints registered: api, views, real_data_api, health_api (MONITORING MODE)")
+    
+    # Initialize prediction scheduler (hourly AI updates)
+    try:
+        from services.scheduler import PredictionScheduler
+        PredictionScheduler.init_scheduler(app)
+        logger.info("✅ Prediction scheduler initialized (hourly updates enabled)")
+    except Exception as e:
+        logger.warning(f"⚠️ Scheduler initialization warning: {str(e)}")
+    
+    # Initialize health monitoring system
+    try:
+        from services.health_monitor import BackgroundHealthMonitor
+        
+        # Create and start health monitor (no orchestrator needed)
+        monitor = BackgroundHealthMonitor()
+        monitor.start()
+        logger.info("✅ Health monitoring system initialized and started (background thread active)")
+    except Exception as e:
+        logger.warning(f"⚠️ Health monitor initialization warning: {str(e)}")
     
     # Register error handlers
     register_error_handlers(app)

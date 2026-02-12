@@ -18,6 +18,26 @@
         src="https://ready-magpie-87.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"
         type="text/javascript"></script>
 
+    <!-- NETWORK-AWARE CLERK CONFIGURATION -->
+    <script>
+        // Fix for network access - dynamically get correct base URL
+        function getClerkRedirectUrl() {
+            const protocol = window.location.protocol;  // http: or https:
+            const host = window.location.hostname;       // 192.168.100.87 or localhost
+            const port = window.location.port ? ':' + window.location.port : '';
+            return protocol + '//' + host + port;
+        }
+
+        // Set global Clerk config for network-aware redirects
+        window.clerkConfig = {
+            baseUrl: getClerkRedirectUrl(),
+            redirectUrl: getClerkRedirectUrl() + '/sso-callback',
+            redirectUrlComplete: getClerkRedirectUrl() + '/dashboard'
+        };
+
+        console.log('✅ Network-Aware Clerk Config Loaded:', window.clerkConfig);
+    </script>
+
     <style>
         :root {
             --bg-primary: #0f172a;
@@ -613,10 +633,11 @@
 
         async function handleSocialSignUp(provider) {
             try {
+                console.log(`🔐 Attempting social signup with ${provider} using`, window.clerkConfig);
                 await signUp.authenticateWithRedirect({
                     strategy: provider,
-                    redirectUrl: '/sso-callback',
-                    redirectUrlComplete: '/dashboard'
+                    redirectUrl: window.clerkConfig.redirectUrl,
+                    redirectUrlComplete: window.clerkConfig.redirectUrlComplete
                 });
             } catch (error) {
                 console.error('Social signup error:', error);
@@ -716,7 +737,9 @@
                 if (signUp.status === 'complete') {
                     await window.Clerk.setActive({ session: signUp.createdSessionId });
                     const token = await window.Clerk.session.getToken();
-                    document.cookie = `__session=${token}; path=/; max-age=3600; secure; samesite=strict`;
+                    // FIX: Use samesite=lax for network access
+                    document.cookie = `__session=${token}; path=/; max-age=86400; samesite=lax`;
+                    console.log('✅ Session persisted to cookie');
 
                     // Sync user details
                     try {
@@ -737,7 +760,8 @@
                         console.error("Sync failed", e);
                     }
 
-                    window.location.href = '/dashboard';
+                    console.log('✅ Signup complete, redirecting to dashboard...');
+                    window.location.href = window.clerkConfig.redirectUrlComplete || '/dashboard';
                 }
             } catch (error) {
                 console.error('Verification error:', error);

@@ -1,7 +1,10 @@
 """
 AI-Based Health Risk Scoring System
 Simplified version for Python 3.14 compatibility (No Numpy/Sklearn)
-Uses pure Python rule-based approach
+Uses pure Python rule-based approach with Huawei Cloud Medical AI fallback
+
+Uses Huawei Cloud Medical AI model when available,
+falls back to rule-based scoring if cloud unavailable.
 """
 
 import logging
@@ -11,6 +14,14 @@ from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
+
+# Import AI services adapter
+try:
+    from ai_services.risk_scoring_engine import get_medical_ai_risk_scorer
+    AI_SERVICES_AVAILABLE = True
+except ImportError:
+    AI_SERVICES_AVAILABLE = False
+    logger.warning("AI Services not available, using fallback risk scoring")
 
 
 @dataclass
@@ -211,6 +222,43 @@ class HealthRiskScorer:
         recent_history: Optional[List[Dict[str, float]]] = None,
         all_history: Optional[List[Dict[str, float]]] = None
     ) -> RiskScore:
+        """
+        Score health status using Huawei Medical AI if available,
+        falls back to rule-based scoring.
+        """
+        # Try Huawei Cloud Medical AI first
+        if AI_SERVICES_AVAILABLE:
+            try:
+                scorer = get_medical_ai_risk_scorer()
+                result_dict = scorer.score_health_status(
+                    current_metrics=current_metrics,
+                    recent_history=recent_history or [],
+                    fallback_fn=self._score_health_status_fallback
+                )
+                
+                # Convert dict to RiskScore
+                return RiskScore(
+                    overall_risk=result_dict.get("overall_risk", "Medium"),
+                    risk_percentage=result_dict.get("risk_percentage", 50),
+                    risk_factors=result_dict.get("risk_factors", []),
+                    trend_analysis=result_dict.get("trend_analysis", {}),
+                    recommendations=result_dict.get("recommendations", []),
+                    confidence=result_dict.get("confidence", 0.85),
+                    timestamp=result_dict.get("timestamp", datetime.now().isoformat())
+                )
+            except Exception as e:
+                logger.debug(f"AI Services risk scoring failed, using fallback: {str(e)}")
+                return self._score_health_status_fallback(current_metrics, recent_history, all_history)
+        else:
+            return self._score_health_status_fallback(current_metrics, recent_history, all_history)
+    
+    def _score_health_status_fallback(
+        self,
+        current_metrics: Dict[str, float],
+        recent_history: Optional[List[Dict[str, float]]] = None,
+        all_history: Optional[List[Dict[str, float]]] = None
+    ) -> RiskScore:
+        """Fallback: Rule-based health status scoring"""
         try:
             timestamp = datetime.now().isoformat()
             recommendations = []

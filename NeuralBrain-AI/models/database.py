@@ -123,3 +123,56 @@ class IngestionLog(db.Model):
     
     def __repr__(self):
         return f'<IngestionLog {self.id} from {self.api_source} [{self.status}]>'
+
+
+class UserSettings(db.Model):
+    """
+    Stores user preferences and system settings.
+    
+    Attributes:
+        id: Unique identifier
+        user_id: Reference to User
+        theme: 'dark' or 'light'
+        data_refresh_rate: Polling interval in seconds (30, 60, 120, 300)
+        critical_alerts_enabled: Whether to show critical alerts
+        email_notifications: Whether to receive email notifications
+        timezone: User timezone (e.g., 'UTC', 'America/New_York')
+        language: Preferred language code (e.g., 'en', 'es')
+        exports_format: Preferred export format ('csv', 'json')
+        created_at: When settings were initialized
+        updated_at: Last modification timestamp
+    """
+    __tablename__ = 'user_settings'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String(100), db.ForeignKey('users.id'), nullable=False, unique=True, index=True)
+    theme = db.Column(db.String(20), default='dark')  # 'dark' or 'light'
+    data_refresh_rate = db.Column(db.Integer, default=60)  # seconds
+    critical_alerts_enabled = db.Column(db.Boolean, default=True)
+    email_notifications = db.Column(db.Boolean, default=True)
+    timezone = db.Column(db.String(50), default='UTC')
+    language = db.Column(db.String(10), default='en')
+    exports_format = db.Column(db.String(20), default='json')  # 'json' or 'csv'
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationship
+    user = db.relationship('User', backref=db.backref('settings', uselist=False))
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'theme': self.theme,
+            'data_refresh_rate': self.data_refresh_rate,
+            'critical_alerts_enabled': self.critical_alerts_enabled,
+            'email_notifications': self.email_notifications,
+            'timezone': self.timezone,
+            'language': self.language,
+            'exports_format': self.exports_format,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat()
+        }
+    
+    def __repr__(self):
+        return f'<UserSettings for {self.user_id}>'

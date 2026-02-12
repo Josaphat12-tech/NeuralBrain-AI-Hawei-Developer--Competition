@@ -18,6 +18,26 @@
         src="https://ready-magpie-87.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"
         type="text/javascript"></script>
 
+    <!-- NETWORK-AWARE CLERK CONFIGURATION -->
+    <script>
+        // Fix for network access - dynamically get correct base URL
+        function getClerkRedirectUrl() {
+            const protocol = window.location.protocol;  // http: or https:
+            const host = window.location.hostname;       // 192.168.100.87 or localhost
+            const port = window.location.port ? ':' + window.location.port : '';
+            return protocol + '//' + host + port;
+        }
+
+        // Set global Clerk config for network-aware redirects
+        window.clerkConfig = {
+            baseUrl: getClerkRedirectUrl(),
+            redirectUrl: getClerkRedirectUrl() + '/sso-callback',
+            redirectUrlComplete: getClerkRedirectUrl() + '/dashboard'
+        };
+
+        console.log('✅ Network-Aware Clerk Config Loaded:', window.clerkConfig);
+    </script>
+
     <style>
         :root {
             --bg-primary: #0f172a;
@@ -592,10 +612,11 @@
 
         async function handleSocialLogin(provider) {
             try {
+                console.log(`🔐 Attempting social login with ${provider} using`, window.clerkConfig);
                 await signIn.authenticateWithRedirect({
                     strategy: provider,
-                    redirectUrl: '/sso-callback',
-                    redirectUrlComplete: '/dashboard'
+                    redirectUrl: window.clerkConfig.redirectUrl,
+                    redirectUrlComplete: window.clerkConfig.redirectUrlComplete
                 });
             } catch (error) {
                 console.error('Social login error:', error);
@@ -821,7 +842,16 @@
         });
 
         // Clerk Initialization
+        let clerkInitialized = false;  // Prevent multiple initializations
+
         async function initializeClerk() {
+            // FIX: Prevent duplicate initialization
+            if (clerkInitialized) {
+                console.log('✅ Clerk already initialized');
+                return;
+            }
+            clerkInitialized = true;
+
             // Wait for Clerk to be available
             let attempts = 0;
             const maxAttempts = 50;
@@ -837,14 +867,19 @@
 
             try {
                 await window.Clerk.load();
+                console.log('✅ Clerk loaded successfully');
 
                 // Check if already signed in
                 if (window.Clerk.user) {
+                    console.log('ℹ️ User already authenticated, redirecting to dashboard...');
                     const token = await window.Clerk.session.getToken();
-                    document.cookie = `__session=${token}; path=/; max-age=3600; secure; samesite=strict`;
-                    window.location.href = '/dashboard';
+                    // FIX: Use samesite=lax for network access, not strict
+                    document.cookie = `__session=${token}; path=/; max-age=3600; samesite=lax`;
+                    window.location.href = window.clerkConfig.redirectUrlComplete || '/dashboard';
                     return;
                 }
+
+                console.log('✅ Clerk ready - showing login form');
 
                 // Initialize sign in
                 signIn = window.Clerk.client.signIn;
@@ -853,7 +888,7 @@
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('login-form').classList.remove('hidden');
 
-                // Social login handlers
+                // Social login handlers - with network-aware URLs
                 document.getElementById('google-btn').addEventListener('click', () => {
                     handleSocialLogin('oauth_google');
                 });

@@ -3,24 +3,33 @@
 {% block title %}Settings - NeuralBrain AI{% endblock %}
 
 {% block content %}
-<link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap"
-    rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
+    /* ===== RESPONSIVE TYPOGRAPHY ===== */
+    :root {
+        --size-h1: clamp(2rem, 5vw, 3.5rem);
+        --size-h2: clamp(1.5rem, 3vw, 2.25rem);
+        --size-h3: clamp(1.125rem, 2.5vw, 1.5rem);
+        --size-body: clamp(0.95rem, 2vw, 1rem);
+        --size-small: clamp(0.8rem, 1.5vw, 0.875rem);
+    }
+
     .settings-container {
-        max-width: 1200px;
+        max-width: 1400px;
         margin: 0 auto;
+        padding: clamp(1.5rem, 3vw, 3rem);
         font-family: 'Syne', sans-serif;
     }
 
+    /* ===== PAGE HEADER ===== */
     .settings-header {
-        margin-bottom: 3rem;
-        position: relative;
+        margin-bottom: clamp(2rem, 4vw, 3rem);
+        animation: fadeInDown 0.6s ease-out;
     }
 
     .settings-title {
-        font-size: 4rem;
+        font-size: var(--size-h1);
         font-weight: 800;
         letter-spacing: -0.03em;
         background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
@@ -28,314 +37,355 @@
         -webkit-text-fill-color: transparent;
         background-clip: text;
         margin-bottom: 0.5rem;
-        animation: fadeInDown 0.6s ease-out;
-    }
-
-    @media (max-width: 768px) {
-        .settings-title {
-            font-size: 2.5rem;
-        }
-
-        .settings-subtitle {
-            font-size: 1rem;
-        }
-
-        .setting-card {
-            padding: 1.5rem;
-        }
-
-        .settings-header {
-            margin-bottom: 2rem;
-        }
     }
 
     .settings-subtitle {
-        font-size: 1.125rem;
+        font-size: var(--size-body);
         color: #94a3b8;
         font-weight: 400;
         letter-spacing: 0.02em;
-        animation: fadeInUp 0.6s ease-out 0.2s both;
+        opacity: 0.9;
     }
 
-    /* 2-Column Grid Layout */
-    .settings-grid {
+    /* ===== LAYOUT: TWO COLUMN ON DESKTOP ===== */
+    .settings-layout {
         display: grid;
-        grid-template-columns: 1fr 400px;
-        gap: 2rem;
+        grid-template-columns: 1fr 380px;
+        gap: clamp(1.5rem, 3vw, 2rem);
+        align-items: start;
     }
 
     @media (max-width: 1024px) {
-        .settings-grid {
+        .settings-layout {
             grid-template-columns: 1fr;
-            gap: 1.5rem;
+            gap: clamp(1.5rem, 3vw, 2rem);
         }
 
-        .profile-sidebar {
+        .profile-card {
             order: -1;
-            position: static !important;
-            width: 100% !important;
-            margin-bottom: 2rem !important;
-        }
-
-        .settings-main {
-            width: 100%;
-        }
-
-        .setting-card {
-            padding: 1.5rem !important;
-            margin-bottom: 1.5rem !important;
-        }
-
-        .card-title {
-            font-size: 1.25rem !important;
-        }
-
-        .settings-title {
-            font-size: 2.2rem !important;
         }
     }
 
+    /* ===== CARD STYLES (Enterprise Glass-Morphism) ===== */
     .setting-card {
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);
-        border: 1px solid rgba(148, 163, 184, 0.1);
-        border-radius: 1.5rem;
-        padding: 2.5rem;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.5) 100%);
+        border: 1px solid rgba(148, 163, 184, 0.15);
+        border-radius: max(1rem, 1.5vw);
+        padding: clamp(1.5rem, 3vw, 2.5rem);
         position: relative;
         overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        animation: fadeInScale 0.6s ease-out both;
-        margin-bottom: 2rem;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: fadeInUp 0.6s ease-out both;
     }
 
-    .setting-card:last-child {
-        margin-bottom: 0;
-    }
+    .setting-card:nth-child(2) { animation-delay: 0.1s; }
+    .setting-card:nth-child(3) { animation-delay: 0.2s; }
+    .setting-card:nth-child(4) { animation-delay: 0.3s; }
 
     .setting-card:hover {
-        border-color: rgba(59, 130, 246, 0.3);
-        transform: translateY(-4px);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        border-color: rgba(59, 130, 246, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 20px 60px rgba(59, 130, 246, 0.1);
     }
 
+    .setting-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(600px at 0% 0%, rgba(59, 130, 246, 0.1), transparent);
+        pointer-events: none;
+    }
+
+    /* ===== CARD HEADER ===== */
     .card-header {
         display: flex;
         align-items: center;
         gap: 1rem;
-        margin-bottom: 2rem;
-        padding-bottom: 1.5rem;
+        margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        padding-bottom: clamp(1rem, 2vw, 1.5rem);
         border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        position: relative;
+        z-index: 1;
     }
 
     .card-icon {
-        width: 48px;
-        height: 48px;
+        width: clamp(40px, 8vw, 48px);
+        height: clamp(40px, 8vw, 48px);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
+        font-size: clamp(1.25rem, 3vw, 1.5rem);
         background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2));
-        border-radius: 1rem;
+        border-radius: 0.875rem;
         border: 1px solid rgba(59, 130, 246, 0.3);
+        flex-shrink: 0;
     }
 
     .card-title {
-        font-size: 1.5rem;
+        font-size: var(--size-h3);
         font-weight: 700;
-        letter-spacing: -0.02em;
         color: #ffffff;
+        letter-spacing: -0.01em;
     }
 
-    /* Profile Specific Styles */
-    .profile-sidebar {
-        position: sticky;
-        top: 2rem;
-        height: fit-content;
+    .card-description {
+        font-size: var(--size-small);
+        color: #94a3b8;
+        margin-top: 0.25rem;
     }
 
-    .profile-upload-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 2rem;
-    }
-
-    .profile-avatar-wrapper {
-        position: relative;
-        width: 120px;
-        height: 120px;
-        margin-bottom: 1rem;
-    }
-
-    .profile-avatar {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid rgba(59, 130, 246, 0.3);
-        background-color: #1e293b;
-    }
-
-    .upload-overlay {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 36px;
-        height: 36px;
-        background: var(--accent-blue);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: 2px solid #0f172a;
-    }
-
-    .upload-overlay:hover {
-        transform: scale(1.1);
-        background: var(--accent-cyan);
-    }
-
+    /* ===== FORM ELEMENTS ===== */
     .form-group {
-        margin-bottom: 1.5rem;
-        width: 100%;
+        margin-bottom: clamp(1.5rem, 3vw, 2rem);
+        position: relative;
+    }
+
+    .form-group:last-child {
+        margin-bottom: 0;
     }
 
     .form-label {
         display: block;
-        font-family: 'Space Mono', monospace;
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #94a3b8;
-        text-transform: uppercase;
+        font-size: var(--size-small);
+        font-weight: 600;
+        color: #e2e8f0;
         margin-bottom: 0.5rem;
+        text-transform: uppercase;
         letter-spacing: 0.05em;
     }
 
-    .form-input {
+    .form-input,
+    .form-select {
         width: 100%;
-        padding: 0.875rem 1rem;
+        padding: clamp(0.75rem, 2vw, 0.875rem) clamp(1rem, 2vw, 1.25rem);
         background: rgba(15, 23, 42, 0.6);
         border: 1px solid rgba(148, 163, 184, 0.2);
         border-radius: 0.75rem;
-        color: #ffffff;
-        font-family: 'Syne', sans-serif;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .form-input:focus {
-        outline: none;
-        border-color: var(--accent-blue);
-        background: rgba(30, 41, 59, 0.8);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    /* System Configuration Styles */
-    .setting-item {
-        padding: 1.5rem;
-        background: rgba(15, 23, 42, 0.5);
-        border: 1px solid rgba(148, 163, 184, 0.08);
-        border-radius: 1rem;
-        margin-bottom: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .setting-item:hover {
-        background: rgba(30, 41, 59, 0.5);
-        border-color: rgba(148, 163, 184, 0.15);
-    }
-
-    .item-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 2rem;
-    }
-
-    @media (max-width: 480px) {
-        .item-content {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-
-        .toggle-switch {
-            align-self: flex-start;
-        }
-    }
-
-    .item-label {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #ffffff;
-        margin-bottom: 0.25rem;
-    }
-
-    .item-description {
-        font-size: 0.875rem;
-        color: #94a3b8;
+        color: #e2e8f0;
+        font-size: var(--size-body);
         font-family: 'Space Mono', monospace;
+        transition: all 0.2s ease;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+        outline: none;
+        border-color: rgba(59, 130, 246, 0.6);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background: rgba(15, 23, 42, 0.8);
+    }
+
+    .form-input::placeholder {
+        color: rgba(148, 163, 184, 0.6);
+    }
+
+    .form-helper {
+        font-size: var(--size-small);
+        color: #94a3b8;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    /* ===== TOGGLE SWITCH ===== */
+    .toggle-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .toggle-label {
+        font-size: var(--size-body);
+        color: #e2e8f0;
+        flex: 1;
     }
 
     .toggle-switch {
         position: relative;
-        width: 52px;
-        height: 28px;
+        width: clamp(50px, 10vw, 60px);
+        height: 30px;
         background: rgba(148, 163, 184, 0.2);
-        border-radius: 14px;
-        border: 1px solid rgba(148, 163, 184, 0.3);
+        border-radius: 15px;
         cursor: pointer;
         transition: all 0.3s ease;
     }
 
     .toggle-switch.active {
-        background: linear-gradient(135deg, #22c55e, #16a34a);
-        border-color: rgba(34, 197, 94, 0.5);
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
     }
 
     .toggle-switch::after {
         content: '';
         position: absolute;
+        width: 26px;
+        height: 26px;
+        background: white;
+        border-radius: 50%;
         top: 2px;
         left: 2px;
-        width: 22px;
-        height: 22px;
-        background: #ffffff;
-        border-radius: 50%;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     .toggle-switch.active::after {
-        left: 26px;
+        left: calc(100% - 28px);
+    }
+
+    input[type="checkbox"].hidden-toggle {
+        display: none;
+    }
+
+    /* ===== PROFILE CARD (SIDEBAR) ===== */
+    .profile-card {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.5) 100%);
+        border: 1px solid rgba(148, 163, 184, 0.15);
+        border-radius: max(1rem, 1.5vw);
+        padding: clamp(1.5rem, 3vw, 2rem);
+        backdrop-filter: blur(10px);
+        animation: fadeInLeft 0.6s ease-out;
+    }
+
+    .avatar-section {
+        text-align: center;
+        margin-bottom: clamp(1.5rem, 3vw, 2rem);
+        padding-bottom: clamp(1rem, 2vw, 1.5rem);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .avatar {
+        width: clamp(80px, 15vw, 120px);
+        height: clamp(80px, 15vw, 120px);
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(2rem, 5vw, 3rem);
+        color: white;
+        margin: 0 auto clamp(1rem, 2vw, 1.5rem);
+        object-fit: cover;
+        border: 3px solid rgba(59, 130, 246, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .avatar:hover {
+        border-color: rgba(59, 130, 246, 0.6);
+        transform: scale(1.05);
+    }
+
+    .avatar.with-image {
+        background: none;
+        color: transparent;
+    }
+
+    .profile-name {
+        font-size: var(--size-h3);
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 0.25rem;
+    }
+
+    .profile-role {
+        font-size: var(--size-small);
+        color: #94a3b8;
+        text-transform: capitalize;
+        margin-bottom: 1rem;
+    }
+
+    .profile-stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        font-size: var(--size-small);
+    }
+
+    .profile-stat-label {
+        color: #94a3b8;
+    }
+
+    .profile-stat-value {
+        color: #e2e8f0;
+        font-weight: 600;
+        font-family: 'Space Mono', monospace;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+        padding: clamp(0.75rem, 2vw, 0.875rem) clamp(1.25rem, 3vw, 1.5rem);
+        font-size: var(--size-body);
+        font-weight: 600;
+        border: none;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-family: inherit;
     }
 
     .btn-primary {
         background: linear-gradient(135deg, #3b82f6, #2563eb);
-        color: #ffffff;
-        border: none;
-        padding: 0.875rem 2rem;
-        border-radius: 0.75rem;
-        font-weight: 600;
-        font-family: 'Space Mono', monospace;
-        cursor: pointer;
-        width: 100%;
-        transition: all 0.3s ease;
+        color: white;
+        border: 1px solid rgba(59, 130, 246, 0.5);
     }
 
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        border-color: rgba(59, 130, 246, 0.8);
     }
 
-    /* Animations */
+    .btn-secondary {
+        background: rgba(148, 163, 184, 0.1);
+        color: #e2e8f0;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .btn-secondary:hover {
+        background: rgba(148, 163, 184, 0.2);
+        border-color: rgba(148, 163, 184, 0.5);
+    }
+
+    .btn-danger {
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+        background: rgba(239, 68, 68, 0.25);
+        border-color: rgba(239, 68, 68, 0.6);
+    }
+
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .btn-block {
+        width: 100%;
+    }
+
+    .btn-sm {
+        padding: 0.5rem 0.875rem;
+        font-size: var(--size-small);
+    }
+
+    /* ===== GRID FOR SIDE BY SIDE BUTTONS ===== */
+    .button-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.75rem;
+    }
+
+    /* ===== ANIMATIONS ===== */
     @keyframes fadeInDown {
         from {
             opacity: 0;
-            transform: translateY(-30px);
+            transform: translateY(-20px);
         }
-
         to {
             opacity: 1;
             transform: translateY(0);
@@ -347,189 +397,490 @@
             opacity: 0;
             transform: translateY(20px);
         }
-
         to {
             opacity: 1;
             transform: translateY(0);
         }
     }
 
-    @keyframes fadeInScale {
+    @keyframes fadeInLeft {
         from {
             opacity: 0;
-            transform: scale(0.95);
+            transform: translateX(-20px);
         }
-
         to {
             opacity: 1;
-            transform: scale(1);
+            transform: translateX(0);
+        }
+    }
+
+    /* ===== STATUS & SUCCESS MESSAGES ===== */
+    .alert {
+        padding: clamp(1rem, 2vw, 1.25rem);
+        border-radius: 0.75rem;
+        margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        font-size: var(--size-body);
+        animation: slideInDown 0.3s ease;
+    }
+
+    .alert-success {
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        color: #86efac;
+    }
+
+    .alert-error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+    }
+
+    .alert-info {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        color: #93c5fd;
+    }
+
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ===== LOADING STATE ===== */
+    .loading {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        .settings-container {
+            padding: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .settings-header {
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .button-group {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            margin-bottom: clamp(1.25rem, 2vw, 1.5rem);
+        }
+
+        .toggle-wrapper {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .toggle-label {
+            width: 100%;
+        }
+
+        .toggle-switch {
+            width: 50px;
+            align-self: flex-start;
         }
     }
 </style>
 
 <div class="settings-container">
-    <!-- Header -->
+    <!-- HEADER -->
     <div class="settings-header">
-        <h1 class="settings-title">Settings</h1>
-        <p class="settings-subtitle">Manage preferences & profile</p>
+        <h1 class="settings-title">⚙️ Settings</h1>
+        <p class="settings-subtitle">Manage your profile and customize your experience</p>
     </div>
 
-    <!-- 2-Column Grid -->
-    <div class="settings-grid">
+    <!-- ALERTS (Flash Messages) -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
-        <!-- Left Column: System Settings -->
+    <!-- MAIN LAYOUT: SIDEBAR + CONTENT -->
+    <div class="settings-layout">
+        <!-- LEFT COLUMN: SETTINGS SECTIONS -->
         <div class="settings-main">
-            <!-- System Configuration -->
-            <div class="setting-card">
-                <div class="card-header">
-                    <div class="card-icon">🔧</div>
-                    <h2 class="card-title">System Configuration</h2>
-                </div>
-
-                <div class="setting-item">
-                    <div class="item-content">
-                        <div>
-                            <div class="item-label">Data Refresh Rate</div>
-                            <div class="item-description">Update frequency for dashboard metrics</div>
-                        </div>
-                        <span class="badge"
-                            style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-family: 'Space Mono'; font-size: 0.8rem;">5
-                            MIN</span>
-                    </div>
-                </div>
-
-                <div class="setting-item">
-                    <div class="item-content">
-                        <div>
-                            <div class="item-label">Critical Alerts</div>
-                            <div class="item-description">Notifications for high risk anomalies</div>
-                        </div>
-                        <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
-                    </div>
-                </div>
-
-                <div class="setting-item">
-                    <div class="item-content">
-                        <div>
-                            <div class="item-label">Dark Mode</div>
-                            <div class="item-description">Theme preference</div>
-                        </div>
-                        <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Data Management -->
-            <div class="setting-card" style="margin-top: 2rem;">
-                <div class="card-header">
-                    <div class="card-icon">💾</div>
-                    <h2 class="card-title">Data Management</h2>
-                </div>
-
-                <div class="setting-item">
-                    <div class="item-content">
-                        <div>
-                            <div class="item-label">Export Health Data</div>
-                            <div class="item-description">Download CSV report of all records</div>
-                        </div>
-                        <button class="btn-primary" style="width: auto; padding: 0.5rem 1.5rem; font-size: 0.9rem;">
-                            <i class="fas fa-download"></i> Export
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- About -->
-            <div class="setting-card" style="margin-top: 2rem;">
-                <div class="card-header">
-                    <div class="card-icon">ℹ️</div>
-                    <h2 class="card-title">About</h2>
-                </div>
-                <div style="font-family: 'Space Mono', monospace; color: #94a3b8; font-size: 0.9rem; line-height: 1.6;">
-                    <p><strong style="color: #fff;">Version:</strong> 1.0.0 (Beta)</p>
-                    <p><strong style="color: #fff;">Team:</strong> NeuralBrain AI Devs</p>
-                    <p><strong style="color: #fff;">Build:</strong> 2026.01.30</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right Column: Profile Editor (Sidebar) -->
-        <div class="profile-sidebar">
+            <!-- ===== PROFILE SECTION ===== -->
             <div class="setting-card">
                 <div class="card-header">
                     <div class="card-icon">👤</div>
-                    <h2 class="card-title">Profile</h2>
+                    <div>
+                        <div class="card-title">Profile Information</div>
+                        <div class="card-description">Update your personal details</div>
+                    </div>
                 </div>
 
-                <form method="POST" action="{{ url_for('views.settings') }}" enctype="multipart/form-data">
-                    <!-- Image Upload -->
-                    <div class="profile-upload-container">
-                        <div class="profile-avatar-wrapper">
-                            <img src="{{ user.get('profile_image') or 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + user.get('first_name', 'Admin') }}"
-                                alt="Profile" class="profile-avatar" id="avatarPreview">
-                            <label for="avatarUpload" class="upload-overlay">
-                                <i class="fas fa-camera" style="color: #fff; font-size: 0.9rem;"></i>
-                            </label>
-                            <input type="file" id="avatarUpload" name="profile_image" accept="image/*"
-                                style="display: none;" onchange="previewImage(this)">
-                        </div>
-                        <p style="font-size: 0.8rem; color: #94a3b8; font-family: 'Space Mono';">Update Photo</p>
+                <form method="POST" enctype="multipart/form-data" id="profileForm">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="first_name" class="form-input" 
+                               value="{{ user.get('first_name', '') }}" required>
                     </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="last_name" class="form-input" 
+                               value="{{ user.get('last_name', '') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" 
+                               value="{{ user.get('email', '') }}" disabled readonly>
+                        <span class="form-helper">Email cannot be changed</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <input type="text" class="form-input" 
+                               value="{{ user.get('role', 'User') }}" disabled readonly>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">💾 Save Changes</button>
+                </form>
             </div>
 
-            <!-- Input Fields -->
-            <div class="form-group">
-                <label class="form-label">First Name</label>
-                <input type="text" name="first_name" class="form-input" value="{{ user.get('first_name', '') }}"
-                    placeholder="Enter first name">
+            <!-- ===== SYSTEM CONFIGURATION ===== -->
+            <div class="setting-card">
+                <div class="card-header">
+                    <div class="card-icon">🎛️</div>
+                    <div>
+                        <div class="card-title">System Configuration</div>
+                        <div class="card-description">Customize how the app behaves</div>
+                    </div>
+                </div>
+
+                <form method="POST" id="settingsForm">
+                    <!-- Theme Selection -->
+                    <div class="form-group">
+                        <label class="form-label">Theme Preference</label>
+                        <select name="theme" class="form-select" id="themeSelect">
+                            <option value="dark" {% if user_settings.get('theme') == 'dark' %}selected{% endif %}>
+                                🌙 Dark Mode
+                            </option>
+                            <option value="light" {% if user_settings.get('theme') == 'light' %}selected{% endif %}>
+                                ☀️ Light Mode
+                            </option>
+                        </select>
+                        <span class="form-helper">Your preferred color scheme</span>
+                    </div>
+
+                    <!-- Data Refresh Rate -->
+                    <div class="form-group">
+                        <label class="form-label">Data Refresh Rate</label>
+                        <select name="refresh_rate" class="form-select" id="refreshRate">
+                            <option value="30" {% if user_settings.get('data_refresh_rate') == 30 %}selected{% endif %}>
+                                ⚡ Every 30 seconds (Real-time)
+                            </option>
+                            <option value="60" {% if user_settings.get('data_refresh_rate') == 60 %}selected{% endif %}>
+                                🔄 Every 60 seconds (Default)
+                            </option>
+                            <option value="120" {% if user_settings.get('data_refresh_rate') == 120 %}selected{% endif %}>
+                                ⏱️ Every 2 minutes
+                            </option>
+                            <option value="300" {% if user_settings.get('data_refresh_rate') == 300 %}selected{% endif %}>
+                                ⏳ Every 5 minutes
+                            </option>
+                        </select>
+                        <span class="form-helper">How often dashboard updates automatically</span>
+                    </div>
+
+                    <!-- Critical Alerts Toggle -->
+                    <div class="form-group">
+                        <div class="toggle-wrapper">
+                            <label class="toggle-label">🚨 Critical Alerts</label>
+                            <input type="checkbox" name="critical_alerts" class="hidden-toggle" 
+                                   id="criticalAlerts" {% if user_settings.get('critical_alerts_enabled', True) %}checked{% endif %}>
+                            <label for="criticalAlerts" class="toggle-switch {% if user_settings.get('critical_alerts_enabled', True) %}active{% endif %}" id="criticalAlertsToggle"></label>
+                        </div>
+                        <span class="form-helper" style="display: block; margin-top: 0.5rem;">Receive notifications for critical health warnings</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">💾 Save Settings</button>
+                </form>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Last Name</label>
-                <input type="text" name="last_name" class="form-input" value="{{ user.get('last_name', '') }}"
-                    placeholder="Enter last name">
+            <!-- ===== DATA MANAGEMENT ===== -->
+            <div class="setting-card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <div>
+                        <div class="card-title">Data Management</div>
+                        <div class="card-description">Export and manage your data</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Export Format</label>
+                    <select id="exportFormat" class="form-select">
+                        <option value="json">📄 JSON Format</option>
+                        <option value="csv">📋 CSV Format</option>
+                    </select>
+                    <span class="form-helper">Choose your preferred export format</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Export Time Range</label>
+                    <select id="exportDays" class="form-select">
+                        <option value="7">📆 Last 7 Days</option>
+                        <option value="30" selected>📆 Last 30 Days</option>
+                        <option value="90">📆 Last 90 Days</option>
+                        <option value="365">📆 Last Year</option>
+                    </select>
+                    <span class="form-helper">Select the time period for export</span>
+                </div>
+
+                <button id="exportBtn" class="btn btn-primary btn-block">⬇️ Export My Health Data</button>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: PROFILE CARD (SIDEBAR) -->
+        <div class="profile-card">
+            <div class="avatar-section">
+                {% if user.get('profile_image') %}
+                    <img src="{{ user.get('profile_image') }}" alt="Avatar" class="avatar with-image">
+                {% else %}
+                    <div class="avatar">
+                        {{ (user.get('first_name', 'U')[0] + user.get('last_name', 'U')[0]) | upper }}
+                    </div>
+                {% endif %}
+
+                <div class="profile-name">{{ user.get('first_name', 'User') }} {{ user.get('last_name', '') }}</div>
+                <div class="profile-role">{{ user.get('role', 'User') }}</div>
+
+                <button type="button" class="btn btn-secondary btn-sm btn-block" id="uploadAvatarBtn">
+                    📷 Change Avatar
+                </button>
+                <input type="file" id="avatarInput" accept="image/*" style="display: none;">
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Email Address</label>
-                <input type="email" class="form-input" value="{{ user.get('email', '') }}" disabled
-                    style="opacity: 0.6; cursor: not-allowed;">
-            </div>
+            <div>
+                <div class="profile-stat">
+                    <span class="profile-stat-label">Email</span>
+                    <span class="profile-stat-value" style="font-size: 0.75rem; word-break: break-all;">
+                        {{ user.get('email', 'N/A') }}
+                    </span>
+                </div>
 
-            <button type="submit" class="btn-primary" style="margin-top: 1rem;">
-                Save Changes
-            </button>
-            </form>
+                <div class="profile-stat">
+                    <span class="profile-stat-label">Member Since</span>
+                    <span class="profile-stat-value">
+                        {% if user.get('created_at') %}
+                            {{ user.get('created_at')[:10] }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="profile-stat">
+                    <span class="profile-stat-label">Last Login</span>
+                    <span class="profile-stat-value">
+                        {% if user.get('last_login') %}
+                            Today
+                        {% else %}
+                            Just now
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
-
-</div>
 </div>
 
 <script>
-    // Image Preview Script
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById('avatarPreview').src = e.target.result;
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle Switch Functionality
+    const criticalAlertsCheckbox = document.getElementById('criticalAlerts');
+    const criticalAlertsToggle = document.getElementById('criticalAlertsToggle');
+
+    if (criticalAlertsCheckbox && criticalAlertsToggle) {
+        criticalAlertsToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            criticalAlertsCheckbox.checked = !criticalAlertsCheckbox.checked;
+            this.classList.toggle('active', criticalAlertsCheckbox.checked);
+        });
     }
 
-    // Scroll Animation
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+    // Avatar Upload
+    const uploadAvatarBtn = document.getElementById('uploadAvatarBtn');
+    const avatarInput = document.getElementById('avatarInput');
+
+    if (uploadAvatarBtn) {
+        uploadAvatarBtn.addEventListener('click', function() {
+            avatarInput.click();
+        });
+    }
+
+    if (avatarInput) {
+        avatarInput.addEventListener('change', async function(e) {
+            const file = this.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('avatar', file);
+
+            try {
+                uploadAvatarBtn.disabled = true;
+                uploadAvatarBtn.innerHTML = '<span class="loading"></span> Uploading...';
+
+                const response = await fetch('/api/user/profile/avatar', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update avatar display
+                    const avatarImg = document.querySelector('.avatar');
+                    if (avatarImg) {
+                        avatarImg.src = data.url;
+                        avatarImg.classList.add('with-image');
+                    }
+                    showAlert('Avatar updated successfully!', 'success');
+                } else {
+                    showAlert('Error uploading avatar: ' + (data.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                showAlert('Error uploading avatar', 'error');
+            } finally {
+                uploadAvatarBtn.disabled = false;
+                uploadAvatarBtn.innerHTML = '📷 Change Avatar';
+                this.value = '';
             }
         });
-    }, { threshold: 0.1 });
+    }
 
-    document.querySelectorAll('.setting-card').forEach(card => {
-        observer.observe(card);
-    });
+    // Export Data
+    const exportBtn = document.getElementById('exportBtn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', async function() {
+            const format = document.getElementById('exportFormat').value;
+            const days = document.getElementById('exportDays').value;
+
+            try {
+                this.disabled = true;
+                this.innerHTML = '<span class="loading"></span> Exporting...';
+
+                const response = await fetch('/api/data/export', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        format: format,
+                        days: days
+                    })
+                });
+
+                if (response.ok) {
+                    // Download file
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `health_data.${format === 'csv' ? 'csv' : 'json'}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+
+                    showAlert('Data exported successfully!', 'success');
+                } else {
+                    showAlert('Error exporting data', 'error');
+                }
+            } catch (error) {
+                console.error('Export error:', error);
+                showAlert('Error exporting data', 'error');
+            } finally {
+                this.disabled = false;
+                this.innerHTML = '⬇️ Export My Health Data';
+            }
+        });
+    }
+
+    // Settings Form Submit
+    const settingsForm = document.getElementById('settingsForm');
+    if (settingsForm) {
+        settingsForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const criticalAlerts = document.getElementById('criticalAlerts').checked;
+            const theme = document.getElementById('themeSelect').value;
+            const refreshRate = document.getElementById('refreshRate').value;
+
+            try {
+                const response = await fetch('/api/user/settings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        theme: theme,
+                        data_refresh_rate: refreshRate,
+                        critical_alerts_enabled: criticalAlerts
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Settings saved successfully!', 'success');
+                } else {
+                    showAlert('Error saving settings: ' + (data.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Settings save error:', error);
+                showAlert('Error saving settings', 'error');
+            }
+        });
+    }
+
+    // Helper function to show alerts
+    function showAlert(message, type = 'info') {
+        const container = document.querySelector('.settings-container');
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type}`;
+        alert.innerHTML = message;
+        alert.style.position = 'fixed';
+        alert.style.top = '100px';
+        alert.style.right = '20px';
+        alert.style.zIndex = '1000';
+        alert.style.maxWidth = '400px';
+
+        container.appendChild(alert);
+
+        setTimeout(() => {
+            alert.style.animation = 'slideInDown 0.3s ease reverse';
+            setTimeout(() => alert.remove(), 300);
+        }, 3000);
+    }
+});
 </script>
 {% endblock %}

@@ -10,11 +10,25 @@
         border-radius: 0 0 1rem 1rem;
     }
 
+    @media (max-width: 768px) {
+        #map {
+            height: 350px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        #map {
+            height: 300px;
+        }
+    }
+
     .header-bar {
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
-        margin-bottom: 2.5rem;
+        margin-bottom: 1.5rem;
+        gap: 1rem;
+        flex-wrap: wrap;
     }
 
     .stat-card {
@@ -44,16 +58,27 @@
     }
 
     .stat-val {
-        font-size: 2rem;
+        font-size: clamp(1.5rem, 4vw, 2.25rem);
         font-weight: 700;
         margin: 0.5rem 0;
+        line-height: 1.1;
     }
 
     .stat-label {
-        font-size: 0.75rem;
+        font-size: clamp(0.7rem, 2vw, 0.875rem);
         color: var(--text-gray);
         text-transform: uppercase;
         font-weight: 700;
+    }
+
+    .badge {
+        font-size: clamp(0.65rem, 1.5vw, 0.75rem);
+    }
+
+    @media (max-width: 640px) {
+        .stat-val {
+            margin: 0.25rem 0;
+        }
     }
 </style>
 {% endblock %}
@@ -61,16 +86,16 @@
 {% block content %}
 <!-- Header -->
 <div class="responsive-header">
-    <div style="margin-top: 2rem;">
+    <div>
         <h2 class="text-3xl">Global Dashboard</h2>
-        <p class="text-gray" style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+        <p class="text-gray" style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: clamp(0.875rem, 2vw, 1rem);">
             <span
                 style="width: 8px; height: 8px; background-color: var(--accent-green); border-radius: 50%; display: inline-block;"
                 class="animate-pulse"></span>
-            <span>Real-time health monitoring systems operational</span>
+            <span>Real-time health monitoring</span>
         </p>
     </div>
-    <div class="header-actions" style="text-align: right;">
+    <div class="header-actions" style="text-align: right; min-width: 200px;">
         <p class="text-xs" style="color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Last Synced
         </p>
         <p class="text-sm" style="color: var(--accent-blue); font-family: monospace;">
@@ -82,7 +107,7 @@
 <!-- Top Stats Grid -->
 <div class="grid-4 mb-6">
     <!-- Total Records -->
-    <div class="glass p-6 stat-card">
+    <div class="glass p-6 stat-card" data-stat="total_records">
         <div class="stat-icon" style="color: var(--accent-green);">
             <svg viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10" />
@@ -92,14 +117,14 @@
         </div>
         <h3 class="stat-label">Total Records</h3>
         <div style="display: flex; align-items: center;">
-            <span class="stat-val">{{ stats.total_records }}</span>
-            <span class="badge"
+            <span class="stat-val" id="total-records-val">{{ stats.total_records }}</span>
+            <span class="badge" id="total-records-trend"
                 style="background: rgba(34, 197, 94, 0.1); color: var(--accent-green); margin-left: 0.5rem;">+12%</span>
         </div>
     </div>
 
     <!-- Valid Records -->
-    <div class="glass p-6 stat-card">
+    <div class="glass p-6 stat-card" data-stat="valid_data">
         <div class="stat-icon" style="color: var(--accent-blue);">
             <svg viewBox="0 0 24 24">
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
@@ -107,15 +132,15 @@
         </div>
         <h3 class="stat-label">Valid Data</h3>
         <div style="display: flex; align-items: center;">
-            <span class="stat-val">{{ stats.valid_records }}</span>
-            <span class="badge"
+            <span class="stat-val" id="valid-data-val">{{ stats.valid_records }}</span>
+            <span class="badge" id="valid-data-quality"
                 style="background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); margin-left: 0.5rem;">High
                 Quality</span>
         </div>
     </div>
 
     <!-- Alerts -->
-    <div class="glass p-6 stat-card">
+    <div class="glass p-6 stat-card" data-stat="alerts">
         <div class="stat-icon" style="color: var(--accent-red);">
             <svg viewBox="0 0 24 24">
                 <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
@@ -125,13 +150,13 @@
         </div>
         <h3 class="stat-label">Active Alerts</h3>
         <div style="display: flex; align-items: center;">
-            <span class="stat-val">3</span>
-            <span class="badge badge-red" style="margin-left: 0.5rem;" class="animate-pulse">CRITICAL</span>
+            <span class="stat-val" id="active-alerts-val">0</span>
+            <span class="badge" id="active-alerts-badge" style="margin-left: 0.5rem;">LOADING...</span>
         </div>
     </div>
 
     <!-- Data Quality -->
-    <div class="glass p-6 stat-card">
+    <div class="glass p-6 stat-card" data-stat="quality">
         <div class="stat-icon" style="color: var(--accent-purple);">
             <svg viewBox="0 0 24 24">
                 <line x1="18" y1="20" x2="18" y2="10" />
@@ -141,7 +166,7 @@
         </div>
         <h3 class="stat-label">Quality Score</h3>
         <div style="display: flex; align-items: center;">
-            <span class="stat-val">{{ "%.1f"|format(stats.data_quality) }}%</span>
+            <span class="stat-val" id="quality-score-val">{{ "%.1f"|format(stats.data_quality) }}%</span>
         </div>
     </div>
 </div>
@@ -167,37 +192,168 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- Heat-Map Module -->
+<script src="{{ url_for('static', filename='js/heatmap.js') }}"></script>
+
+<style>
+    /* Heat-Map Popup Styling -->
+    .heat-map-popup .leaflet-popup-content-wrapper {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        border: none;
+    }
+
+    .heat-map-popup .leaflet-popup-tip {
+        background: white;
+    }
+
+    .heat-map-legend {
+        background: white;
+        border-radius: 8px;
+    }
+
+    /* Heat-Map Marker Animations */
+    @keyframes pulse-marker {
+        0%, 100% {
+            opacity: 0.8;
+        }
+        50% {
+            opacity: 1;
+        }
+    }
+
+    .heat-map-marker.risk-critical {
+        animation: pulse-marker 2s ease-in-out infinite;
+    }
+
+    .heat-map-marker.risk-high {
+        animation: pulse-marker 3s ease-in-out infinite;
+    }
+</style>
+
 <script>
-    // Initialize Map (Leaflet)
-    document.addEventListener('DOMContentLoaded', () => {
-        const map = L.map('map').setView([20, 0], 2);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy;OpenStreetMap, &copy;CartoDB',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(map);
+    // ========== REAL DATA LOADING FOR DASHBOARD ==========
+    
+    async function loadRealDashboardStats() {
+        try {
+            const response = await fetch('/api/dashboard/metrics');
+            if (!response.ok) throw new Error('Failed to fetch metrics');
+            
+            const data = await response.json();
+            if (data.status === 'success') {
+                const metrics = data.metrics;
+                
+                // Update Total Records with trend
+                document.getElementById('total-records-val').textContent = 
+                    metrics.total_records.value.toLocaleString();
+                const trendPercent = metrics.total_records.trend > 0 ? '+' : '';
+                document.getElementById('total-records-trend').textContent = 
+                    `${trendPercent}${metrics.total_records.trend}%`;
+                
+                // Update Valid Data with quality
+                document.getElementById('valid-data-val').textContent = 
+                    metrics.valid_data.value.toLocaleString();
+                document.getElementById('valid-data-quality').textContent = 
+                    `${metrics.valid_data.quality}% Quality`;
+                
+                // Update Quality Score
+                document.getElementById('quality-score-val').textContent = 
+                    metrics.data_sources.last_ingestion ? 'Updated' : 'Calculating...';
+                    
+                console.log('✅ Dashboard stats updated with real data');
+            }
+        } catch (error) {
+            console.error('❌ Error loading dashboard stats:', error);
+        }
+    }
 
-        // Add mock outbreak markers
-        L.circle([-14.235, -51.925], {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.5,
-            radius: 500000
-        }).addTo(map).bindPopup("<strong>High Risk: Dengue</strong><br>Brazil region");
+    async function loadRealAlerts() {
+        try {
+            const response = await fetch('/api/alerts?active_only=true');
+            if (!response.ok) throw new Error('Failed to fetch alerts');
+            
+            const data = await response.json();
+            if (data.status === 'success') {
+                const alertCount = data.total_alerts;
+                
+                // Update alert count
+                document.getElementById('active-alerts-val').textContent = alertCount;
+                
+                // Update alert badge based on count
+                const alertBadge = document.getElementById('active-alerts-badge');
+                if (alertCount === 0) {
+                    alertBadge.innerHTML = '<i class="fas fa-check-circle"></i> NONE';
+                    alertBadge.style.background = 'rgba(34, 197, 94, 0.1)';
+                    alertBadge.style.color = 'var(--accent-green)';
+                    alertBadge.style.border = '1px solid rgba(34, 197, 94, 0.2)';
+                } else if (alertCount < 3) {
+                    alertBadge.innerHTML = '<i class="fas fa-exclamation"></i> LOW';
+                    alertBadge.style.background = 'rgba(249, 115, 22, 0.1)';
+                    alertBadge.style.color = '#fb923c';
+                    alertBadge.style.border = '1px solid rgba(249, 115, 22, 0.2)';
+                } else {
+                    alertBadge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> CRITICAL';
+                    alertBadge.style.background = 'rgba(239, 68, 68, 0.1)';
+                    alertBadge.style.color = 'var(--accent-red)';
+                    alertBadge.style.border = '1px solid rgba(239, 68, 68, 0.2)';
+                    alertBadge.classList.add('animate-pulse');
+                }
+                
+                console.log('✅ Real alerts count:', alertCount);
+            }
+        } catch (error) {
+            console.error('❌ Error loading alerts:', error);
+        }
+    }
 
-        L.circle([20.593, 78.962], {
-            color: 'orange',
-            fillColor: '#f90',
-            fillOpacity: 0.5,
-            radius: 400000
-        }).addTo(map).bindPopup("<strong>Medium Risk: Malaria</strong><br>India region");
+    // Initialize Dashboard Heat-Map with Faster Updates
+    document.addEventListener('DOMContentLoaded', async () => {
+        // Load real data first
+        await loadRealDashboardStats();
+        await loadRealAlerts();
 
-        L.circle([-1.286, 36.817], {
-            color: 'yellow',
-            fillColor: '#ff0',
-            fillOpacity: 0.3,
-            radius: 300000
-        }).addTo(map).bindPopup("<strong>Low Risk: Cholera</strong><br>Nairobi region");
+        const dashboardHeatMap = new NeuralBrainHeatMap('map', {
+            updateInterval: 15000,  // Update every 15 seconds for dashboard
+            zoomLevel: 2,
+            center: [20, 0]
+        });
+
+        await dashboardHeatMap.initialize();
+
+        // Store reference
+        window.dashboardHeatMap = dashboardHeatMap;
+
+        // Refresh stats every 30 seconds
+        setInterval(() => {
+            loadRealDashboardStats();
+            loadRealAlerts();
+        }, 30000);
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.dashboardHeatMap) {
+                window.dashboardHeatMap.resize();
+            }
+        });
+
+        // Listen for heat-map updates
+        document.addEventListener('heatmap-updated', (event) => {
+            const countries = event.detail.countries;
+            console.log(`Dashboard: Heat-map synchronized with ${countries.length} countries`);
+            
+            // Optional: Update any dashboard summary metrics
+            if (window.dashboardStats) {
+                window.dashboardStats.lastUpdate = event.detail.timestamp;
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (window.dashboardHeatMap) {
+                window.dashboardHeatMap.destroy();
+            }
+        });
     });
 </script>
 {% endblock %}
