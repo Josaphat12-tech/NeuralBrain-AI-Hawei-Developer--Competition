@@ -20,55 +20,115 @@
 <div class="grid-2">
     <!-- Heart Rate Chart -->
     <div class="glass p-6">
-        <h3 class="text-xl font-bold mb-6"><i class="fas fa-heart" style="color: var(--accent-red);"></i> Heart Rate
-            Trends</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 class="text-xl font-bold" style="display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-heart" style="color: var(--accent-red);"></i> Heart Rate Trends
+            </h3>
+            <span class="badge" style="background: rgba(239, 68, 68, 0.1); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.2); font-size: 0.75rem;">bpm</span>
+        </div>
         <div style="position: relative; height: 300px;">
             <canvas id="heartRateChart"></canvas>
+        </div>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; color: var(--text-gray);">
+            <p style="margin: 0; display: flex; justify-content: space-between;">
+                <span>Min: <strong id="hr-min">--</strong></span>
+                <span>Avg: <strong id="hr-avg">--</strong></span>
+                <span>Max: <strong id="hr-max">--</strong></span>
+            </p>
         </div>
     </div>
 
     <!-- Temperature Chart -->
     <div class="glass p-6">
-        <h3 class="text-xl font-bold mb-6"><i class="fas fa-thermometer" style="color: var(--accent-orange);"></i>
-            Temperature Variation</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 class="text-xl font-bold" style="display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-thermometer" style="color: var(--accent-orange);"></i> Temperature Variation
+            </h3>
+            <span class="badge" style="background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); border: 1px solid rgba(249, 115, 22, 0.2); font-size: 0.75rem;">°C</span>
+        </div>
         <div style="position: relative; height: 300px;">
             <canvas id="temperatureChart"></canvas>
+        </div>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; color: var(--text-gray);">
+            <p style="margin: 0; display: flex; justify-content: space-between;">
+                <span>Min: <strong id="temp-min">--</strong></span>
+                <span>Avg: <strong id="temp-avg">--</strong></span>
+                <span>Max: <strong id="temp-max">--</strong></span>
+            </p>
         </div>
     </div>
 
     <!-- Blood Pressure Chart -->
     <div class="glass p-6">
-        <h3 class="text-xl font-bold mb-6"><i class="fas fa-droplet" style="color: var(--accent-red);"></i> Blood
-            Pressure</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 class="text-xl font-bold" style="display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-droplet" style="color: var(--accent-red);"></i> Blood Pressure
+            </h3>
+            <span class="badge" style="background: rgba(239, 68, 68, 0.1); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.2); font-size: 0.75rem;">mmHg</span>
+        </div>
         <div style="position: relative; height: 300px;">
             <canvas id="bloodPressureChart"></canvas>
+        </div>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; color: var(--text-gray);">
+            <p style="margin: 2px 0; display: flex; justify-content: space-between;">
+                <span>Systolic - Diastolic pressure ratio</span>
+            </p>
         </div>
     </div>
 
     <!-- Oxygen Saturation Chart -->
     <div class="glass p-6">
-        <h3 class="text-xl font-bold mb-6"><i class="fas fa-wind" style="color: var(--accent-cyan);"></i> Oxygen
-            Saturation</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 class="text-xl font-bold" style="display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-wind" style="color: var(--accent-cyan);"></i> Oxygen Saturation
+            </h3>
+            <span class="badge" style="background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.2); font-size: 0.75rem;">SpO₂ %</span>
+        </div>
         <div style="position: relative; height: 300px;">
             <canvas id="oxygenChart"></canvas>
+        </div>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; color: var(--text-gray);">
+            <p style="margin: 0; display: flex; justify-content: space-between;">
+                <span>Healthy Range: <strong>95-100%</strong></span>
+            </p>
         </div>
     </div>
 
     <!-- Glucose Level Chart -->
     <div class="glass p-6">
-        <h3 class="text-xl font-bold mb-6"><i class="fas fa-cubes" style="color: var(--accent-purple);"></i> Glucose
-            Levels</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 class="text-xl font-bold" style="display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-cubes" style="color: var(--accent-purple);"></i> Glucose Levels
+            </h3>
+            <span class="badge" style="background: rgba(139, 92, 246, 0.1); color: var(--accent-purple); border: 1px solid rgba(139, 92, 246, 0.2); font-size: 0.75rem;">mg/dL</span>
+        </div>
         <div style="position: relative; height: 300px;">
             <canvas id="glucoseChart"></canvas>
+        </div>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; color: var(--text-gray);">
+            <p style="margin: 0; display: flex; justify-content: space-between;">
+                <span>Fasting: <strong id="gluc-min">--</strong></span>
+                <span>Average: <strong id="gluc-avg">--</strong></span>
+                <span>Peak: <strong id="gluc-max">--</strong></span>
+            </p>
         </div>
     </div>
 
     <!-- Respiratory Rate Chart -->
     <div class="glass p-6">
-        <h3 class="text-xl font-bold mb-6"><i class="fas fa-lungs" style="color: var(--accent-green);"></i> Respiratory
-            Rate</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 class="text-xl font-bold" style="display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-lungs" style="color: var(--accent-green);"></i> Respiratory Rate
+            </h3>
+            <span class="badge" style="background: rgba(34, 197, 94, 0.1); color: var(--accent-green); border: 1px solid rgba(34, 197, 94, 0.2); font-size: 0.75rem;">breaths/min</span>
+        </div>
         <div style="position: relative; height: 300px;">
             <canvas id="respiratoryChart"></canvas>
+        </div>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; color: var(--text-gray);">
+            <p style="margin: 0; display: flex; justify-content: space-between;">
+                <span>Normal Range: <strong>12-20 breaths/min</strong></span>
+            </p>
         </div>
     </div>
 </div>
@@ -80,131 +140,318 @@
 
 {% block extra_js %}
 <script>
-    // Chart.js Configuration
+    // Professional Chart Configuration
+    Chart.defaults.font.family = "'Inter', sans-serif";
     Chart.defaults.color = '#9ca3af';
-    Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
+    
+    // Enhanced tooltip configuration
+    const tooltipConfig = {
+        backgroundColor: 'rgba(17, 24, 39, 0.95)',
+        titleColor: '#f9fafb',
+        bodyColor: '#d1d5db',
+        borderColor: 'rgba(255, 255, 255, 0.15)',
+        borderWidth: 1,
+        padding: 12,
+        displayColors: true,
+        callbacks: {
+            afterLabel: function(context) {
+                if (context.dataset.label) {
+                    return context.dataset.label.split('(')[1]?.replace(')', '') || '';
+                }
+            }
+        }
+    };
 
     // Data for charts
     const dataStore = document.getElementById('analytics-data-store');
     const metricsData = JSON.parse(dataStore.dataset.metrics);
+    
     const chartColors = {
-        primary: '#3b82f6',
-        success: '#22c55e',
-        warning: '#f59e0b',
-        danger: '#ef4444',
-        purple: '#8b5cf6'
+        primary: '#3b82f6',      // Blue
+        success: '#22c55e',      // Green
+        warning: '#f59e0b',      // Amber
+        danger: '#ef4444',       // Red
+        purple: '#8b5cf6',       // Purple
+        cyan: '#06b6d4'          // Cyan
     };
 
-    // Heart Rate Chart
+    // Gradient factory
+    function createGradient(ctx, color1, color2) {
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, color1);
+        gradient.addColorStop(1, color2);
+        return gradient;
+    }
+
+    // Heart Rate Chart - Professional Bar Chart with Gradients
     if (metricsData['heart_rate']) {
-        new Chart(document.getElementById('heartRateChart'), {
+        const ctx = document.getElementById('heartRateChart').getContext('2d');
+        document.getElementById('hr-min').textContent = metricsData.heart_rate.min;
+        document.getElementById('hr-avg').textContent = metricsData.heart_rate.average;
+        document.getElementById('hr-max').textContent = metricsData.heart_rate.max;
+
+        new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Min', 'Avg', 'Max'],
+                labels: ['Minimum', 'Average', 'Maximum'],
                 datasets: [{
                     label: 'Heart Rate (bpm)',
                     data: [metricsData.heart_rate.min, metricsData.heart_rate.average, metricsData.heart_rate.max],
                     backgroundColor: [chartColors.success, chartColors.primary, chartColors.danger],
-                    borderRadius: 8
+                    borderRadius: 12,
+                    borderSkipped: false,
+                    borderWidth: 0
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: tooltipConfig
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 200,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#6b7280', font: { size: 12 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#6b7280', font: { size: 12 } }
+                    }
+                }
+            }
         });
     }
 
-    // Temperature Chart
+    // Temperature Chart - Smooth Area Chart
     if (metricsData['temperature']) {
-        new Chart(document.getElementById('temperatureChart'), {
+        const ctx = document.getElementById('temperatureChart').getContext('2d');
+        document.getElementById('temp-min').textContent = metricsData.temperature.min.toFixed(1);
+        document.getElementById('temp-avg').textContent = metricsData.temperature.average.toFixed(1);
+        document.getElementById('temp-max').textContent = metricsData.temperature.max.toFixed(1);
+
+        const gradient = createGradient(ctx, 'rgba(249, 158, 11, 0.3)', 'rgba(249, 158, 11, 0)');
+
+        new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Min', 'Avg', 'Max'],
+                labels: ['Minimum', 'Average', 'Maximum'],
                 datasets: [{
                     label: 'Temperature (°C)',
                     data: [metricsData.temperature.min, metricsData.temperature.average, metricsData.temperature.max],
                     borderColor: chartColors.warning,
-                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    backgroundColor: gradient,
                     fill: true,
-                    tension: 0.4
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointRadius: 6,
+                    pointBackgroundColor: chartColors.warning,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 8
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: tooltipConfig
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#6b7280', font: { size: 12 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#6b7280', font: { size: 12 } }
+                    }
+                }
+            }
         });
     }
 
-    // Blood Pressure Chart
+    // Blood Pressure Chart - Radar Chart for Systolic/Diastolic Comparison
     if (metricsData['blood_pressure_sys'] && metricsData['blood_pressure_dia']) {
-        new Chart(document.getElementById('bloodPressureChart'), {
+        const ctx = document.getElementById('bloodPressureChart').getContext('2d');
+
+        new Chart(ctx, {
             type: 'radar',
             data: {
-                labels: ['Min', 'Avg', 'Max'],
+                labels: ['Minimum', 'Average', 'Maximum'],
                 datasets: [
                     {
-                        label: 'Systolic',
+                        label: 'Systolic (mmHg)',
                         data: [metricsData.blood_pressure_sys.min, metricsData.blood_pressure_sys.average, metricsData.blood_pressure_sys.max],
                         borderColor: chartColors.danger,
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)'
+                        backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                        borderWidth: 2,
+                        pointBackgroundColor: chartColors.danger,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
                     },
                     {
-                        label: 'Diastolic',
+                        label: 'Diastolic (mmHg)',
                         data: [metricsData.blood_pressure_dia.min, metricsData.blood_pressure_dia.average, metricsData.blood_pressure_dia.max],
                         borderColor: chartColors.primary,
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)'
+                        backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                        borderWidth: 2,
+                        pointBackgroundColor: chartColors.primary,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
                     }
                 ]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: { color: '#9ca3af', font: { size: 12 }, padding: 15 }
+                    },
+                    tooltip: tooltipConfig
+                },
+                scales: {
+                    r: {
+                        grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                        ticks: { color: '#6b7280', font: { size: 11 } }
+                    }
+                }
+            }
         });
     }
 
-    // Oxygen Saturation Chart
+    // Oxygen Saturation Chart - Radial Gauge
     if (metricsData['oxygen_saturation']) {
-        new Chart(document.getElementById('oxygenChart'), {
+        const ctx = document.getElementById('oxygenChart').getContext('2d');
+        const oxygenLevel = metricsData.oxygen_saturation.average;
+
+        new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Oxygen Level', 'Remaining'],
+                labels: ['Oxygen Level', 'Remaining Capacity'],
                 datasets: [{
-                    data: [metricsData.oxygen_saturation.average, 100 - metricsData.oxygen_saturation.average],
-                    backgroundColor: [chartColors.success, 'rgba(100, 116, 139, 0.2)'],
+                    data: [oxygenLevel, 100 - oxygenLevel],
+                    backgroundColor: [
+                        chartColors.cyan,
+                        'rgba(100, 116, 139, 0.2)'
+                    ],
+                    borderColor: ['#0f172a', '#0f172a'],
+                    borderWidth: 2,
+                    circumference: 180,
+                    rotation: 180
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: { color: '#9ca3af', font: { size: 12 }, padding: 15 }
+                    },
+                    tooltip: tooltipConfig
+                }
+            }
+        });
+    }
+
+    // Glucose Chart - Multi-Dataset Bar with Color Coding
+    if (metricsData['glucose_level']) {
+        const ctx = document.getElementById('glucoseChart').getContext('2d');
+        document.getElementById('gluc-min').textContent = metricsData.glucose_level.min;
+        document.getElementById('gluc-avg').textContent = metricsData.glucose_level.average;
+        document.getElementById('gluc-max').textContent = metricsData.glucose_level.max;
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Fasting', 'Average', 'Peak'],
+                datasets: [{
+                    label: 'Glucose Level (mg/dL)',
+                    data: [metricsData.glucose_level.min, metricsData.glucose_level.average, metricsData.glucose_level.max],
+                    backgroundColor: [chartColors.success, chartColors.warning, chartColors.danger],
+                    borderRadius: 12,
+                    borderSkipped: false,
                     borderWidth: 0
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: tooltipConfig
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 400,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#6b7280', font: { size: 12 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#6b7280', font: { size: 12 } }
+                    }
+                }
+            }
         });
     }
 
-    // Glucose Chart
-    if (metricsData['glucose_level']) {
-        new Chart(document.getElementById('glucoseChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Min', 'Avg', 'Max'],
-                datasets: [{
-                    label: 'Glucose (mg/dL)',
-                    data: [metricsData.glucose_level.min, metricsData.glucose_level.average, metricsData.glucose_level.max],
-                    backgroundColor: [chartColors.success, chartColors.warning, chartColors.danger],
-                    borderRadius: 8
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-    }
-
-    // Respiratory Rate Chart
+    // Respiratory Rate Chart - Professional Line Chart
     if (metricsData['respiratory_rate']) {
-        new Chart(document.getElementById('respiratoryChart'), {
+        const ctx = document.getElementById('respiratoryChart').getContext('2d');
+        const gradient = createGradient(ctx, 'rgba(34, 197, 94, 0.3)', 'rgba(34, 197, 94, 0)');
+
+        new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Min', 'Avg', 'Max'],
+                labels: ['Minimum', 'Average', 'Maximum'],
                 datasets: [{
                     label: 'Respiratory Rate (breaths/min)',
                     data: [metricsData.respiratory_rate.min, metricsData.respiratory_rate.average, metricsData.respiratory_rate.max],
                     borderColor: chartColors.success,
-                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    backgroundColor: gradient,
                     fill: true,
-                    tension: 0.4
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointRadius: 6,
+                    pointBackgroundColor: chartColors.success,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 8
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: tooltipConfig
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 40,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#6b7280', font: { size: 12 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#6b7280', font: { size: 12 } }
+                    }
+                }
+            }
         });
     }
 </script>

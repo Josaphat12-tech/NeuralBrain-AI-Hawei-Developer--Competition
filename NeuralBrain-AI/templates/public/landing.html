@@ -1467,51 +1467,78 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-    <script>
-        // Initialize Map
-        document.addEventListener('DOMContentLoaded', () => {
-            const mapContainer = document.getElementById('map');
-            if (mapContainer) {
-                const map = L.map('map', {
-                    zoomControl: true,
-                    scrollWheelZoom: true,
-                    dragging: true,
-                    attributionControl: false
-                }).setView([20, 0], 2);
+    <!-- Heat-Map Module -->
+    <script src="{{ url_for('static', filename='js/heatmap.js') }}"></script>
 
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                    subdomains: 'abcd',
-                    maxZoom: 19
-                }).addTo(map);
+    <style>
+        /* Heat-Map Popup Styling */
+        .heat-map-popup .leaflet-popup-content-wrapper {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border: none;
+        }
 
-                const outbreaks = [
-                    { lat: -14.235, lng: -51.925, color: '#ef4444', radius: 15, region: 'South America (Brazil)', risk: 'High', cases: '12,450', trend: 'Rising' },
-                    { lat: 20.593, lng: 78.962, color: '#f97316', radius: 12, region: 'South Asia (India)', risk: 'Moderate', cases: '5,230', trend: 'Stable' },
-                    { lat: -1.286, lng: 36.817, color: '#eab308', radius: 10, region: 'East Africa (Kenya)', risk: 'Low', cases: '1,120', trend: 'Decreasing' },
-                    { lat: 39.904, lng: 116.407, color: '#3b82f6', radius: 8, region: 'East Asia (China)', risk: 'Monitored', cases: '850', trend: 'Stable' },
-                    { lat: 51.507, lng: -0.127, color: '#22c55e', radius: 8, region: 'Europe (UK)', risk: 'Safe', cases: '120', trend: 'Low' }
-                ];
+        .heat-map-popup .leaflet-popup-tip {
+            background: white;
+        }
 
-                outbreaks.forEach(point => {
-                    const circle = L.circleMarker([point.lat, point.lng], {
-                        color: point.color,
-                        fillColor: point.color,
-                        fillOpacity: 0.6,
-                        radius: point.radius,
-                        weight: 0
-                    }).addTo(map);
+        .heat-map-legend {
+            background: white;
+            border-radius: 8px;
+        }
 
-                    const popupContent = `
-                        <div style="font-family: 'Inter', sans-serif; color: #1e293b; padding: 5px;">
-                            <h4 style="margin: 0 0 5px 0; color: ${point.color}; font-weight: 700;">${point.region}</h4>
-                            <p style="margin: 0; font-size: 0.9rem;"><strong>Risk Level:</strong> ${point.risk}</p>
-                            <p style="margin: 0; font-size: 0.9rem;"><strong>Active Cases:</strong> ${point.cases}</p>
-                            <p style="margin: 0; font-size: 0.9rem;"><strong>Trend:</strong> ${point.trend}</p>
-                        </div>
-                    `;
-                    circle.bindPopup(popupContent);
-                });
+        /* Heat-Map Marker Animations */
+        @keyframes pulse-marker {
+            0%, 100% {
+                opacity: 0.8;
             }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .heat-map-marker.risk-critical {
+            animation: pulse-marker 2s ease-in-out infinite;
+        }
+
+        .heat-map-marker.risk-high {
+            animation: pulse-marker 3s ease-in-out infinite;
+        }
+    </style>
+
+    <script>
+        // Initialize Enhanced Heat-Map
+        document.addEventListener('DOMContentLoaded', async () => {
+            const heatMap = new NeuralBrainHeatMap('map', {
+                updateInterval: 30000,  // Update every 30 seconds
+                zoomLevel: 2,
+                center: [20, 0]
+            });
+
+            await heatMap.initialize();
+
+            // Store reference for responsive resizing
+            window.landingHeatMap = heatMap;
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                if (window.landingHeatMap) {
+                    window.landingHeatMap.resize();
+                }
+            });
+
+            // Listen for heat-map updates
+            document.addEventListener('heatmap-updated', (event) => {
+                console.log('Heat-map updated with data for', event.detail.countries.length, 'countries');
+            });
+
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', () => {
+                if (window.landingHeatMap) {
+                    window.landingHeatMap.destroy();
+                }
+            });
         });
     </script>
 </body>

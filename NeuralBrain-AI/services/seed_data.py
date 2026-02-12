@@ -1,6 +1,9 @@
 """
 Seed Data Service
 Generates sample health data for demonstration and testing
+
+Uses Huawei Cloud health metrics inference when available,
+falls back to random generation if cloud unavailable.
 """
 
 import random
@@ -9,6 +12,14 @@ from datetime import datetime, timedelta
 from models import db, HealthDataRecord
 
 logger = logging.getLogger(__name__)
+
+# Import AI services adapter
+try:
+    from ai_services.inference_adapter import get_health_metrics_adapter
+    AI_SERVICES_AVAILABLE = True
+except ImportError:
+    AI_SERVICES_AVAILABLE = False
+    logger.warning("AI Services not available, using fallback health metrics")
 
 
 class DataSeeder:
@@ -32,7 +43,29 @@ class DataSeeder:
     
     @staticmethod
     def generate_sample_metrics():
-        """Generate realistic health metrics."""
+        """
+        Generate realistic health metrics.
+        
+        Uses Huawei Cloud ModelArts if available, falls back to random generation.
+        """
+        if AI_SERVICES_AVAILABLE:
+            try:
+                adapter = get_health_metrics_adapter()
+                metrics = adapter.get_health_metrics(
+                    patient_id="seed-data",
+                    context="daily_monitoring",
+                    fallback_fn=DataSeeder._generate_random_metrics
+                )
+                return metrics
+            except Exception as e:
+                logger.debug(f"AI Services health metrics failed, using fallback: {str(e)}")
+                return DataSeeder._generate_random_metrics()
+        else:
+            return DataSeeder._generate_random_metrics()
+    
+    @staticmethod
+    def _generate_random_metrics():
+        """Fallback: Generate random health metrics locally."""
         return {
             'heart_rate': random.randint(60, 100),
             'temperature': round(random.uniform(36.5, 37.5), 1),

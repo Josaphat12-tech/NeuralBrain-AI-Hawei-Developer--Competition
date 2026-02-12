@@ -1,0 +1,535 @@
+{% extends "admin/base_dashboard.html" %}
+
+{% block title %}Settings - NeuralBrain AI{% endblock %}
+
+{% block content %}
+<link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+
+<style>
+    .settings-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        font-family: 'Syne', sans-serif;
+    }
+
+    .settings-header {
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .settings-title {
+        font-size: 4rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        animation: fadeInDown 0.6s ease-out;
+    }
+
+    @media (max-width: 768px) {
+        .settings-title {
+            font-size: 2.5rem;
+        }
+
+        .settings-subtitle {
+            font-size: 1rem;
+        }
+
+        .setting-card {
+            padding: 1.5rem;
+        }
+
+        .settings-header {
+            margin-bottom: 2rem;
+        }
+    }
+
+    .settings-subtitle {
+        font-size: 1.125rem;
+        color: #94a3b8;
+        font-weight: 400;
+        letter-spacing: 0.02em;
+        animation: fadeInUp 0.6s ease-out 0.2s both;
+    }
+
+    /* 2-Column Grid Layout */
+    .settings-grid {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+        .settings-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .profile-sidebar {
+            order: -1;
+            position: static !important;
+            width: 100% !important;
+            margin-bottom: 2rem !important;
+        }
+
+        .settings-main {
+            width: 100%;
+        }
+
+        .setting-card {
+            padding: 1.5rem !important;
+            margin-bottom: 1.5rem !important;
+        }
+
+        .card-title {
+            font-size: 1.25rem !important;
+        }
+
+        .settings-title {
+            font-size: 2.2rem !important;
+        }
+    }
+
+    .setting-card {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: fadeInScale 0.6s ease-out both;
+        margin-bottom: 2rem;
+    }
+
+    .setting-card:last-child {
+        margin-bottom: 0;
+    }
+
+    .setting-card:hover {
+        border-color: rgba(59, 130, 246, 0.3);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2));
+        border-radius: 1rem;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: #ffffff;
+    }
+
+    /* Profile Specific Styles */
+    .profile-sidebar {
+        position: sticky;
+        top: 2rem;
+        height: fit-content;
+    }
+
+    .profile-upload-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .profile-avatar-wrapper {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin-bottom: 1rem;
+    }
+
+    .profile-avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid rgba(59, 130, 246, 0.3);
+        background-color: #1e293b;
+    }
+
+    .upload-overlay {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 36px;
+        height: 36px;
+        background: var(--accent-blue);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid #0f172a;
+    }
+
+    .upload-overlay:hover {
+        transform: scale(1.1);
+        background: var(--accent-cyan);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+
+    .form-label {
+        display: block;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.05em;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 0.75rem;
+        color: #ffffff;
+        font-family: 'Syne', sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--accent-blue);
+        background: rgba(30, 41, 59, 0.8);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* System Configuration Styles */
+    .setting-item {
+        padding: 1.5rem;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(148, 163, 184, 0.08);
+        border-radius: 1rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .setting-item:hover {
+        background: rgba(30, 41, 59, 0.5);
+        border-color: rgba(148, 163, 184, 0.15);
+    }
+
+    .item-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    @media (max-width: 480px) {
+        .item-content {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .toggle-switch {
+            align-self: flex-start;
+        }
+    }
+
+    .item-label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 0.25rem;
+    }
+
+    .item-description {
+        font-size: 0.875rem;
+        color: #94a3b8;
+        font-family: 'Space Mono', monospace;
+    }
+
+    .toggle-switch {
+        position: relative;
+        width: 52px;
+        height: 28px;
+        background: rgba(148, 163, 184, 0.2);
+        border-radius: 14px;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .toggle-switch.active {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        border-color: rgba(34, 197, 94, 0.5);
+    }
+
+    .toggle-switch::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 22px;
+        height: 22px;
+        background: #ffffff;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-switch.active::after {
+        left: 26px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: #ffffff;
+        border: none;
+        padding: 0.875rem 2rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        font-family: 'Space Mono', monospace;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInScale {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+</style>
+
+<div class="settings-container">
+    <!-- Header -->
+    <div class="settings-header">
+        <h1 class="settings-title">Settings</h1>
+        <p class="settings-subtitle">Manage preferences & profile</p>
+    </div>
+
+    <!-- 2-Column Grid -->
+    <div class="settings-grid">
+
+        <!-- Left Column: System Settings -->
+        <div class="settings-main">
+            <!-- System Configuration -->
+            <div class="setting-card">
+                <div class="card-header">
+                    <div class="card-icon">🔧</div>
+                    <h2 class="card-title">System Configuration</h2>
+                </div>
+
+                <div class="setting-item">
+                    <div class="item-content">
+                        <div>
+                            <div class="item-label">Data Refresh Rate</div>
+                            <div class="item-description">Update frequency for dashboard metrics</div>
+                        </div>
+                        <span class="badge"
+                            style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-family: 'Space Mono'; font-size: 0.8rem;">5
+                            MIN</span>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="item-content">
+                        <div>
+                            <div class="item-label">Critical Alerts</div>
+                            <div class="item-description">Notifications for high risk anomalies</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="item-content">
+                        <div>
+                            <div class="item-label">Dark Mode</div>
+                            <div class="item-description">Theme preference</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Management -->
+            <div class="setting-card" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <div class="card-icon">💾</div>
+                    <h2 class="card-title">Data Management</h2>
+                </div>
+
+                <div class="setting-item">
+                    <div class="item-content">
+                        <div>
+                            <div class="item-label">Export Health Data</div>
+                            <div class="item-description">Download CSV report of all records</div>
+                        </div>
+                        <button class="btn-primary" style="width: auto; padding: 0.5rem 1.5rem; font-size: 0.9rem;">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About -->
+            <div class="setting-card" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <div class="card-icon">ℹ️</div>
+                    <h2 class="card-title">About</h2>
+                </div>
+                <div style="font-family: 'Space Mono', monospace; color: #94a3b8; font-size: 0.9rem; line-height: 1.6;">
+                    <p><strong style="color: #fff;">Version:</strong> 1.0.0 (Beta)</p>
+                    <p><strong style="color: #fff;">Team:</strong> NeuralBrain AI Devs</p>
+                    <p><strong style="color: #fff;">Build:</strong> 2026.01.30</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Profile Editor (Sidebar) -->
+        <div class="profile-sidebar">
+            <div class="setting-card">
+                <div class="card-header">
+                    <div class="card-icon">👤</div>
+                    <h2 class="card-title">Profile</h2>
+                </div>
+
+                <form method="POST" action="{{ url_for('views.settings') }}" enctype="multipart/form-data">
+                    <!-- Image Upload -->
+                    <div class="profile-upload-container">
+                        <div class="profile-avatar-wrapper">
+                            <img src="{{ user.get('profile_image') or 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + user.get('first_name', 'Admin') }}"
+                                alt="Profile" class="profile-avatar" id="avatarPreview">
+                            <label for="avatarUpload" class="upload-overlay">
+                                <i class="fas fa-camera" style="color: #fff; font-size: 0.9rem;"></i>
+                            </label>
+                            <input type="file" id="avatarUpload" name="profile_image" accept="image/*"
+                                style="display: none;" onchange="previewImage(this)">
+                        </div>
+                        <p style="font-size: 0.8rem; color: #94a3b8; font-family: 'Space Mono';">Update Photo</p>
+                    </div>
+            </div>
+
+            <!-- Input Fields -->
+            <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input type="text" name="first_name" class="form-input" value="{{ user.get('first_name', '') }}"
+                    placeholder="Enter first name">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" name="last_name" class="form-input" value="{{ user.get('last_name', '') }}"
+                    placeholder="Enter last name">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" value="{{ user.get('email', '') }}" disabled
+                    style="opacity: 0.6; cursor: not-allowed;">
+            </div>
+
+            <button type="submit" class="btn-primary" style="margin-top: 1rem;">
+                Save Changes
+            </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script>
+    // Image Preview Script
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('avatarPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Scroll Animation
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.setting-card').forEach(card => {
+        observer.observe(card);
+    });
+</script>
+{% endblock %}
